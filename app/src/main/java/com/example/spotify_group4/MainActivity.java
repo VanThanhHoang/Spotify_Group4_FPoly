@@ -7,6 +7,7 @@ public class MainActivity extends AppCompatActivity {
         //test
         //phideptrai
         //sang ngon l`
+        //haha
         super.onCreate(savedInstanceState);
         System.out.println("");
         setContentView(R.layout.activity_main);
