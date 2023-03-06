@@ -6,8 +6,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //test
         //phideptrai
+        //sang ngon l`
         super.onCreate(savedInstanceState);
         System.out.println("");
         setContentView(R.layout.activity_main);
+
     }
 }
