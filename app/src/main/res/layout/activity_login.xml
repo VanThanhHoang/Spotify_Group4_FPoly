@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".MainActivity">
+    tools:context=".View.LoginActivity">
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -13,12 +13,13 @@
         android:orientation="vertical"
         android:background="@color/black"
         android:padding="20dp"
-        tools:context=".MainActivity">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+        tools:context=".View.LoginActivity">
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
-            android:src="@drawable/logo_spotify"/>
+            app:lottie_autoPlay="true"
+            app:lottie_rawRes="@raw/anm_app_logo"/>
         <TextView
             style="@style/titlle_Login"
             android:text="@string/titlle_login1"
