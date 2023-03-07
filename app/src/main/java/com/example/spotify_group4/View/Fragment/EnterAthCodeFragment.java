@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -120,12 +119,9 @@ public class EnterAthCodeFragment extends Fragment {
         };
         for (int i = 0 ;i<edAthCodes.length;i++) {
             int finalI = i;
-            edAthCodes[i].setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus){
-                        indexAthCodeFocus = finalI;
-                    }
+            edAthCodes[i].setOnFocusChangeListener((v, hasFocus) -> {
+                if(hasFocus){
+                    indexAthCodeFocus = finalI;
                 }
             });
             edAthCodes[i].addTextChangedListener(textWatcher);

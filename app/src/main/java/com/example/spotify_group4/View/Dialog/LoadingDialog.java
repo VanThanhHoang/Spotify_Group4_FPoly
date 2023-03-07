@@ -1,14 +1,11 @@
 package com.example.spotify_group4.View.Dialog;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Window;
-
 import androidx.annotation.NonNull;
-
 import com.example.spotify_group4.R;
 
 public class LoadingDialog extends Dialog {

@@ -3,7 +3,6 @@ package com.example.spotify_group4.View.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,8 @@ public class PhoneNumberAthFragment extends Fragment {
     FragmentPhonenumberAthBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
     FirebaseAuth mAuth;
-    LoadingDialog loadingDialog ;
+    LoadingDialog loadingDialog;
+
     @Override
     public void onAttach(@NonNull Context context) {
         replaceFragmentListener = (ReplaceFragmentListener) context;
@@ -48,7 +48,7 @@ public class PhoneNumberAthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
-        if(getContext()!=null){
+        if (getContext() != null) {
             loadingDialog = new LoadingDialog(getContext());
         }
         initCountyCodePicker();
@@ -57,8 +57,8 @@ public class PhoneNumberAthFragment extends Fragment {
             String phoneNumber = layoutBinding.countryCodePicker.getFullNumber();
             if (validPhoneNumber(phoneNumber)) {
                 loadingDialog.show();
-                sendOtp("+"+phoneNumber);
-             } else {
+                sendOtp("+" + phoneNumber);
+            } else {
                 Toast.makeText(getContext(), "Số điện thoại bạn vừa nhập không hợp lệ !", Toast.LENGTH_SHORT).show();
             }
         });
@@ -80,32 +80,29 @@ public class PhoneNumberAthFragment extends Fragment {
     }
 
     private void sendOtp(String phoneNumber) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phoneNumber) // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(this.getActivity()) // Activity (for callback binding)
-                        .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                            @Override
-                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                signInWithPhoneAuthCredential(phoneAuthCredential);
-                                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
-                            }
-                            @Override
-                            public void onVerificationFailed(@NonNull FirebaseException e) {
-                                loadingDialog.hide();
-                            }
-                            @Override
-                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                                super.onCodeSent(s, forceResendingToken);
-                                EnterAthCodeFragment enterAthCodeFragment = new EnterAthCodeFragment();
-                                Bundle bundle = new Bundle();
-                                loadingDialog.hide();
-                                bundle.putString("phoneNumber", phoneNumber);
-                                enterAthCodeFragment.setArguments(bundle);
-                                replaceFragmentListener.replaceFragment(enterAthCodeFragment);
-                            }
-                        }).build();
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth).setPhoneNumber(phoneNumber).setTimeout(60L, TimeUnit.SECONDS).setActivity(this.getActivity()).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                signInWithPhoneAuthCredential(phoneAuthCredential);
+                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+                loadingDialog.hide();
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                EnterAthCodeFragment enterAthCodeFragment = new EnterAthCodeFragment();
+                Bundle bundle = new Bundle();
+                loadingDialog.hide();
+                bundle.putString("phoneNumber", phoneNumber);
+                enterAthCodeFragment.setArguments(bundle);
+                replaceFragmentListener.replaceFragment(enterAthCodeFragment);
+            }
+        }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
@@ -115,14 +112,13 @@ public class PhoneNumberAthFragment extends Fragment {
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this.getActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = task.getResult().getUser();
-                        Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
-                        goHomeActivity();
-                    }
-                });
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this.getActivity(), task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = task.getResult().getUser();
+                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
+                goHomeActivity();
+            }
+        });
     }
 
 }
