@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Spotify_Group4</string>
+    <!--layout_sigin-->
+    <string name="titlle_login1">Hàng triệu bài hát.</string>
+    <string name="titlle_login2">Miễn phí trên Spotify.</string>
+    <string name="sigup">Đăng Ký miễn phí</string>
+    <string name="sigin_sdt">Tiếp tục với số điện thoại</string>
+    <string name="sigin_google">Tiếp tục bằng Google</string>
+    <string name="sigin_facebook">Tiếp tục bằng tài khoản Facebook</string>
+    <string name="login">Đăng nhập</string>
 </resources>

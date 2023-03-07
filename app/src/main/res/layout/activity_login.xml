@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black"
+    android:padding="20dp"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="250dp"
+        android:src="@drawable/logo_spotify"/>
+    <TextView
+        style="@style/titlle_Login"
+        android:text="@string/titlle_login1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/size_titlle"/>
+    <TextView
+        style="@style/titlle_Login"
+        android:text="@string/titlle_login2"
+        android:textColor="@color/white"
+        android:textSize="@dimen/size_titlle"
+        android:layout_marginBottom="20dp"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style"
+        app:strokeWidth="0dp"
+        app:strokeColor="@color/white"
+        app:cornerRadius="@dimen/border_raius_button"
+        android:backgroundTint="@color/green"
+        android:text="@string/sigup"
+        android:textColor="@color/black" />
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style"
+        android:drawableLeft="@drawable/ic_phone1"
+        android:drawableTint="@color/white"
+        android:text="@string/sigin_sdt"
+        app:cornerRadius="@dimen/border_raius_button"
+        android:textColor="@color/white" />
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style"
+        app:cornerRadius="@dimen/border_raius_button"
+        android:text="@string/sigin_google"
+        android:textColor="@color/white"
+        android:drawableLeft="@drawable/ic_google"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style"
+        app:cornerRadius="@dimen/border_raius_button"
+        android:text="@string/sigin_facebook"
+        android:textColor="@color/white"
+        android:drawableLeft="@drawable/ic_facebook"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        app:strokeWidth="0dp" />
+</LinearLayout>
