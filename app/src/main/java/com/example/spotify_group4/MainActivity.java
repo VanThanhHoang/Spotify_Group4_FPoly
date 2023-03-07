@@ -8,7 +8,6 @@ public class MainActivity extends AppCompatActivity {
         //phideptrai
         //sang ngon l`
         //haha
-        //aisbdhalihsb
         super.onCreate(savedInstanceState);
         System.out.println("");
         setContentView(R.layout.activity_main);
