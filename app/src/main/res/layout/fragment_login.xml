@@ -20,12 +20,12 @@
             app:lottie_autoPlay="true"
             app:lottie_rawRes="@raw/anm_app_logo"/>
         <TextView
-            style="@style/titlle_Login"
+            style="@style/title_Login"
             android:text="@string/titlle_login1"
             android:textColor="@color/white"
             android:textSize="@dimen/size_titlle"/>
         <TextView
-            style="@style/titlle_Login"
+            style="@style/title_Login"
             android:text="@string/titlle_login2"
             android:textColor="@color/white"
             android:textSize="@dimen/size_titlle"

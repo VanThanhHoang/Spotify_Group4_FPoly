@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+   <LinearLayout
+       android:layout_marginTop="50dp"
+       android:orientation="horizontal"
+       android:weightSum="7"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+       <EditText
+           android:id="@+id/athCode0"
+           style="@style/ath_code"/>
+       <EditText
+           android:id="@+id/athCode2"
+           style="@style/ath_code"/>
+       <EditText
+           android:id="@+id/athCode3"
+           style="@style/ath_code"/>
+       <EditText
+           android:id="@+id/athCode4"
+           style="@style/ath_code"/>
+       <EditText
+           android:id="@+id/athCode5"
+           style="@style/ath_code"/>
+       <EditText
+           android:id="@+id/athCode6"
+           style="@style/ath_code"/>
+
+   </LinearLayout>
+</LinearLayout>
