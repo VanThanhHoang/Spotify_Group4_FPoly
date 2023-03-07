@@ -32,7 +32,6 @@ android {
 
 dependencies {
     // auth
-
     // lib
     def lottieVersion = "4.1.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
