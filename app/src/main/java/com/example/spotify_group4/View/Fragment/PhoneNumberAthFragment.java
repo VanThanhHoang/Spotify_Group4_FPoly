@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.View.Activity.HomeActivity;
+import com.example.spotify_group4.View.Dialog.LoadingDialog;
 import com.example.spotify_group4.databinding.FragmentPhonenumberAthBinding;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,7 @@ public class PhoneNumberAthFragment extends Fragment {
     FragmentPhonenumberAthBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
     FirebaseAuth mAuth;
-
+    LoadingDialog loadingDialog ;
     @Override
     public void onAttach(@NonNull Context context) {
         replaceFragmentListener = (ReplaceFragmentListener) context;
@@ -47,11 +48,15 @@ public class PhoneNumberAthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
+        if(getContext()!=null){
+            loadingDialog = new LoadingDialog(getContext());
+        }
         initCountyCodePicker();
         setHasOptionsMenu(true);
         layoutBinding.btnGetAthCode.setOnClickListener(v -> {
             String phoneNumber = layoutBinding.countryCodePicker.getFullNumber();
             if (validPhoneNumber(phoneNumber)) {
+                loadingDialog.show();
                 sendOtp("+"+phoneNumber);
              } else {
                 Toast.makeText(getContext(), "Số điện thoại bạn vừa nhập không hợp lệ !", Toast.LENGTH_SHORT).show();
@@ -86,19 +91,16 @@ public class PhoneNumberAthFragment extends Fragment {
                                 signInWithPhoneAuthCredential(phoneAuthCredential);
                                 Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
                             }
-
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                Log.d("drawable-v24",""+e.getMessage());
+                                loadingDialog.hide();
                             }
-
                             @Override
                             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 super.onCodeSent(s, forceResendingToken);
                                 EnterAthCodeFragment enterAthCodeFragment = new EnterAthCodeFragment();
                                 Bundle bundle = new Bundle();
-                                bundle.putString("verifyId", s);
-                                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
+                                loadingDialog.hide();
                                 bundle.putString("phoneNumber", phoneNumber);
                                 enterAthCodeFragment.setArguments(bundle);
                                 replaceFragmentListener.replaceFragment(enterAthCodeFragment);
