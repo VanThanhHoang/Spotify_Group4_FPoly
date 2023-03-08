@@ -20,21 +20,20 @@ import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Helper.KeyBroadHelper;
 import com.example.spotify_group4.View.Activity.HomeActivity;
+import com.example.spotify_group4.View.Dialog.LoadingDialog;
 import com.example.spotify_group4.databinding.FragmentEnterAthCodeBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
+import java.util.concurrent.TimeUnit;
 public class EnterAthCodeFragment extends Fragment {
+    LoadingDialog loadingDialog ;
     FragmentEnterAthCodeBinding layoutBinding;
     EditText[] edAthCodes;
     int indexAthCodeFocus = 0;
@@ -44,13 +43,16 @@ public class EnterAthCodeFragment extends Fragment {
     String phoneNumber;
     String verifyId;
     FirebaseAuth mAuth;
-
+    PhoneAuthProvider.ForceResendingToken mForceResendingToken;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentEnterAthCodeBinding.inflate(getLayoutInflater(), null, false);
         mAuth = FirebaseAuth.getInstance();
         getInfoVerify();
+        if(getContext()!=null){
+            loadingDialog = new LoadingDialog(getContext());
+        }
         return layoutBinding.getRoot();
     }
 
@@ -97,7 +99,10 @@ public class EnterAthCodeFragment extends Fragment {
         }
         initTextWatcher();
         countDownToEnableButtonGetAthCodeAgain();
-        layoutBinding.btnGetAthCode.setOnClickListener(v -> countDownToEnableButtonGetAthCodeAgain());
+        layoutBinding.btnGetAthCode.setOnClickListener(v ->{
+            reGetOtp(phoneNumber);
+            countDownToEnableButtonGetAthCodeAgain();
+        } );
         if (this.getActivity() != null) {
             KeyboardVisibilityEvent.setEventListener(
                     this.getActivity(),
@@ -111,11 +116,13 @@ public class EnterAthCodeFragment extends Fragment {
                         }
                     });
         }
+
         layoutBinding.btnVerify.setOnClickListener(v ->
         {
             for (EditText edT : edAthCodes) {
                 athCode.append(edT.getText().toString());
             }
+            loadingDialog.show();
             String otpCode = athCode.toString();
             sendOtp(otpCode);
         });
@@ -123,7 +130,6 @@ public class EnterAthCodeFragment extends Fragment {
     }
 
     void initTextWatcher() {
-
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -192,12 +198,40 @@ public class EnterAthCodeFragment extends Fragment {
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verifyId, otpCode);
         signInWithPhoneAuthCredential(phoneAuthCredential);
     }
+    private void reGetOtp(String phoneNumber) {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth).
+                setPhoneNumber(phoneNumber).
+                setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this.getActivity()).
+                setForceResendingToken(mForceResendingToken).
+                setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+                {
+            @Override
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                signInWithPhoneAuthCredential(phoneAuthCredential);
+                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+                loadingDialog.hide();
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                verifyId = s;
+                mForceResendingToken = forceResendingToken;
+            }
+        }).build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = task.getResult().getUser();
+                        loadingDialog.hide();
                         goHomeActivity();
                     } else {
                         Toast.makeText(getContext(), "Mã xác minh bạn nhập " +

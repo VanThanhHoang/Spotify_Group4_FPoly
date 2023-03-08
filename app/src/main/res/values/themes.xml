@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Spotify_Group4" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/gray_contain</item>
+        <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -48,5 +48,9 @@
         <item name="android:maxLength">1</item>
         <item name="backgroundTint">@color/white</item>
         <item name="android:inputType">number|textNoSuggestions</item>
+    </style>
+    <!-- Custom.Indicator -->
+    <style name="Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/black</item>
     </style>
 </resources>

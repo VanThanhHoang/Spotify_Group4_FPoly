@@ -59,6 +59,7 @@
             android:textColor="@color/white"
             android:drawableLeft="@drawable/ic_facebook"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginAccount"
             style="@style/button_login_style"
             android:text="@string/login"
             android:textColor="@color/white"

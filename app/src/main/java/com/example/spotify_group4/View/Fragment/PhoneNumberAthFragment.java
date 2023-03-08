@@ -57,7 +57,7 @@ public class PhoneNumberAthFragment extends Fragment {
             String phoneNumber = layoutBinding.countryCodePicker.getFullNumber();
             if (validPhoneNumber(phoneNumber)) {
                 loadingDialog.show();
-                sendOtp("+" + phoneNumber);
+                getOtp("+"+phoneNumber);
             } else {
                 Toast.makeText(getContext(), "Số điện thoại bạn vừa nhập không hợp lệ !", Toast.LENGTH_SHORT).show();
             }
@@ -79,12 +79,11 @@ public class PhoneNumberAthFragment extends Fragment {
         });
     }
 
-    private void sendOtp(String phoneNumber) {
+    private void getOtp(String phoneNumber) {
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth).setPhoneNumber(phoneNumber).setTimeout(60L, TimeUnit.SECONDS).setActivity(this.getActivity()).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 signInWithPhoneAuthCredential(phoneAuthCredential);
-                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -95,12 +94,13 @@ public class PhoneNumberAthFragment extends Fragment {
             @Override
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
-                goEnterAuthCodeFragment(s,phoneNumber);
+                goEnterAuthCodeFragment(s, phoneNumber);
             }
         }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
-    void goEnterAuthCodeFragment(String verifyId,String phoneNumber){
+
+    void goEnterAuthCodeFragment(String verifyId, String phoneNumber) {
         EnterAthCodeFragment enterAthCodeFragment = new EnterAthCodeFragment();
         Bundle bundle = new Bundle();
         loadingDialog.hide();
@@ -109,9 +109,10 @@ public class PhoneNumberAthFragment extends Fragment {
         enterAthCodeFragment.setArguments(bundle);
         replaceFragmentListener.replaceFragment(enterAthCodeFragment);
     }
+
     void goHomeActivity() {
         Intent intent = new Intent(getContext(), HomeActivity.class);
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             getActivity().finish();
             startActivity(intent);
         }
@@ -121,7 +122,6 @@ public class PhoneNumberAthFragment extends Fragment {
         mAuth.signInWithCredential(credential).addOnCompleteListener(this.getActivity(), task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = task.getResult().getUser();
-                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
                 goHomeActivity();
             }
         });

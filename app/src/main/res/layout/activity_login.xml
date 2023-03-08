@@ -18,7 +18,7 @@
             app:navigationIcon="@drawable/ic_back" />
     </com.google.android.material.appbar.AppBarLayout>
     <FrameLayout
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/fragmentContainerLogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </RelativeLayout>

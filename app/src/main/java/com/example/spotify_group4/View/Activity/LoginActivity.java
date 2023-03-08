@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity implements ReplaceFragmentL
     @Override
     public void replaceFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment);
+        fragmentTransaction.replace(R.id.fragmentContainerHome, fragment);
         if(fragment instanceof LoginFragment){
             fragmentTransaction.commit();
             return;

@@ -1,5 +1,6 @@
 package com.example.spotify_group4.View.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
+import com.example.spotify_group4.View.Activity.HomeActivity;
 import com.example.spotify_group4.databinding.FragmentLoginBinding;
 
 
@@ -34,6 +36,9 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
     void setEvent(){
+        layoutBinding.btnLoginAccount.setOnClickListener(v->{
+            startActivity(new Intent(getContext(), HomeActivity.class));
+        });
         layoutBinding.btnPhoneAth.setOnClickListener(v->
                 replaceFragmentListener.replaceFragment(new PhoneNumberAthFragment()));
     }

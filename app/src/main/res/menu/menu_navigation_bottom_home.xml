@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:enabled="true"
+            android:icon="@drawable/ic_home"
+            android:id="@+id/it_Home_MenuHomeNavigation"
+            android:title="Trang chủ" />
+        <item
+            android:icon="@drawable/ic_search"
+            android:enabled="true"
+            android:id="@+id/it_Search_MenuHomeNavigation"
+            android:title="Tìm kiếm" />
+        <item
+            android:icon="@drawable/ic_lib"
+            android:enabled="true"
+            android:id="@+id/it_Library_MenuHomeNavigation"
+            android:title="Thư viện" />
+        <item
+            android:icon="@drawable/ic_account"
+            android:enabled="true"
+            android:id="@+id/it_Account_MenuHomeNavigation"
+            android:title="Tài khoản"  />
+    </group>
+</menu>
