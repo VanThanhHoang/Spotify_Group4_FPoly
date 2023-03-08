@@ -49,4 +49,8 @@
         <item name="backgroundTint">@color/white</item>
         <item name="android:inputType">number|textNoSuggestions</item>
     </style>
+    <style name="textDetail">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

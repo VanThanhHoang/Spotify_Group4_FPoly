@@ -3,8 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/drawable-v24/custom_edittext_br.xml" value="0.1685" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/activity_home.xml" value="0.12708333333333333" />
         <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/activity_login.xml" value="0.278125" />
         <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/activity_main.xml" value="0.12864583333333332" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/activity_splash_screen.xml" value="0.278125" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/dialog_loading.xml" value="0.12708333333333333" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/fragment_enter_ath_code.xml" value="0.12864583333333332" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/fragment_login.xml" value="0.278125" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/fragment_phonenumber_ath.xml" value="0.278125" />
+        <entry key="..\:/Spotify_Group4_FPoly/app/src/main/res/layout/register_account.xml" value="0.27708333333333335" />
       </map>
     </option>
   </component>
