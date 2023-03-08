@@ -95,20 +95,26 @@ public class PhoneNumberAthFragment extends Fragment {
             @Override
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
-                EnterAthCodeFragment enterAthCodeFragment = new EnterAthCodeFragment();
-                Bundle bundle = new Bundle();
-                loadingDialog.hide();
-                bundle.putString("phoneNumber", phoneNumber);
-                enterAthCodeFragment.setArguments(bundle);
-                replaceFragmentListener.replaceFragment(enterAthCodeFragment);
+                goEnterAuthCodeFragment(s,phoneNumber);
             }
         }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
-
+    void goEnterAuthCodeFragment(String verifyId,String phoneNumber){
+        EnterAthCodeFragment enterAthCodeFragment = new EnterAthCodeFragment();
+        Bundle bundle = new Bundle();
+        loadingDialog.hide();
+        bundle.putString("verifyId", verifyId);
+        bundle.putString("phoneNumber", phoneNumber);
+        enterAthCodeFragment.setArguments(bundle);
+        replaceFragmentListener.replaceFragment(enterAthCodeFragment);
+    }
     void goHomeActivity() {
         Intent intent = new Intent(getContext(), HomeActivity.class);
-        startActivity(intent);
+        if(getActivity()!=null){
+            getActivity().finish();
+            startActivity(intent);
+        }
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -120,5 +126,4 @@ public class PhoneNumberAthFragment extends Fragment {
             }
         });
     }
-
 }
