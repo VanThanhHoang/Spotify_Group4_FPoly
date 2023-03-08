@@ -5,59 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
+
     <LinearLayout
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
         android:background="@color/black"
+        android:orientation="vertical"
         android:padding="20dp"
         tools:context=".View.LoginActivity">
+
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
             app:lottie_autoPlay="true"
-            app:lottie_rawRes="@raw/anm_app_logo"/>
+            app:lottie_rawRes="@raw/anm_app_logo" />
+
         <TextView
             style="@style/title_Login"
             android:text="@string/titlle_login1"
             android:textColor="@color/white"
-            android:textSize="@dimen/size_titlle"/>
+            android:textSize="@dimen/size_titlle" />
+
         <TextView
             style="@style/title_Login"
+            android:layout_marginBottom="20dp"
             android:text="@string/titlle_login2"
             android:textColor="@color/white"
-            android:textSize="@dimen/size_titlle"
-            android:layout_marginBottom="20dp"/>
+            android:textSize="@dimen/size_titlle" />
+
         <com.google.android.material.button.MaterialButton
             style="@style/button_login_style"
-            app:strokeWidth="0dp"
-            app:strokeColor="@color/white"
-            app:cornerRadius="@dimen/border_raius_button"
             android:backgroundTint="@color/green"
             android:text="@string/sigup"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            app:cornerRadius="@dimen/border_raius_button"
+            app:strokeColor="@color/white"
+            app:strokeWidth="0dp" />
+
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPhoneAth"
             style="@style/button_login_style"
             android:drawableLeft="@drawable/ic_phone1"
             android:drawableTint="@color/white"
-            android:id="@+id/btnPhoneAth"
             android:text="@string/sigin_sdt"
-            app:cornerRadius="@dimen/border_raius_button"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            app:cornerRadius="@dimen/border_raius_button" />
+
         <com.google.android.material.button.MaterialButton
             style="@style/button_login_style"
-            app:cornerRadius="@dimen/border_raius_button"
+            android:drawableLeft="@drawable/ic_google"
             android:text="@string/sigin_google"
             android:textColor="@color/white"
-            android:drawableLeft="@drawable/ic_google"/>
+            app:cornerRadius="@dimen/border_raius_button" />
+
         <com.google.android.material.button.MaterialButton
             style="@style/button_login_style"
-            app:cornerRadius="@dimen/border_raius_button"
+            android:drawableLeft="@drawable/ic_facebook"
             android:text="@string/sigin_facebook"
             android:textColor="@color/white"
-            android:drawableLeft="@drawable/ic_facebook"/>
+            app:cornerRadius="@dimen/border_raius_button" />
+
         <com.google.android.material.button.MaterialButton
             style="@style/button_login_style"
             android:text="@string/login"

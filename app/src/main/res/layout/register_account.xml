@@ -88,5 +88,11 @@
             android:layout_weight="0.5"
             android:layout_height="match_parent" />
     </LinearLayout>
-
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_register_account"
+        app:strokeWidth="0dp"
+        app:strokeColor="@color/white"
+        app:cornerRadius="@dimen/border_raius_button"
+        android:backgroundTint="@color/coloredittext1"
+        android:text="@string/register_account"/>
 </LinearLayout>
