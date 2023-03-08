@@ -53,6 +53,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <style name="customIndicator" parent="ShapeAppearance.Material3.NavigationBarView.ActiveIndicator">
+        <item name="color">@color/black</item>
+    </style>
     <style name="button_register_account" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textSize">15sp</item>
         <item name="strokeWidth">1sp</item>
