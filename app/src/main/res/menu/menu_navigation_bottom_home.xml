@@ -4,16 +4,16 @@
         <item
             android:checked="true"
             android:enabled="true"
-            android:icon="@drawable/ic_home"
+            android:icon="@drawable/ic_home_state_list"
             android:id="@+id/it_Home_MenuHomeNavigation"
             android:title="Trang chủ" />
         <item
-            android:icon="@drawable/ic_search"
+            android:icon="@drawable/ic_search_state_list"
             android:enabled="true"
             android:id="@+id/it_Search_MenuHomeNavigation"
             android:title="Tìm kiếm" />
         <item
-            android:icon="@drawable/ic_lib"
+            android:icon="@drawable/ic_lib_state_list"
             android:enabled="true"
             android:id="@+id/it_Library_MenuHomeNavigation"
             android:title="Thư viện" />

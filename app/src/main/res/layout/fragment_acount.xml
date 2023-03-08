@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
-    <TextView
-        style="@style/title_Login"
-        android:text="Account"
+    android:background="@color/white">
+    <com.google.android.material.button.MaterialButton
+        android:text="dang xuat"
         android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
+        style="@style/button_login_style"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </RelativeLayout>
