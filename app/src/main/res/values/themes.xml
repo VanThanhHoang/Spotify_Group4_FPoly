@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Spotify_Group4" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/gray_contain</item>
-        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -49,8 +49,20 @@
         <item name="backgroundTint">@color/white</item>
         <item name="android:inputType">number|textNoSuggestions</item>
     </style>
-    <!-- Custom.Indicator -->
-    <style name="Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/black</item>
+    <style name="textDetail">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="button_register_account" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textSize">15sp</item>
+        <item name="strokeWidth">1sp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="strokeColor">@color/white</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>
