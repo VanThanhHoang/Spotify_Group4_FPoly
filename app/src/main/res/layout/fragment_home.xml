@@ -7,7 +7,7 @@
         android:text="Test"
         android:textColor="@color/black"
         android:backgroundTint="@color/white"
-        android:id="@+id/imgTest"
+        android:id="@+id/btnTest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </RelativeLayout>

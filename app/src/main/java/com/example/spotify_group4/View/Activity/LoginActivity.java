@@ -37,4 +37,14 @@ public class LoginActivity extends AppCompatActivity implements ReplaceFragmentL
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+    @Override
+    public void hideComponents() {
+
+    }
+
+    @Override
+    public void showComponents() {
+
+    }
 }

@@ -4,4 +4,6 @@ import androidx.fragment.app.Fragment;
 
 public interface ReplaceFragmentListener {
     void replaceFragment(Fragment fragment);
+    void hideComponents();
+    void showComponents();
 }

@@ -16,6 +16,7 @@ import com.example.spotify_group4.R;
 import com.example.spotify_group4.View.Fragment.AccountFragment;
 import com.example.spotify_group4.View.Fragment.HomeFragment;
 import com.example.spotify_group4.View.Fragment.LibraryFragment;
+import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
 import com.example.spotify_group4.View.Fragment.SearchFragment;
 import com.example.spotify_group4.databinding.ActivityHomeBinding;
 
@@ -71,6 +72,25 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerHome, fragment);
         fragmentTransaction.setCustomAnimations(R.anim.anm_replace_fragment, R.anim.anm_replace_fragment);
+        if(fragment instanceof MusicPlayFragment){
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            return;
+        }
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void hideComponents() {
+        if (layoutBinding.bottomNavigation.isShown()) {
+            layoutBinding.bottomNavigation.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showComponents() {
+        if (!layoutBinding.bottomNavigation.isShown()) {
+            layoutBinding.bottomNavigation.setVisibility(View.VISIBLE);
+        }
     }
 }
