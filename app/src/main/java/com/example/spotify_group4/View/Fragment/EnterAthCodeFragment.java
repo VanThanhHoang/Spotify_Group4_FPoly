@@ -28,12 +28,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 public class EnterAthCodeFragment extends Fragment {
-    LoadingDialog loadingDialog ;
+    LoadingDialog loadingDialog;
     FragmentEnterAthCodeBinding layoutBinding;
     EditText[] edAthCodes;
     int indexAthCodeFocus = 0;
@@ -99,10 +102,10 @@ public class EnterAthCodeFragment extends Fragment {
         }
         initTextWatcher();
         countDownToEnableButtonGetAthCodeAgain();
-        layoutBinding.btnGetAthCode.setOnClickListener(v ->{
+        layoutBinding.btnGetAthCode.setOnClickListener(v -> {
             reGetOtp(phoneNumber);
             countDownToEnableButtonGetAthCodeAgain();
-        } );
+        });
         if (this.getActivity() != null) {
             KeyboardVisibilityEvent.setEventListener(
                     this.getActivity(),
@@ -198,34 +201,34 @@ public class EnterAthCodeFragment extends Fragment {
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verifyId, otpCode);
         signInWithPhoneAuthCredential(phoneAuthCredential);
     }
+
     private void reGetOtp(String phoneNumber) {
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth).
                 setPhoneNumber(phoneNumber).
                 setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this.getActivity()).
                 setForceResendingToken(mForceResendingToken).
-                setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
-                {
-            @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                signInWithPhoneAuthCredential(phoneAuthCredential);
-                Toast.makeText(getContext(), "ádasd", Toast.LENGTH_SHORT).show();
-            }
+                setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                        signInWithPhoneAuthCredential(phoneAuthCredential);
+                    }
 
-            @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
-                loadingDialog.hide();
-            }
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        loadingDialog.hide();
+                    }
 
-            @Override
-            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                super.onCodeSent(s, forceResendingToken);
-                verifyId = s;
-                mForceResendingToken = forceResendingToken;
-            }
-        }).build();
+                    @Override
+                    public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        super.onCodeSent(s, forceResendingToken);
+                        verifyId = s;
+                        mForceResendingToken = forceResendingToken;
+                    }
+                }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), task -> {

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/black">
     <Button
-        android:text="Test"
         android:textColor="@color/black"
         android:backgroundTint="@color/white"
         android:id="@+id/btnTest"

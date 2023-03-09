@@ -1,4 +1,4 @@
-<resources >
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.Spotify_Group4" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -15,6 +15,7 @@
         <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="button_login_style" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textSize">15sp</item>
         <item name="strokeWidth">1sp</item>
@@ -26,6 +27,7 @@
         <item name="strokeColor">@color/white</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="title_Login">
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
@@ -34,10 +36,12 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
     <style name="text_prefix_size">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="ath_code">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
@@ -49,13 +53,16 @@
         <item name="backgroundTint">@color/white</item>
         <item name="android:inputType">number|textNoSuggestions</item>
     </style>
+
     <style name="textDetail">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="customIndicator" parent="ShapeAppearance.Material3.NavigationBarView.ActiveIndicator">
         <item name="color">@color/black</item>
     </style>
+
     <style name="button_register_account" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textSize">15sp</item>
         <item name="strokeWidth">1sp</item>
@@ -68,11 +75,19 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
     </style>
-    <style name="img_button_toolbar">
 
+    <style name="img_button_toolbar">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">48dp</item>
         <item name="tint">@color/white</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+    </style>
+
+    <style name="img_button_media_player">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="tint">@color/white</item>
+        <item name="iconSize">30sp</item>
         <item name="backgroundTint">@android:color/transparent</item>
     </style>
 </resources>

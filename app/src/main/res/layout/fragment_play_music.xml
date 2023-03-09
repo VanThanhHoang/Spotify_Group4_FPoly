@@ -8,13 +8,11 @@
         android:id="@+id/toolbarPlayMusicFragment"
         android:layout_width="match_parent"
         android:layout_height="60dp">
-
         <androidx.constraintlayout.utils.widget.ImageFilterButton
             android:id="@+id/btnBack"
             style="@style/img_button_toolbar"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_arrow" />
-
         <androidx.constraintlayout.utils.widget.ImageFilterButton
             android:id="@+id/btnMore"
             style="@style/img_button_toolbar"
@@ -40,6 +38,7 @@
            android:layout_width="match_parent"
            android:layout_height="30dp"/>
     <TextView
+        android:id="@+id/tvTimeStart"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/timeSeekBar"
         android:text="timestart"
@@ -49,6 +48,7 @@
         android:layout_width="100dp"
         android:layout_height="48dp"/>
     <TextView
+        android:id="@+id/tvTimeEnd"
         android:text="timeEnd"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/timeSeekBar"
@@ -57,4 +57,35 @@
         android:textSize="13sp"
         android:layout_width="100dp"
         android:layout_height="48dp"/>
+    <RelativeLayout
+        android:layout_below="@+id/tvTimeStart"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnPlay_Pause"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/custom_image_button_cycle"
+            android:gravity="center"
+            android:src="@drawable/ic_pause" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPrev"
+            style="@style/img_button_media_player"
+            app:icon="@drawable/ic_prev"
+            android:layout_toStartOf="@+id/btnPlay_Pause"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            style="@style/img_button_media_player"
+            app:icon="@drawable/ic_next"
+            android:layout_toEndOf="@+id/btnPlay_Pause"/>
+        <com.google.android.material.button.MaterialButton
+            app:icon="@drawable/ic_random"
+            style="@style/img_button_media_player"
+            android:layout_toStartOf="@+id/btnPrev"/>
+        <com.google.android.material.button.MaterialButton
+            app:icon="@drawable/ic_loop"
+            style="@style/img_button_media_player"
+            android:layout_toEndOf="@+id/btnNext"/>
+    </RelativeLayout>
 </RelativeLayout>

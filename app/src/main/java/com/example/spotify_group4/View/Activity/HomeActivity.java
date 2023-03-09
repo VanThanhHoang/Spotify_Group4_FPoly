@@ -72,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerHome, fragment);
         fragmentTransaction.setCustomAnimations(R.anim.anm_replace_fragment, R.anim.anm_replace_fragment);
-        if(fragment instanceof MusicPlayFragment){
+        if (fragment instanceof MusicPlayFragment) {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             return;

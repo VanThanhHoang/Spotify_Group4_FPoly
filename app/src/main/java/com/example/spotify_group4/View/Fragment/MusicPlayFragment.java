@@ -3,8 +3,6 @@ package com.example.spotify_group4.View.Fragment;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
+import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
+import com.example.spotify_group4.R;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
-public class MusicPlayFragment extends Fragment {
+public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     FragmentPlayMusicBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
     String urlData;
-
+    MediaPlayerPresenter playMusicPresenter;
+    int CURRENT_ACTION = 1;
     public MusicPlayFragment(String url) {
         this.urlData = url;
     }
@@ -30,6 +30,7 @@ public class MusicPlayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentPlayMusicBinding.inflate(getLayoutInflater(), null, false);
+        playMusicPresenter = new MediaPlayerPresenter(getContext(),this);
         return layoutBinding.getRoot();
     }
 
@@ -45,31 +46,41 @@ public class MusicPlayFragment extends Fragment {
         replaceFragmentListener.hideComponents();
         initEvent();
         setUpLayout();
-        playMusic();
+        playMusicPresenter.playMusic();
     }
-    void initEvent(){
-        if(getActivity()!=null){
-            layoutBinding.btnBack.setOnClickListener(v-> getActivity().onBackPressed());
+
+    void initEvent() {
+        if (getActivity() != null) {
+            layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
+        }
+        layoutBinding.btnPlayPause.setOnClickListener(v -> playButtonAction());
+    }
+    void playButtonAction(){
+        if(CURRENT_ACTION == MediaPlayerPresenter.ACTION_PLAY){
+            playMusicPresenter.stopMusic();
+            CURRENT_ACTION = MediaPlayerPresenter.ACTION_STOP;
+        }else if(CURRENT_ACTION == MediaPlayerPresenter.ACTION_STOP){
+            playMusicPresenter.playMusic();
+            CURRENT_ACTION = MediaPlayerPresenter.ACTION_PLAY;
         }
     }
-    void setUpLayout(){
-
-        Picasso.get().load("https://cdn.shopify.com/s/files/1/0570/3640/6943/products/the-weeknd-blinded-by-the-lights-poster-815179.jpg?v=1650952639").
-                into(layoutBinding.imgSong);
-
-    }
-    void playMusic() {
-        new Handler(Looper.getMainLooper()).postDelayed(this::startMediaPlayer, 100);
+    void setUpLayout() {
+        playMusicPresenter.loadSongImg("https://lastfm.freetls.fastly.net/i/u/770x0/725cbf01f1b2b49bf17b3cb6e956283b.jpg#725cbf01f1b2b49bf17b3cb6e956283b")
+                .into(layoutBinding.imgSong);
     }
 
-    void startMediaPlayer() {
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(urlData);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (Exception e) {
+    @Override
+    public void onMusicPlay() {
+        layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_pause);
+    }
 
-        }
+    @Override
+    public void onMusicPause() {
+
+    }
+
+    @Override
+    public void onMusicStop() {
+        layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);
     }
 }
