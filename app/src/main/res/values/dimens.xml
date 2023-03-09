@@ -2,5 +2,5 @@
 <resources>
     <dimen name="border_raius_button">20sp</dimen>
     <dimen name="size_titlle">30sp</dimen>
-    <dimen name="error_text_size">20sp</dimen>
+    <dimen name="error_text_size">12sp</dimen>
 </resources>

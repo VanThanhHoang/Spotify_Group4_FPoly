@@ -59,14 +59,14 @@ public class PhoneNumberAthFragment extends Fragment {
                 loadingDialog.show();
                 getOtp("+"+phoneNumber);
             } else {
-                Toast.makeText(getContext(), "Số điện thoại bạn vừa nhập không hợp lệ !", Toast.LENGTH_SHORT).show();
+               layoutBinding.tvError.setText("Số điện thoại bạn nhập không hợp lệ, vui lòng kiểm tra lại !");
             }
         });
         super.onViewCreated(view, savedInstanceState);
     }
 
     boolean validPhoneNumber(String phoneNumber) {
-        String pattern = "^[0-9]{11}$";
+        String pattern = "^\\d{11}$";
         return Pattern.matches(pattern, phoneNumber);
     }
 
@@ -88,6 +88,7 @@ public class PhoneNumberAthFragment extends Fragment {
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
+                layoutBinding.tvError.setText("Sever bận vui lòng đăng nhập bằng email, hoặc thử lại sau !");
                 loadingDialog.hide();
             }
 

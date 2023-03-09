@@ -38,44 +38,48 @@
                 app:ccp_showFullName="true"
                 app:ccp_showNameCode="false"
                 app:ccp_textSize="20sp" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPhoneNumber"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/black"
-                app:endIconTint="@color/black"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/countryCodePicker"
-                android:layout_margin="0dp"
-                app:prefixText="+84 "
-                android:hint="Số điện thoại của bạn"
-                app:hintTextColor="@color/white"
-                app:prefixTextAppearance="@style/text_prefix_size"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
                 android:gravity="center"
-                app:endIconMode="clear_text">
+                android:hint="Số điện thoại của bạn"
+                android:textColorHint="@color/black"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/black"
+                app:hintTextColor="@color/white"
+                app:prefixText="+84 "
+                app:prefixTextAppearance="@style/text_prefix_size">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edPhoneNumber"
-                    android:maxLength="11"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
                     android:background="@color/gray_contain"
                     android:inputType="number|textNoSuggestions"
+                    android:maxLength="11"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
             </com.google.android.material.textfield.TextInputLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
     <TextView
-        android:id="@+id/tvEror"
+        android:id="@+id/tvError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:maxLines="1"
+        android:gravity="left"
         android:padding="10dp"
-        android:text="lỗi"
-        android:textColor="@color/red"
+        android:text=""
+        android:textColor="@color/green"
         android:textSize="@dimen/error_text_size"
-        android:visibility="invisible" />
+        android:visibility="visible" />
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGetAthCode"
         style="@style/button_login_style"
