@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.spotify_group4.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,13 +13,11 @@ import com.google.firebase.auth.FirebaseUser;
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+       new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (isUserLogin()) {
                 startHomeActivity();
             } else {
@@ -29,7 +25,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         }, 3000);
     }
-
     private void startLoginActivity() {
         Intent intentStartLogInAtv = new Intent(this, LoginActivity.class);
         finish();
@@ -43,6 +38,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     boolean isUserLogin() {
+        FirebaseUser currentUser = null;
+        try {
+           currentUser  = mAuth.getCurrentUser();
+        }catch (Exception e){
+            e.getMessage();
+        }
         return currentUser != null;
     }
 }
