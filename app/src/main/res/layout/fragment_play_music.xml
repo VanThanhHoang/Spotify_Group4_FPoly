@@ -3,10 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
-    <TextView
-        style="@style/title_Login"
-        android:text="Library"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:id="@+id/toolbarPlayMusicFragment"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterButton
+            style="@style/img_button_toolbar"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_arrow" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterButton
+            style="@style/img_button_toolbar"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_more" />
+    </RelativeLayout>
+
 </RelativeLayout>
