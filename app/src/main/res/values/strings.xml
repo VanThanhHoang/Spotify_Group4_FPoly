@@ -20,4 +20,8 @@
     <string name="detail6">Tôi không muốn nhận tin nhắn tiếp thị từ Spotify.</string>
     <string name="detail7">Chia sẻ dữ liệu đăng ký của tôi với các nhà cung cấp nội dung của Spotify cho mục đích tiếp thị.</string>
     <string name="register_account">Tạo tài khoản</string>
+    <!-- login email -->
+    <string name="emailorname">Email hoặc tên người dùng</string>
+    <string name="pass">Mật khẩu</string>
+    <string name="login_no_pass">Đăng nhập không cần mật khẩu</string>
 </resources>

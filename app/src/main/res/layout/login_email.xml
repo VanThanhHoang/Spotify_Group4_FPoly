@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:backgroundTint="@android:color/transparent"
+            app:tint="@color/white"
+            android:layout_alignParentStart="true"/>
+        <TextView
+            android:layout_centerInParent="true"
+            style="@style/titlle_Login1"
+            android:layout_width="wrap_content"
+            android:text="@string/login"
+            android:drawableTint="@color/white"/>
+    </RelativeLayout>
+    <TextView
+        style="@style/titlle_Login2"
+        android:text="@string/emailorname" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:background="@drawable/custom_edittext_br"
+            android:layout_height="50dp"
+            android:paddingStart="20dp"
+            android:textColor="@color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        style="@style/titlle_Login2"
+        android:text="@string/pass" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:endIconTint="@color/white"
+        app:endIconMode="password_toggle">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:background="@drawable/custom_edittext_br"
+            android:inputType="textPassword"
+            android:layout_height="50dp"
+            android:paddingStart="20dp"
+            android:textColor="@color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style2"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/coloredittext1"
+        android:layout_width="wrap_content"
+        android:textSize="20dp"
+        app:strokeWidth="0dp"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/button_login_style"
+        android:layout_width="wrap_content"
+        app:cornerRadius="@dimen/border_raius_button"
+        android:text="@string/login_no_pass"
+        android:textColor="@color/white" />
+</LinearLayout>
