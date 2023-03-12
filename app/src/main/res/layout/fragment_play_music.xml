@@ -49,13 +49,17 @@
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:text="Singer"/>
-       <androidx.appcompat.widget.AppCompatSeekBar
-           android:max="1000"
-           android:id="@+id/timeSeekBar"
-           android:layout_marginTop="20dp"
-           android:layout_below="@id/tvSinger"
-           android:layout_width="match_parent"
-           android:layout_height="30dp"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:layout_marginTop="5dp"
+        android:id="@+id/timeSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:layout_below="@id/tvSinger"
+        android:max="1000"
+        android:progressDrawable="@drawable/br_seek_bar"
+        android:thumb="@null"
+        android:thumbTint="@color/gray_contain" />
 
     <TextView
         android:id="@+id/tvTimeStart"
