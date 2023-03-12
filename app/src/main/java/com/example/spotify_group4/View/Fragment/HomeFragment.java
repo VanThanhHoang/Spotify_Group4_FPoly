@@ -33,7 +33,11 @@ public class HomeFragment extends Fragment {
     void initEvent(){
         layoutBinding.btnTest.setOnClickListener(v->
         {
-            String url ="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+            String url ="https://skymusicfpoly.000webhostapp.com/music/nhunhungphutbandau.mp3";
+            replaceFragmentListener.replaceFragment(new MusicPlayFragment(url));
+        });
+        layoutBinding.btnTest1.setOnClickListener(v->{
+            String url ="https://skymusicfpoly.000webhostapp.com/music/baogioanhquen.mp3";
             replaceFragmentListener.replaceFragment(new MusicPlayFragment(url));
         });
     }

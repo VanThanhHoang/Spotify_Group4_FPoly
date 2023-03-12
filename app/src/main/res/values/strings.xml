@@ -25,4 +25,6 @@
     <string name="pass">Mật khẩu</string>
     <string name="login_no_pass">Đăng nhập không cần mật khẩu</string>
     <string name="notification_music_chanel_name">Thông báo trình điều khiển nhạc</string>
+    <!-- mediaPlayer -->
+    <string name="defaultDuration">00:00</string>
 </resources>

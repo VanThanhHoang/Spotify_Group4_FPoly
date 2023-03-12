@@ -9,10 +9,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
 public class MediaPlayerPresenter {
+/*    public static final String ACTION_SONG_LOADED = "com.example.spotify_group4.ACTION_SONG_LOADED";
+    public static final String ACTION_LOAD_SONG = "com.example.spotify_group4.ACTION_SONG_LOADED";*/
     public static int ACTION_PLAY = 1;
     public static int ACTION_PAUSE = 2;
     public static int ACTION_STOP = 3;
     public static int ACTION_RESUME = 4;
+    public static int ACTION_SEEK = 5;
     Context context;
     MediaPlayerListener mediaPlayerListener;
     Intent intentService;
@@ -21,19 +24,31 @@ public class MediaPlayerPresenter {
         intentService = new Intent(context, MediaPlayerService.class);
         this.mediaPlayerListener = mediaPlayerListener;
     }
-    public void playMusic() {
-        intentService.putExtra("ACTION", ACTION_PLAY);
-        intentService.putExtra("URL","https://skymusicfpoly.000webhostapp.com/music/anhdinhe.mp3");
-        context.startService(intentService);
-        mediaPlayerListener.onMusicPlay();
-    }
 
+    public void playMusic(String url) {
+        context.stopService(intentService);
+        intentService.putExtra("ACTION", ACTION_PLAY);
+        intentService.putExtra("URL",url);
+        mediaPlayerListener.onMusicPlay();
+        context.startService(intentService);
+    }
+    public void resumeMusic() {
+        intentService.putExtra("ACTION", ACTION_RESUME);
+        mediaPlayerListener.onMusicPlay();
+        context.startService(intentService);
+    }
+    public void seekMusic(int positionUpdate) {
+        intentService.putExtra("POSITION_TO_SEEK",positionUpdate);
+        intentService.putExtra("ACTION", ACTION_SEEK);
+        context.startService(intentService);
+    }
     public void stopMusic() {
         intentService.putExtra("ACTION", ACTION_STOP);
         context.startService(intentService);
         mediaPlayerListener.onMusicStop();
     }
-    public void pauseMusic(){
+
+    public void pauseMusic() {
         intentService.putExtra("ACTION", ACTION_PAUSE);
         context.startService(intentService);
         mediaPlayerListener.onMusicPause();
@@ -42,6 +57,4 @@ public class MediaPlayerPresenter {
     public RequestCreator loadSongImg(String url) {
         return Picasso.get().load(url);
     }
-
-
 }

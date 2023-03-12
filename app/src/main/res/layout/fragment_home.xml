@@ -4,9 +4,18 @@
     android:layout_height="match_parent"
     android:background="@color/black">
     <Button
+        android:text="Song1"
         android:textColor="@color/black"
         android:backgroundTint="@color/white"
         android:id="@+id/btnTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:text="Song2"
+        android:layout_below="@+id/btnTest"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
+        android:id="@+id/btnTest1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </RelativeLayout>
