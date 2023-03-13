@@ -163,7 +163,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public void onMusicPause() {
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);
     }
-
     @Override
     public void onMusicStop() {
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);

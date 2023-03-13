@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-storage'
     // stickyHeader
     implementation 'com.github.shuhart:stickyheader:1.1.0'
     //call api
