@@ -93,11 +93,11 @@
             android:id="@+id/btnPlay_Pause"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:backgroundTint="@color/green"
             android:layout_centerInParent="true"
             android:background="@drawable/custom_image_button_cycle"
+            android:backgroundTint="@color/green"
             android:gravity="center"
-            android:src="@drawable/ic_pause" />
+            android:src="@drawable/ic_play" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrev"
             style="@style/img_button_media_player"

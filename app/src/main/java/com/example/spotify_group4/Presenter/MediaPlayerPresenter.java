@@ -27,7 +27,7 @@ public class MediaPlayerPresenter {
         context.stopService(intentService);
         intentService.putExtra("ACTION", ACTION_PLAY);
         intentService.putExtra("URL",url);
-        mediaPlayerListener.onMusicPlay();
+        mediaPlayerListener.onSongLoad();
         context.startService(intentService);
     }
     public void resumeMusic() {

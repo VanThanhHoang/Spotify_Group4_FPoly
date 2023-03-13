@@ -6,7 +6,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.media.session.PlaybackState;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -23,6 +25,7 @@ import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
 
 import java.io.IOException;
 
+
 public class MediaPlayerService extends Service {
     MediaPlayer mediaPlayer;
     boolean isExits = false;
@@ -32,6 +35,9 @@ public class MediaPlayerService extends Service {
     MediaMetadataCompat.Builder metadataBuilder;
     PlaybackStateCompat.Builder playbackStateBuilder;
     int currentPosition = 0;
+    NotificationCompat.Builder notificationBuilder;
+    Notification notification;
+
     void initMediaSession() {
         mediaSession = new MediaSessionCompat(this, "MEDIA");
         mediaSession.setActive(true);
@@ -43,14 +49,8 @@ public class MediaPlayerService extends Service {
         metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
         metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(getResources(), R.drawable.ic_facebook));
         mediaSession.setMetadata(metadataBuilder.build());
-
         setMediaSessionCallBack();
-
-        playbackStateBuilder = new PlaybackStateCompat.Builder();
-        playbackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
-        playbackStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, 0, 0);
-        playbackStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, currentPosition, 1.0f, SystemClock.elapsedRealtime());
-        mediaSession.setPlaybackState(playbackStateBuilder.build());
+        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
     }
 
     @Override
@@ -75,24 +75,38 @@ public class MediaPlayerService extends Service {
     }
 
     void prepareMusic(String url) {
-      /*  try {*/
-            mediaPlayer = new MediaPlayer().create(this,R.raw.homlayemcuoi);
-           /* mediaPlayer.setDataSource(url);*/
-            /*mediaPlayer.prepare();*/
-            mediaPlayer.start();
+        try {
+            setupMediaPlayer(url);
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    initDuration();
-                    handler.postDelayed(updateSeekBar, 1000);
-                    initMediaSession();
-                    sendNotificationMediaPlayer();
+                    startUiMusic();
+                    initNotification();
+                    onPlayState();
                 }
             });
-
-        /*} catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
+    }
+
+    void startUiMusic() {
+        handler.postDelayed(updateSeekBar, 1000);
+        mediaPlayer.start();
+        initDuration();
+        handler.postDelayed(updateSeekBar, 1000);
+        initMediaSession();
+
+    }
+
+    void setupMediaPlayer(String url) throws IOException {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(url);
+        mediaPlayer.prepareAsync();
+        AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder();
+        audioAttributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
+        audioAttributesBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
+        mediaPlayer.setAudioAttributes(audioAttributesBuilder.build());
     }
 
     void setMediaSessionCallBack() {
@@ -100,8 +114,6 @@ public class MediaPlayerService extends Service {
             @Override
             public void onPlay() {
                 super.onPlay();
-                playMusic();
-                mediaSession.setPlaybackState(playbackStateBuilder.build());
             }
 
             @Override
@@ -109,32 +121,28 @@ public class MediaPlayerService extends Service {
                 pauseMusic();
                 super.onPause();
                 // Handle pause action
-                mediaSession.setPlaybackState(playbackStateBuilder.build());
             }
 
             @Override
             public void onSkipToNext() {
                 super.onSkipToNext();
                 // Handle skip to next action
-                mediaSession.setPlaybackState(playbackStateBuilder.build());
             }
 
             @Override
             public void onSkipToPrevious() {
                 super.onSkipToPrevious();
-                // Handle skip to previous action
-                mediaSession.setPlaybackState(playbackStateBuilder.build());
             }
 
             @Override
             public void onStop() {
-                stopMusic();
                 super.onStop();
             }
         });
     }
 
     void seekMedia(int position) {
+        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
         mediaPlayer.seekTo(position);
     }
 
@@ -172,15 +180,16 @@ public class MediaPlayerService extends Service {
         }
         if (action == MediaPlayerPresenter.ACTION_SEEK) {
             seekMedia(positionToSeek);
+        } else {
+            handleAction(action);
         }
         //action
-        handleAction(action);
         return START_NOT_STICKY;
     }
 
     void handleAction(int action) {
-        if (action == MediaPlayerPresenter.ACTION_PLAY || action == MediaPlayerPresenter.ACTION_RESUME) {
-            playMusic();
+        if (action == MediaPlayerPresenter.ACTION_RESUME) {
+            resumeMusic();
         } else if (action == MediaPlayerPresenter.ACTION_STOP) {
             stopMusic();
         } else if (action == MediaPlayerPresenter.ACTION_PAUSE) {
@@ -188,9 +197,14 @@ public class MediaPlayerService extends Service {
         }
     }
 
-    void playMusic() {
+    void resumeMusic() {
+        onPlayState();
         handler.postDelayed(updateSeekBar, 1000);
         mediaPlayer.start();
+
+    }
+
+    void updateNotificationToPauseState() {
 
     }
 
@@ -206,26 +220,46 @@ public class MediaPlayerService extends Service {
         handler.removeCallbacks(updateSeekBar);
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
+                onPauseState();
                 mediaPlayer.pause();
             }
         }
     }
 
-    void sendNotificationMediaPlayer() {
+    void initNotification() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_noti);
-        Notification notification = new NotificationCompat.Builder(this,
+        notificationBuilder = new NotificationCompat.Builder(this,
                 String.valueOf(R.string.ID_CHANEL_MUSIC))
                 .setSmallIcon(R.drawable.ic_noti)
-                .setSubText("Sky music")
                 .setLargeIcon(bitmap)
                 .setOnlyAlertOnce(true)
-                .addAction(R.drawable.ic_prev, "Previous", null)
-                .addAction(R.drawable.ic_pause, "Pause", null)
-                .addAction(R.drawable.ic_next, "Next", null)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(1)
-                        .setMediaSession(mediaSession.getSessionToken()))
+                        .setMediaSession(mediaSession.getSessionToken()));
+    }
+
+    void onPlayState() {
+        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
+        notificationBuilder.clearActions();
+        notificationBuilder.addAction(R.drawable.ic_prev, "Previous", null)
+                .addAction(R.drawable.ic_pause, "Pause", null)
+                .addAction(R.drawable.ic_next, "Next", null);
+        notification = notificationBuilder.build();
+        startForeground(1, notification);
+    }
+    PlaybackStateCompat createPlaybackState(int playBackState){
+        return new PlaybackStateCompat.Builder()
+                .setState(playBackState,mediaPlayer.getCurrentPosition(),1f,SystemClock.elapsedRealtime())
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                 .build();
+    }
+    void onPauseState() {
+        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PAUSED));
+        notificationBuilder.clearActions();
+        notificationBuilder.addAction(R.drawable.ic_prev, "Previous", null)
+                .addAction(R.drawable.ic_play, "Pause", null)
+                .addAction(R.drawable.ic_next, "Next", null);
+        notification = notificationBuilder.build();
         startForeground(1, notification);
     }
 
