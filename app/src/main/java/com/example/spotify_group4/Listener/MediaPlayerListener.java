@@ -1,7 +1,7 @@
 package com.example.spotify_group4.Listener;
 
 public interface MediaPlayerListener {
-    void ondSongLoad();
+    void onSongLoad();
     void onMusicPlay();
     void onMusicPause();
     void onMusicStop();

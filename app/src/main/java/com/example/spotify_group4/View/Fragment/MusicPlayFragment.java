@@ -44,6 +44,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(ACTION_INIT_DURATION)) {
+                onMusicPlay();
                 fullIntDuration = intent.getIntExtra("fullIntDuration",0);
                 String fullDuration = intent.getStringExtra("fullDuration");
                 layoutBinding.tvTimeEnd.setText(fullDuration);
@@ -94,9 +95,9 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loadingDialog.show();
         replaceFragmentListener.hideComponents();
         initEvent();
-        Toast.makeText(getContext(), "asdsa", Toast.LENGTH_SHORT).show();
         setUpLayout();
         playMusicPresenter.playMusic(urlData);
     }
@@ -131,12 +132,13 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     @Override
-    public void ondSongLoad() {
+    public void onSongLoad() {
         loadingDialog.show();
     }
 
     @Override
     public void onMusicPlay() {
+        loadingDialog.hide();
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_pause);
     }
 
