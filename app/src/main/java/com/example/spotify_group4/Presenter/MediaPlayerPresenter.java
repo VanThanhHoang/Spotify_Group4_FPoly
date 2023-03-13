@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.spotify_group4.Listener.MediaPlayerListener;
+import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Service.MediaPlayerService;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -23,10 +24,10 @@ public class MediaPlayerPresenter {
         this.mediaPlayerListener = mediaPlayerListener;
     }
 
-    public void playMusic(String url) {
+    public void playMusic(Song song) {
         context.stopService(intentService);
         intentService.putExtra("ACTION", ACTION_PLAY);
-        intentService.putExtra("URL",url);
+        intentService.putExtra("SONG",song);
         mediaPlayerListener.onSongLoad();
         context.startService(intentService);
     }

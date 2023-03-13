@@ -1,6 +1,5 @@
 package com.example.spotify_group4.Service;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
-import android.media.session.PlaybackState;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -19,6 +17,8 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.spotify_group4.Helper.TimeFormatter;
+import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
@@ -33,18 +33,16 @@ public class MediaPlayerService extends Service {
     MediaSessionCompat mediaSession;
     private Runnable updateSeekBar;
     MediaMetadataCompat.Builder metadataBuilder;
-    PlaybackStateCompat.Builder playbackStateBuilder;
-    int currentPosition = 0;
     NotificationCompat.Builder notificationBuilder;
     Notification notification;
-
+    Song song  ;
     void initMediaSession() {
         mediaSession = new MediaSessionCompat(this, "MEDIA");
         mediaSession.setActive(true);
         // set info
         metadataBuilder = new MediaMetadataCompat.Builder();
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "Artist");
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Song Title");
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.getSingerName());
+        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.getName());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Album Name");
         metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
         metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(getResources(), R.drawable.ic_facebook));
@@ -77,13 +75,10 @@ public class MediaPlayerService extends Service {
     void prepareMusic(String url) {
         try {
             setupMediaPlayer(url);
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    startUiMusic();
-                    initNotification();
-                    onPlayState();
-                }
+            mediaPlayer.setOnPreparedListener(mp -> {
+                startUiMusic();
+                initNotification();
+                onPlayState();
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,13 +137,13 @@ public class MediaPlayerService extends Service {
     }
 
     void seekMedia(int position) {
-        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
         mediaPlayer.seekTo(position);
+
     }
 
     void initDuration() {
         Intent intent = new Intent(MusicPlayFragment.ACTION_INIT_DURATION);
-        String fullDuration = formatTime(mediaPlayer.getDuration());
+        String fullDuration = TimeFormatter.formatMillisecondToMinuteAndSecond(mediaPlayer.getDuration());
         intent.putExtra("fullIntDuration", mediaPlayer.getDuration());
         intent.putExtra("fullDuration", fullDuration);
         sendBroadcast(intent);
@@ -156,9 +151,8 @@ public class MediaPlayerService extends Service {
 
     void updateDuration() {
         Intent intent = new Intent(MusicPlayFragment.ACTION_UPDATE_DURATION);
-        currentPosition = mediaPlayer.getCurrentPosition();
-        String currentDuration = formatTime(currentPosition);
-        int positionSeekbar = getPositionSeekbar(currentPosition);
+        String currentDuration = TimeFormatter.formatMillisecondToMinuteAndSecond(mediaPlayer.getCurrentPosition());
+        int positionSeekbar = getPositionSeekbar(mediaPlayer.getCurrentPosition());
         intent.putExtra("positionSeekbar", positionSeekbar);
         intent.putExtra("currentDuration", currentDuration);
         sendBroadcast(intent);
@@ -172,13 +166,14 @@ public class MediaPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int action = intent.getIntExtra("ACTION", 0);
-        String url = intent.getStringExtra("URL");
+        song  = (Song) intent.getSerializableExtra("SONG");
         int positionToSeek = intent.getIntExtra("POSITION_TO_SEEK", 0);
         if (!isExits) {
             isExits = true;
-            prepareMusic(url);
+            prepareMusic(song.getUrl());
         }
         if (action == MediaPlayerPresenter.ACTION_SEEK) {
+            mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
             seekMedia(positionToSeek);
         } else {
             handleAction(action);
@@ -201,10 +196,6 @@ public class MediaPlayerService extends Service {
         onPlayState();
         handler.postDelayed(updateSeekBar, 1000);
         mediaPlayer.start();
-
-    }
-
-    void updateNotificationToPauseState() {
 
     }
 
@@ -247,12 +238,14 @@ public class MediaPlayerService extends Service {
         notification = notificationBuilder.build();
         startForeground(1, notification);
     }
-    PlaybackStateCompat createPlaybackState(int playBackState){
+
+    PlaybackStateCompat createPlaybackState(int playBackState) {
         return new PlaybackStateCompat.Builder()
-                .setState(playBackState,mediaPlayer.getCurrentPosition(),1f,SystemClock.elapsedRealtime())
+                .setState(playBackState, mediaPlayer.getCurrentPosition(), 1f, SystemClock.elapsedRealtime())
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                 .build();
     }
+
     void onPauseState() {
         mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PAUSED));
         notificationBuilder.clearActions();
@@ -267,12 +260,5 @@ public class MediaPlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    @SuppressLint("DefaultLocale")
-    private String formatTime(int duration) {
-        int minutes = (duration / 1000) / 60; // tính số phút
-        int seconds = (duration / 1000) % 60; // tính số giây
-        return String.format("%02d:%02d", minutes, seconds);
     }
 }

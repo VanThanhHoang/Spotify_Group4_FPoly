@@ -31,4 +31,5 @@
     <!-- album-->
     <string name="ten_album">Tuyển tập của QNT</string>
     <string name="ten_ca_si">Osad, low G và Da LAB</string>
+    <string name="ID_CHANEL_MUSIC">MUSIC_CHANEL</string>
 </resources>

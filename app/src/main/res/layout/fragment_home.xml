@@ -1,21 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
-    <Button
-        android:text="Song1"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/white"
-        android:id="@+id/btnTest"
+    android:background="@color/black"
+    android:padding="5dp">
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:maxLines="1"
+        style="@style/title_Login"
+        android:text="Gợi ý dành cho bạn"
+        android:textSize="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <Button
-        android:text="Song2"
-        android:layout_below="@+id/btnTest"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/white"
-        android:id="@+id/btnTest1"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="5dp"
+        android:id="@+id/rvPlayListDefault0"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"/>
+    <TextView
+        android:maxLines="1"
+        style="@style/title_Login"
+        android:text="Playlist hot trong tháng"
+        android:textSize="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-</RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="5dp"
+        android:id="@+id/rvPlayListDefault1"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"/>
+    <TextView
+        android:maxLines="1"
+        style="@style/title_Login"
+        android:text="Edm and Electronic "
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="5dp"
+        android:id="@+id/rvPlayListDefault2"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"/>
+    <TextView
+        android:maxLines="1"
+        style="@style/title_Login"
+        android:text="Rap Underound"
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="5dp"
+        android:id="@+id/rvPlayListDefault3"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"/>
+    <TextView
+        android:maxLines="1"
+        style="@style/title_Login"
+        android:text="Nhạc 9x "
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="5dp"
+        android:id="@+id/rvPlayListDefault4"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"/>
+
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>

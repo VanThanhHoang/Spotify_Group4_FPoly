@@ -12,13 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
+import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.View.Fragment.AccountFragment;
 import com.example.spotify_group4.View.Fragment.HomeFragment;
 import com.example.spotify_group4.View.Fragment.LibraryFragment;
 import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
+import com.example.spotify_group4.View.Fragment.PlayListFragment;
 import com.example.spotify_group4.View.Fragment.SearchFragment;
 import com.example.spotify_group4.databinding.ActivityHomeBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements ReplaceFragmentListener {
     ActivityHomeBinding layoutBinding;
@@ -72,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerHome, fragment);
         fragmentTransaction.setCustomAnimations(R.anim.anm_replace_fragment, R.anim.anm_replace_fragment);
-        if (fragment instanceof MusicPlayFragment) {
+        if (fragment instanceof MusicPlayFragment || fragment instanceof PlayListFragment) {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             return;
@@ -93,4 +98,6 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
             layoutBinding.bottomNavigation.setVisibility(View.VISIBLE);
         }
     }
+
+
 }

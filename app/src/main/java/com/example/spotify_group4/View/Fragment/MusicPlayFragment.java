@@ -5,23 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.spotify_group4.Helper.TimeFormatter;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
+import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.View.Dialog.LoadingDialog;
@@ -33,25 +30,25 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public static final String ACTION_UPDATE_DURATION = "UPDATE_UI_FRAGMENT_MUSIC_PLAYER";
     FragmentPlayMusicBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
-    String urlData;
+    Song song;
     MediaPlayerPresenter playMusicPresenter;
     int CURRENT_ACTION = 1;
     LoadingDialog loadingDialog;
     mediaPlayerReceiver mediaPlayerReceiver;
-    int fullIntDuration ;
+    int fullIntDuration;
+
     private class mediaPlayerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(ACTION_INIT_DURATION)) {
                 onMusicPlay();
-                fullIntDuration = intent.getIntExtra("fullIntDuration",0);
+                fullIntDuration = intent.getIntExtra("fullIntDuration", 0);
                 String fullDuration = intent.getStringExtra("fullDuration");
                 layoutBinding.tvTimeEnd.setText(fullDuration);
             } else {
-
                 String currentDuration = intent.getStringExtra("currentDuration");
-                int positionSeekbar = intent.getIntExtra("positionSeekbar",0);
+                int positionSeekbar = intent.getIntExtra("positionSeekbar", 0);
                 layoutBinding.tvTimeStart.setText(currentDuration);
                 layoutBinding.timeSeekBar.setProgress(positionSeekbar);
             }
@@ -63,7 +60,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         registerBroadcast();
         super.onStart();
     }
-    void registerBroadcast(){
+
+    void registerBroadcast() {
         mediaPlayerReceiver = new mediaPlayerReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_INIT_DURATION);
@@ -72,8 +70,9 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             getContext().registerReceiver(mediaPlayerReceiver, intentFilter);
         }
     }
-    public MusicPlayFragment(String url) {
-        this.urlData = url;
+
+    public MusicPlayFragment(Song song) {
+        this.song = song;
     }
 
     @Override
@@ -99,7 +98,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         replaceFragmentListener.hideComponents();
         initEvent();
         setUpLayout();
-        playMusicPresenter.playMusic(urlData);
+        playMusicPresenter.playMusic(song);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -108,11 +107,27 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
         }
         layoutBinding.btnPlayPause.setOnClickListener(v -> playButtonAction());
-        layoutBinding.timeSeekBar.setOnTouchListener((v, event) ->{
-            SeekBar seekBar =(SeekBar) v;
-            int positionUpdate = (fullIntDuration/1000)*seekBar.getProgress();
-            playMusicPresenter.seekMusic(positionUpdate);
-            return false;
+        layoutBinding.timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    int positionUpdate = (fullIntDuration / 1000) * seekBar.getProgress();
+                    playMusicPresenter.seekMusic(positionUpdate);
+                    seekBar.setProgress(progress);
+                    layoutBinding.tvTimeStart.setText(TimeFormatter.formatMillisecondToMinuteAndSecond(positionUpdate));
+                    playMusicPresenter.seekMusic(positionUpdate);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
         });
     }
 
@@ -127,7 +142,9 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     void setUpLayout() {
-        playMusicPresenter.loadSongImg("https://skymusicfpoly.000webhostapp.com/imgsinger/anhquan.png")
+        layoutBinding.tvSinger.setText(song.getSingerName());
+        layoutBinding.tvSongName.setText(song.getName());
+        playMusicPresenter.loadSongImg(song.getUrlImg())
                 .into(layoutBinding.imgSong);
     }
 

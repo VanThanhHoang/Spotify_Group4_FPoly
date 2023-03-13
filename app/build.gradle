@@ -31,6 +31,8 @@ android {
 }
 
 dependencies {
+    // stickyHeader
+    implementation 'com.github.shuhart:stickyheader:1.1.0'
     //call api
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // Media style '
@@ -43,6 +45,7 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // lib
     def lottieVersion = "4.1.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
