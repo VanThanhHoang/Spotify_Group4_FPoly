@@ -51,15 +51,18 @@
         android:text="Singer"/>
 
     <androidx.appcompat.widget.AppCompatSeekBar
-        android:layout_marginTop="5dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:defaultFocusHighlightEnabled="true"
+        android:progressDrawable="@drawable/br_seek_bar"
+        android:layout_marginTop="15dp"
+        android:maxHeight="5dp"
         android:id="@+id/timeSeekBar"
         android:layout_width="match_parent"
-        android:layout_height="7dp"
+        android:layout_height="30dp"
         android:layout_below="@id/tvSinger"
         android:max="1000"
-        android:progressDrawable="@drawable/br_seek_bar"
-        android:thumb="@null"
-        android:thumbTint="@color/gray_contain" />
+        android:thumb="@null" />
 
     <TextView
         android:id="@+id/tvTimeStart"
@@ -90,6 +93,7 @@
             android:id="@+id/btnPlay_Pause"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:backgroundTint="@color/green"
             android:layout_centerInParent="true"
             android:background="@drawable/custom_image_button_cycle"
             android:gravity="center"

@@ -9,8 +9,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
 public class MediaPlayerPresenter {
-/*    public static final String ACTION_SONG_LOADED = "com.example.spotify_group4.ACTION_SONG_LOADED";
-    public static final String ACTION_LOAD_SONG = "com.example.spotify_group4.ACTION_SONG_LOADED";*/
     public static int ACTION_PLAY = 1;
     public static int ACTION_PAUSE = 2;
     public static int ACTION_STOP = 3;
