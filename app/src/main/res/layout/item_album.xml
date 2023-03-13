@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardview"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/albumqnt"
+            android:layout_weight="4.5">
+
+            <View
+                android:id="@+id/leftLine"
+                android:layout_width="10dp"
+                android:layout_height="100dp"
+                android:layout_above="@+id/botLine"
+                android:layout_marginBottom="25dp"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:layout_toEndOf="@id/leftLine"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/botLine"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="25dp"
+                android:text="@string/ten_album"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/botLine"
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/black" />
+        </RelativeLayout>
+        <TextView
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"
+            android:layout_height="0dp"
+            android:text="@string/ten_ca_si"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+
