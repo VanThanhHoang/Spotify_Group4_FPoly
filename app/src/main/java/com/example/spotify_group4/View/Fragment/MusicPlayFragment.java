@@ -124,14 +124,26 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         playMusicPresenter.startPlayList(songList, currentSongPosition);
     }
 
+    void resetTime() {
+        layoutBinding.timeSeekBar.setProgress(0);
+        layoutBinding.tvTimeStart.setText(R.string.defaultDuration);
+        layoutBinding.tvTimeEnd.setText(R.string.defaultDuration);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     void initEvent() {
         if (getActivity() != null) {
             layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
         }
         layoutBinding.btnNext.setOnClickListener(v -> playMusicPresenter.playNextSong());
-        layoutBinding.btnPlayPause.setOnClickListener(v -> playButtonAction());
-        layoutBinding.btnPrev.setOnClickListener(v -> playMusicPresenter.playPrevSong());
+        layoutBinding.btnPlayPause.setOnClickListener(v -> {
+            playButtonAction();
+            resetTime();
+        });
+        layoutBinding.btnPrev.setOnClickListener(v -> {
+            playMusicPresenter.playPrevSong();
+            resetTime();
+        });
         layoutBinding.timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -184,7 +196,11 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if (position == -1 || position == songList.size()) {
+                    return;
+                }
                 if (isUserSwipe) {
+                    resetTime();
                     loadListener.onLoad();
                     playMusicPresenter.transSongByViewPager(position);
                 }
