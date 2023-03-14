@@ -3,6 +3,7 @@ package com.example.spotify_group4.Presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Model.Song;
@@ -23,6 +24,7 @@ public class MediaPlayerPresenter {
     public static int ACTION_SEEK = 5;
     public static int ACTION_PLAY_NEXT_SONG = 6;
     public static int ACTION_PLAY_PREV_SONG = 7;
+    public static int ACTION_TRANS_SONG_VIEWPAGER =8 ;
     Context context;
     MediaPlayerListener mediaPlayerListener;
     Intent intentService;
@@ -54,12 +56,17 @@ public class MediaPlayerPresenter {
     }
     public void playNextSong() {
         intentService.putExtra("ACTION", ACTION_PLAY_NEXT_SONG);
-        mediaPlayerListener.onNextSong();
+        mediaPlayerListener.onTransSong();
+        context.startService(intentService);
+    }
+    public void transSongByViewPager(int position){
+        intentService.putExtra("ACTION", ACTION_TRANS_SONG_VIEWPAGER);
+        intentService.putExtra("CURRENT_SONG_POSITION",position);
         context.startService(intentService);
     }
     public void playPrevSong() {
         intentService.putExtra("ACTION", ACTION_PLAY_PREV_SONG);
-        mediaPlayerListener.onPrevSong();
+        mediaPlayerListener.onTransSong();
         context.startService(intentService);
     }
     public void seekMusic(int positionUpdate) {

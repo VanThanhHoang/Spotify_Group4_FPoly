@@ -7,6 +7,6 @@ public interface MediaPlayerListener {
     void onMusicStop();
     void onUpdateSeekbar();
     void onUpdateTime();
-    void onNextSong();
-    void onPrevSong();
+    void onTransSong();
+
 }

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black">
+
     <RelativeLayout
         android:id="@+id/toolbarPlayMusicFragment"
         android:layout_width="match_parent"
         android:layout_height="60dp">
+
         <androidx.constraintlayout.utils.widget.ImageFilterButton
             android:id="@+id/btnBack"
             style="@style/img_button_toolbar"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_arrow" />
+
         <androidx.constraintlayout.utils.widget.ImageFilterButton
             android:id="@+id/btnMore"
             style="@style/img_button_toolbar"
@@ -20,82 +23,52 @@
             android:src="@drawable/ic_more" />
     </RelativeLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/imgSongContain"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="8dp"
-        android:elevation="5dp"
-        android:layout_marginTop="18dp"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vpgSongInfo"
         android:layout_width="match_parent"
-        android:layout_below="@+id/toolbarPlayMusicFragment"
-        android:layout_height="400dp">
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imgSong"
-            android:scaleType="centerCrop"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-    </androidx.cardview.widget.CardView>
-    <TextView
-        android:textStyle="bold"
-        android:id="@+id/tvSongName"
-        style="@style/title_Login"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imgSongContain"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:maxLines="1"
-        android:text="Song name" />
-    <TextView
-        android:id="@+id/tvSinger"
-        android:layout_below="@+id/tvSongName"
-        style="@style/title_Login"
-        android:maxLines="1"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:text="Singer"/>
+        android:layout_height="500dp"
+        android:layout_below="@+id/toolbarPlayMusicFragment" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:defaultFocusHighlightEnabled="true"
-        android:progressDrawable="@drawable/br_seek_bar"
-        android:layout_marginTop="15dp"
-        android:maxHeight="5dp"
         android:id="@+id/timeSeekBar"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_below="@id/tvSinger"
+        android:layout_below="@+id/vpgSongInfo"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:defaultFocusHighlightEnabled="true"
         android:max="1000"
+        android:maxHeight="5dp"
+        android:progressDrawable="@drawable/br_seek_bar"
         android:thumb="@null" />
 
     <TextView
         android:id="@+id/tvTimeStart"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/timeSeekBar"
-        android:text="@string/defaultDuration"
-        android:gravity="center"
         style="@style/title_Login"
-        android:textSize="13sp"
         android:layout_width="100dp"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:layout_below="@+id/timeSeekBar"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:text="@string/defaultDuration"
+        android:textSize="13sp" />
+
     <TextView
         android:id="@+id/tvTimeEnd"
-        android:text="@string/defaultDuration"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/timeSeekBar"
-        android:gravity="center"
         style="@style/title_Login"
-        android:textSize="13sp"
         android:layout_width="100dp"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:layout_below="@+id/timeSeekBar"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:text="@string/defaultDuration"
+        android:textSize="13sp" />
+
     <RelativeLayout
-        android:layout_below="@+id/tvTimeStart"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:layout_below="@+id/tvTimeStart">
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnPlay_Pause"
@@ -106,23 +79,27 @@
             android:backgroundTint="@color/green"
             android:gravity="center"
             android:src="@drawable/ic_play" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrev"
             style="@style/img_button_media_player"
-            app:icon="@drawable/ic_prev"
-            android:layout_toStartOf="@+id/btnPlay_Pause"/>
+            android:layout_toStartOf="@+id/btnPlay_Pause"
+            app:icon="@drawable/ic_prev" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
             style="@style/img_button_media_player"
-            app:icon="@drawable/ic_next"
-            android:layout_toEndOf="@+id/btnPlay_Pause"/>
+            android:layout_toEndOf="@+id/btnPlay_Pause"
+            app:icon="@drawable/ic_next" />
+
         <com.google.android.material.button.MaterialButton
-            app:icon="@drawable/ic_random"
             style="@style/img_button_media_player"
-            android:layout_toStartOf="@+id/btnPrev"/>
+            android:layout_toStartOf="@+id/btnPrev"
+            app:icon="@drawable/ic_random" />
+
         <com.google.android.material.button.MaterialButton
-            app:icon="@drawable/ic_loop"
             style="@style/img_button_media_player"
-            android:layout_toEndOf="@+id/btnNext"/>
+            android:layout_toEndOf="@+id/btnNext"
+            app:icon="@drawable/ic_loop" />
     </RelativeLayout>
 </RelativeLayout>

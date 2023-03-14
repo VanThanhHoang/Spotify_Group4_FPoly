@@ -13,7 +13,6 @@ import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -109,6 +108,8 @@ public class MediaPlayerService extends Service {
     }
 
     void prepareMusic(String url) {
+        initMediaSession();
+        initNotification();
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
@@ -116,7 +117,6 @@ public class MediaPlayerService extends Service {
             setupMediaPlayer(url);
             mediaPlayer.setOnPreparedListener(mp -> {
                 startUiMusic();
-                initNotification();
                 changState(PlaybackStateCompat.STATE_PLAYING);
             });
         } catch (IOException e) {
@@ -125,12 +125,9 @@ public class MediaPlayerService extends Service {
     }
 
     void startUiMusic() {
-        handler.postDelayed(updateSeekBar, 1000);
         mediaPlayer.start();
         initDuration();
         handler.postDelayed(updateSeekBar, 1000);
-        initMediaSession();
-
     }
 
     void setupMediaPlayer(String url) throws IOException {
@@ -152,20 +149,27 @@ public class MediaPlayerService extends Service {
 
     void transSong(int ACTION) {
         if (ACTION == MediaPlayerPresenter.ACTION_PLAY_NEXT_SONG) {
-            Log.d("test1", "transSong: " + currentSongPosition);
             ++currentSongPosition;
             if (currentSongPosition == songList.size()) {
                 currentSongPosition = 0;
             }
         } else {
-            --currentSongPosition;
             if (currentSongPosition == 0) {
                 currentSongPosition = songList.size() - 1;
+            } else {
+                --currentSongPosition;
             }
         }
-        Log.d("test", "transSong: " + currentSongPosition);
+        sendBroadCastTransSong();
         currentSong = songList.get(currentSongPosition);
         prepareMusic(currentSong.getUrl());
+    }
+
+    void sendBroadCastTransSong() {
+        Intent intent = new Intent();
+        intent.putExtra("CURS_POSITION", currentSongPosition);
+        intent.setAction(MusicPlayFragment.ACTION_TRANS_SONG);
+        sendBroadcast(intent);
     }
 
     void onCompleteMusic() {
