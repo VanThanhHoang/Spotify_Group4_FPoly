@@ -37,7 +37,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.songViewHolder
         Song song = songList.get(positionItem);
         holder.cardViewContainer.setOnClickListener(v->replaceFragmentListener
                 .replaceFragment(
-                        new MusicPlayFragment(songList.get(positionItem))
+                        new MusicPlayFragment( songList,positionItem)
                 )
         );
         Picasso.get().load(song.getUrlImg()).into(holder.imgSong);

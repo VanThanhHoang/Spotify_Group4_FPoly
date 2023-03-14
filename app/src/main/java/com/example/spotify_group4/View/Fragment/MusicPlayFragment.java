@@ -16,41 +16,52 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Helper.TimeFormatter;
+import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
-import com.example.spotify_group4.View.Dialog.LoadingDialog;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
+
+import java.util.List;
 
 public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     //ACTION
+    public static final String ACTION_MUSIC_COMPLETE = "MUSIC_COMPLETE_FRAGMENT_MUSIC_PLAYER";
     public static final String ACTION_INIT_DURATION = "INIT_UI_FRAGMENT_MUSIC_PLAYER";
     public static final String ACTION_UPDATE_DURATION = "UPDATE_UI_FRAGMENT_MUSIC_PLAYER";
     FragmentPlayMusicBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
-    Song song;
     MediaPlayerPresenter playMusicPresenter;
-    int CURRENT_ACTION = 1;
-    LoadingDialog loadingDialog;
+    int CURRENT_ACTION = MediaPlayerPresenter.ACTION_PLAY;
     mediaPlayerReceiver mediaPlayerReceiver;
     int fullIntDuration;
+    LoadListener loadListener;
+    List<Song> songList;
+    int positionSong;
+    Song song;
 
     private class mediaPlayerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(ACTION_INIT_DURATION)) {
-                onMusicPlay();
-                fullIntDuration = intent.getIntExtra("fullIntDuration", 0);
-                String fullDuration = intent.getStringExtra("fullDuration");
-                layoutBinding.tvTimeEnd.setText(fullDuration);
-            } else {
-                String currentDuration = intent.getStringExtra("currentDuration");
-                int positionSeekbar = intent.getIntExtra("positionSeekbar", 0);
-                layoutBinding.tvTimeStart.setText(currentDuration);
-                layoutBinding.timeSeekBar.setProgress(positionSeekbar);
+            switch (action) {
+                case ACTION_INIT_DURATION:
+                    onMusicPlay();
+                    fullIntDuration = intent.getIntExtra("fullIntDuration", 0);
+                    String fullDuration = intent.getStringExtra("fullDuration");
+                    layoutBinding.tvTimeEnd.setText(fullDuration);
+                    break;
+                case ACTION_UPDATE_DURATION:
+                    String currentDuration = intent.getStringExtra("currentDuration");
+                    int positionSeekbar = intent.getIntExtra("positionSeekbar", 0);
+                    layoutBinding.tvTimeStart.setText(currentDuration);
+                    layoutBinding.timeSeekBar.setProgress(positionSeekbar);
+                    break;
+                case ACTION_MUSIC_COMPLETE:
+                    onMusicStop();
+                    break;
             }
         }
     }
@@ -66,27 +77,28 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_INIT_DURATION);
         intentFilter.addAction(ACTION_UPDATE_DURATION);
+        intentFilter.addAction(ACTION_MUSIC_COMPLETE);
         if (getContext() != null) {
             getContext().registerReceiver(mediaPlayerReceiver, intentFilter);
         }
     }
 
-    public MusicPlayFragment(Song song) {
-        this.song = song;
+    public MusicPlayFragment(List<Song> songList, int songPosition) {
+        this.songList = songList;
+        this.positionSong = songPosition;
+        this.song = songList.get(positionSong);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentPlayMusicBinding.inflate(getLayoutInflater(), null, false);
         playMusicPresenter = new MediaPlayerPresenter(getContext(), this);
-        if (getContext() != null) {
-            loadingDialog = new LoadingDialog(this.getContext());
-        }
         return layoutBinding.getRoot();
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
+        loadListener = (LoadListener) context;
         replaceFragmentListener = (ReplaceFragmentListener) context;
         super.onAttach(context);
     }
@@ -94,11 +106,10 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadingDialog.show();
         replaceFragmentListener.hideComponents();
         initEvent();
         setUpLayout();
-        playMusicPresenter.playMusic(song);
+        playMusicPresenter.startPlayList(songList, positionSong);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -106,7 +117,9 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         if (getActivity() != null) {
             layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
         }
+        layoutBinding.btnNext.setOnClickListener(v -> playMusicPresenter.playNextSong());
         layoutBinding.btnPlayPause.setOnClickListener(v -> playButtonAction());
+        layoutBinding.btnPrev.setOnClickListener(v -> playMusicPresenter.playPrevSong());
         layoutBinding.timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -150,12 +163,12 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
 
     @Override
     public void onSongLoad() {
-        loadingDialog.show();
+        loadListener.onLoad();
     }
 
     @Override
     public void onMusicPlay() {
-        loadingDialog.hide();
+        loadListener.onComplete();
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_pause);
     }
 
@@ -163,18 +176,29 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public void onMusicPause() {
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);
     }
+
     @Override
     public void onMusicStop() {
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);
     }
 
     @Override
-    public void updateSeekbar() {
+    public void onUpdateSeekbar() {
 
     }
 
     @Override
-    public void updateTime() {
+    public void onUpdateTime() {
+
+    }
+
+    @Override
+    public void onNextSong() {
+
+    }
+
+    @Override
+    public void onPrevSong() {
 
     }
 }

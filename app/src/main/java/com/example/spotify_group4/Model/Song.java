@@ -1,23 +1,36 @@
 package com.example.spotify_group4.Model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Song implements Serializable {
+import androidx.annotation.NonNull;
+
+
+public class Song implements Parcelable {
     int id;
     String name;
-    int idSinger;
     String singerName;
     String url;
     String urlImg;
-//
-    public String getUrlImg() {
-        return urlImg;
-    }
 
-    public void setUrlImg(String urlImg) {
+    public Song(String name, String Singer, String url, String urlImg) {
+        this.name = name;
+        this.singerName = Singer;
+        this.url = url;
         this.urlImg = urlImg;
     }
 
+    public Song(Parcel source) {
+        this.url = source.readString();
+        this.singerName = source.readString();
+        this.name = source.readString();
+        this.id = source.readInt();
+        this.urlImg = source.readString();
+    }
+
+    public String getUrlImg() {
+        return urlImg;
+    }
     public int getId() {
         return id;
     }
@@ -30,17 +43,6 @@ public class Song implements Serializable {
         return singerName;
     }
 
-    public void setSingerName(String singerName) {
-        this.singerName = singerName;
-    }
-
-    public Song(String name, String Singer, String url,String urlImg) {
-        this.name = name;
-        this.singerName = Singer;
-        this.url = url;
-        this.urlImg = urlImg;
-    }
-
     public String getName() {
         return name;
     }
@@ -49,19 +51,33 @@ public class Song implements Serializable {
         this.name = name;
     }
 
-    public int getIdSinger() {
-        return idSinger;
-    }
-
-    public void setIdSinger(int idSinger) {
-        this.idSinger = idSinger;
-    }
-
     public String getUrl() {
         return url;
     }
-
-    public void setUrl(String url) {
-        this.url = url;
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(this.url);
+        dest.writeString(this.singerName);
+        dest.writeString(this.name);
+        dest.writeInt(this.id);
+        dest.writeString(this.urlImg);
+    }
+
+    public static final Parcelable.Creator<Song> CREATOR =
+            new Parcelable.Creator<Song>() {
+                @Override
+                public Song createFromParcel(Parcel source) {
+                    return new Song(source);
+                }
+
+                @Override
+                public Song[] newArray(int size) {
+                    return new Song[size];
+                }
+            };
 }

@@ -13,7 +13,7 @@
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowLightStatusBar">false</item>
-        <!-- Customize your theme here. -->
+          <!-- Customize your theme here. -->
     </style>
 
     <style name="button_login_style" parent="Widget.Material3.Button.OutlinedButton">

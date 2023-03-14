@@ -11,9 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
-import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.R;
+import com.example.spotify_group4.View.Dialog.LoadingDialog;
 import com.example.spotify_group4.View.Fragment.AccountFragment;
 import com.example.spotify_group4.View.Fragment.HomeFragment;
 import com.example.spotify_group4.View.Fragment.LibraryFragment;
@@ -21,17 +22,13 @@ import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
 import com.example.spotify_group4.View.Fragment.PlayListFragment;
 import com.example.spotify_group4.View.Fragment.SearchFragment;
 import com.example.spotify_group4.databinding.ActivityHomeBinding;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class HomeActivity extends AppCompatActivity implements ReplaceFragmentListener {
+public class HomeActivity extends AppCompatActivity implements ReplaceFragmentListener , LoadListener {
     ActivityHomeBinding layoutBinding;
     HomeFragment homeFragment;
     SearchFragment searchFragment;
     LibraryFragment libraryFragment;
     AccountFragment accountFragment;
-
+    LoadingDialog loadingDialog;
     @Nullable
     @Override
     public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
@@ -67,9 +64,16 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         super.onCreate(savedInstanceState);
         layoutBinding = ActivityHomeBinding.inflate(getLayoutInflater(), null, false);
         setContentView(layoutBinding.getRoot());
+        loadingDialog = new LoadingDialog(this);
         initFragment();
         replaceFragment(homeFragment);
         initEvent();
+    }
+
+    @Override
+    protected void onDestroy() {
+        loadingDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override
@@ -100,4 +104,13 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     }
 
 
+    @Override
+    public void onLoad() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void onComplete() {
+        loadingDialog.dismiss();
+    }
 }
