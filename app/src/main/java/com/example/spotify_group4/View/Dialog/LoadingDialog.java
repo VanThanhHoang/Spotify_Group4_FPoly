@@ -23,5 +23,6 @@ public class LoadingDialog extends Dialog {
         Window window = getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setCancelable(false);
+        this.setCancelable(false);
     }
 }
