@@ -48,6 +48,10 @@ public class MediaPlayerService extends Service {
         }
         songList = intent.getParcelableArrayListExtra("SONG_LIST");
         currentSong = songList.get(currentSongPosition);
+        if(action==MediaPlayerPresenter.ACTION_TRANS_SONG_VIEWPAGER){
+            currentSongPosition = intent.getIntExtra("CURRENT_SONG_POSITION",0);
+            transSongByViewPager();
+        }
         if (songList.isEmpty()) {
             return START_NOT_STICKY;
         }
@@ -117,6 +121,7 @@ public class MediaPlayerService extends Service {
             setupMediaPlayer(url);
             mediaPlayer.setOnPreparedListener(mp -> {
                 startUiMusic();
+                mediaPlayer.start();
                 changState(PlaybackStateCompat.STATE_PLAYING);
             });
         } catch (IOException e) {
@@ -125,6 +130,7 @@ public class MediaPlayerService extends Service {
     }
 
     void startUiMusic() {
+        handler.postDelayed(updateSeekBar, 1000);
         mediaPlayer.start();
         initDuration();
         handler.postDelayed(updateSeekBar, 1000);
@@ -146,7 +152,10 @@ public class MediaPlayerService extends Service {
         audioAttributesBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
         mediaPlayer.setAudioAttributes(audioAttributesBuilder.build());
     }
-
+    void transSongByViewPager() {
+        currentSong = songList.get(currentSongPosition);
+        prepareMusic(currentSong.getUrl());
+    }
     void transSong(int ACTION) {
         if (ACTION == MediaPlayerPresenter.ACTION_PLAY_NEXT_SONG) {
             ++currentSongPosition;

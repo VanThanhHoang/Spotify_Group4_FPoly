@@ -8,12 +8,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,7 +70,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
                     onMusicStop();
                     break;
                 case ACTION_TRANS_SONG:
-                    currentSongPosition = intent.getIntExtra("CURS_POSITION",0);
+                    currentSongPosition = intent.getIntExtra("CURS_POSITION", 0);
                     onTransSong();
                     break;
             }
@@ -99,7 +97,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
 
     public MusicPlayFragment(List<Song> songList, int songPosition) {
         this.songList = songList;
-        this.currentSongPosition= songPosition;
+        this.currentSongPosition = songPosition;
         this.song = songList.get(currentSongPosition);
     }
 
@@ -123,7 +121,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         replaceFragmentListener.hideComponents();
         initEvent();
         initViewPager();
-        playMusicPresenter.startPlayList(songList,currentSongPosition);
+        playMusicPresenter.startPlayList(songList, currentSongPosition);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -174,9 +172,22 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         layoutBinding.vpgSongInfo.setAdapter(songVpgAdapter);
         new Handler(Looper.getMainLooper()).postDelayed(() -> layoutBinding.vpgSongInfo.setCurrentItem(currentSongPosition), 100);
         layoutBinding.vpgSongInfo.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            boolean isUserSwipe;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (!layoutBinding.vpgSongInfo.isFakeDragging()) {
+                    isUserSwipe = true;
+                }
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (isUserSwipe) {
+                    loadListener.onLoad();
+                    playMusicPresenter.transSongByViewPager(position);
+                }
             }
         });
         layoutBinding.vpgSongInfo.setPageTransformer(new AnimationZoomViewPager());
