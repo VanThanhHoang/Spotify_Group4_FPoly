@@ -31,6 +31,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.google.firebase:firebase-storage'
     // stickyHeader
     implementation 'com.github.shuhart:stickyheader:1.1.0'
@@ -48,6 +50,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // lib
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
     def lottieVersion = "4.1.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation 'com.hbb20:ccp:2.5.0'

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.spotify_group4.Adapter.PlaylistAdapter;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.PlayList;
+import com.example.spotify_group4.Retrofit.ApiSkyMusic;
 import com.example.spotify_group4.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment {
@@ -28,7 +34,7 @@ public class HomeFragment extends Fragment {
     ReplaceFragmentListener replaceFragmentListener;
 
     void createPlayListRecycleView() {
-        PlaylistAdapter playlistAdapter = new PlaylistAdapter(playLists,replaceFragmentListener);
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(playLists, replaceFragmentListener);
         for (int i = 0; i < 5; i++) {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             listDefaultPlayList[i].setLayoutManager(linearLayoutManager);
@@ -44,18 +50,23 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     void createPlayLists() {
         playLists = new ArrayList<>();
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
-        playLists.add(new PlayList("Tuyển tập nhạc Orijinn", "https://i.scdn.co/image/ab67616d0000b273e543a517bf685934d8688e27"));
+        Call<List<PlayList>> callGetPlayList = ApiSkyMusic.apiSkyMusic.getAllPlayList();
+        callGetPlayList.enqueue(new Callback<List<PlayList>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<PlayList>> call, @NonNull Response<List<PlayList>> response) {
+                layoutBinding.shimmerLayout.hideShimmer();
+                layoutBinding.shimmerLayout.setVisibility(View.INVISIBLE);
+                playLists = response.body();
+                createPlayListRecycleView();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<PlayList>> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), "Sever bận !", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -70,6 +81,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        layoutBinding.shimmerLayout.startShimmer();
         createPlayLists();
         initEvent();
         listDefaultPlayList = new RecyclerView[]{
@@ -79,7 +91,6 @@ public class HomeFragment extends Fragment {
                 layoutBinding.rvPlayListDefault3,
                 layoutBinding.rvPlayListDefault4,
         };
-        createPlayListRecycleView();
         replaceFragmentListener.showComponents();
         super.onViewCreated(view, savedInstanceState);
     }

@@ -48,8 +48,8 @@ public class MediaPlayerService extends Service {
         }
         songList = intent.getParcelableArrayListExtra("SONG_LIST");
         currentSong = songList.get(currentSongPosition);
-        if(action==MediaPlayerPresenter.ACTION_TRANS_SONG_VIEWPAGER){
-            currentSongPosition = intent.getIntExtra("CURRENT_SONG_POSITION",0);
+        if (action == MediaPlayerPresenter.ACTION_TRANS_SONG_VIEWPAGER) {
+            currentSongPosition = intent.getIntExtra("CURRENT_SONG_POSITION", 0);
             transSongByViewPager();
         }
         if (songList.isEmpty()) {
@@ -112,8 +112,7 @@ public class MediaPlayerService extends Service {
     }
 
     void prepareMusic(String url) {
-        initMediaSession();
-        initNotification();
+
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
@@ -122,6 +121,8 @@ public class MediaPlayerService extends Service {
             mediaPlayer.setOnPreparedListener(mp -> {
                 startUiMusic();
                 mediaPlayer.start();
+                initMediaSession();
+                initNotification();
                 changState(PlaybackStateCompat.STATE_PLAYING);
             });
         } catch (IOException e) {
@@ -130,8 +131,6 @@ public class MediaPlayerService extends Service {
     }
 
     void startUiMusic() {
-        handler.postDelayed(updateSeekBar, 1000);
-        mediaPlayer.start();
         initDuration();
         handler.postDelayed(updateSeekBar, 1000);
     }
@@ -152,10 +151,12 @@ public class MediaPlayerService extends Service {
         audioAttributesBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
         mediaPlayer.setAudioAttributes(audioAttributesBuilder.build());
     }
+
     void transSongByViewPager() {
         currentSong = songList.get(currentSongPosition);
         prepareMusic(currentSong.getUrl());
     }
+
     void transSong(int ACTION) {
         if (ACTION == MediaPlayerPresenter.ACTION_PLAY_NEXT_SONG) {
             ++currentSongPosition;
@@ -292,7 +293,7 @@ public class MediaPlayerService extends Service {
     }
 
     void changState(int state) {
-        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PAUSED));
+        mediaSession.setPlaybackState(createPlaybackState(state));
         notificationBuilder.clearActions();
         notificationBuilder.addAction(R.drawable.ic_prev, "Previous", null);
         if (state == PlaybackStateCompat.STATE_PAUSED) {

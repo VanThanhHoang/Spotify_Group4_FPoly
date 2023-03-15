@@ -1,11 +1,16 @@
 package com.example.spotify_group4.Model;
 
-public class PlayList {
-    String name;
-    int id;
-    String urlImg;
+import com.google.gson.annotations.SerializedName;
 
-    public PlayList(String name, String urlImg) {
+public class PlayList {
+    @SerializedName("ID")
+    int id;
+    @SerializedName("NAME")
+    String name;
+    @SerializedName("URL_IMG")
+    String urlImg;
+    public PlayList(int id,String name, String urlImg) {
+        this.id= id;
         this.name = name;
         this.urlImg = urlImg;
     }

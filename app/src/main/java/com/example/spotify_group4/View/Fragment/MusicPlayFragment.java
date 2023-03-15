@@ -138,7 +138,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         layoutBinding.btnNext.setOnClickListener(v -> playMusicPresenter.playNextSong());
         layoutBinding.btnPlayPause.setOnClickListener(v -> {
             playButtonAction();
-            resetTime();
         });
         layoutBinding.btnPrev.setOnClickListener(v -> {
             playMusicPresenter.playPrevSong();
