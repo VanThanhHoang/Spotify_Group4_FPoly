@@ -57,6 +57,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<List<PlayList>> call, @NonNull Response<List<PlayList>> response) {
                 layoutBinding.shimmerLayout.hideShimmer();
+                if (layoutBinding.layoutRefresh.isRefreshing()) {
+                    layoutBinding.layoutRefresh.setRefreshing(false);
+                }
                 layoutBinding.shimmerLayout.setVisibility(View.INVISIBLE);
                 playLists = response.body();
                 createPlayListRecycleView();
@@ -76,7 +79,7 @@ public class HomeFragment extends Fragment {
     }
 
     void initEvent() {
-
+        layoutBinding.layoutRefresh.setOnRefreshListener(this::createPlayLists);
     }
 
     @Override

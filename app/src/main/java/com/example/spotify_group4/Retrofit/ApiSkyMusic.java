@@ -1,8 +1,6 @@
 package com.example.spotify_group4.Retrofit;
 
 import com.example.spotify_group4.Model.PlayList;
-import com.example.spotify_group4.Model.Singer;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -15,8 +13,6 @@ public interface ApiSkyMusic {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
     ApiSkyMusic apiSkyMusic = retrofitSkyMusic.create(ApiSkyMusic.class);
-    @GET("get_all_singer.php")
-    Call<List<Singer>> getAllSinger();
-    @GET("get_all_playlist.php")
+   @GET("get_all_playlist.php")
     Call<List<PlayList>> getAllPlayList();
 }

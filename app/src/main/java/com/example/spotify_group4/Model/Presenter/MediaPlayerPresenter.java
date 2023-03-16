@@ -1,4 +1,4 @@
-package com.example.spotify_group4.Presenter;
+package com.example.spotify_group4.Model.Presenter;
 
 import android.content.Context;
 import android.content.Intent;
