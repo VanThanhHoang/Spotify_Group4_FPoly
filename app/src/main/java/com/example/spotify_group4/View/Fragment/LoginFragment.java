@@ -12,15 +12,34 @@ import androidx.fragment.app.Fragment;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.View.Activity.HomeActivity;
 import com.example.spotify_group4.databinding.FragmentLoginBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+
+import java.util.List;
 
 
 public class LoginFragment extends Fragment {
     FragmentLoginBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentLoginBinding.inflate(getLayoutInflater(),null,false);
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(getContext(),gso);
+        layoutBinding.btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SigninGoogle();
+            }
+        });
         return layoutBinding.getRoot();
     }
 
@@ -41,5 +60,24 @@ public class LoginFragment extends Fragment {
         });
         layoutBinding.btnPhoneAth.setOnClickListener(v->
                 replaceFragmentListener.replaceFragment(new PhoneNumberAthFragment()));
+    }
+    private void SigninGoogle(){
+        Intent intent = gsc.getSignInIntent();
+        startActivityForResult(intent,100);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                task.getResult(ApiException.class);
+                Intent intent = new Intent(getContext(),HomeActivity.class);
+                startActivity(intent);
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

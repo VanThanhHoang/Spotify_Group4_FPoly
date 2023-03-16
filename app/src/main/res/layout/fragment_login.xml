@@ -54,6 +54,7 @@
             app:cornerRadius="@dimen/border_raius_button" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginGoogle"
             style="@style/button_login_style"
             android:drawableLeft="@drawable/ic_google"
             android:text="@string/sigin_google"
