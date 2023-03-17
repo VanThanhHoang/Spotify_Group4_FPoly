@@ -19,9 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-import java.util.List;
-
-
 public class LoginFragment extends Fragment {
     FragmentLoginBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
@@ -31,15 +28,9 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentLoginBinding.inflate(getLayoutInflater(),null,false);
-
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getContext(),gso);
-        layoutBinding.btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SigninGoogle();
-            }
-        });
+        layoutBinding.btnLoginGoogle.setOnClickListener(v -> SignInGoogle());
         return layoutBinding.getRoot();
     }
 
@@ -61,7 +52,7 @@ public class LoginFragment extends Fragment {
         layoutBinding.btnPhoneAth.setOnClickListener(v->
                 replaceFragmentListener.replaceFragment(new PhoneNumberAthFragment()));
     }
-    private void SigninGoogle(){
+    private void SignInGoogle(){
         Intent intent = gsc.getSignInIntent();
         startActivityForResult(intent,100);
     }

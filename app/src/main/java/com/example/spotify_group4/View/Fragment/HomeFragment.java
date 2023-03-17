@@ -2,6 +2,8 @@ package com.example.spotify_group4.View.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +81,14 @@ public class HomeFragment extends Fragment {
     }
 
     void initEvent() {
-        layoutBinding.layoutRefresh.setOnRefreshListener(this::createPlayLists);
+        layoutBinding.layoutRefresh.setOnRefreshListener(() -> {
+            createPlayLists();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (layoutBinding.layoutRefresh.isRefreshing()) {
+                    layoutBinding.layoutRefresh.setRefreshing(false);
+                }
+            },2000);
+        });
     }
 
     @Override
