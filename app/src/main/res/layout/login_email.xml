@@ -61,10 +61,4 @@
         android:layout_width="wrap_content"
         android:textSize="20dp"
         app:strokeWidth="0dp"/>
-    <com.google.android.material.button.MaterialButton
-        style="@style/button_login_style"
-        android:layout_width="wrap_content"
-        app:cornerRadius="@dimen/border_raius_button"
-        android:text="@string/login_no_pass"
-        android:textColor="@color/white" />
 </LinearLayout>

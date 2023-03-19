@@ -62,6 +62,7 @@
             app:cornerRadius="@dimen/border_raius_button" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginFacebook"
             style="@style/button_login_style"
             android:drawableLeft="@drawable/ic_facebook"
             android:text="@string/sigin_facebook"
@@ -70,6 +71,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLoginAccount"
+            style="@style/button_login_style"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            app:strokeWidth="0dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginAccount1"
             style="@style/button_login_style"
             android:text="@string/login"
             android:textColor="@color/white"
