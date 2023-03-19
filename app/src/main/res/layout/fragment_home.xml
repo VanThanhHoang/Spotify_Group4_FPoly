@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/layoutRefresh"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,7 +12,6 @@
         android:padding="5dp">
 
         <RelativeLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -25,7 +25,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_slider" />
 
                     <include layout="@layout/shimmer_layout" />
 
@@ -35,6 +35,9 @@
 
                     <include layout="@layout/shimmer_layout" />
 
+                    <include layout="@layout/shimmer_layout" />
+
+                    <include layout="@layout/shimmer_layout" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -43,66 +46,97 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tvHelloHomeFragment"
+                    android:layout_margin="15dp"
                     style="@style/title_Login"
-                    android:textSize="20sp"
-                    android:id="@+id/tvContentTittle0"
+                    android:text="Hello"
+                    android:gravity="left"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="wrap_content"/>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vpgHomeSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rounded_br" />
+
+                <me.relex.circleindicator.CircleIndicator3
+                    android:id="@+id/homeCircleIndicatior"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+                <TextView
+                    android:id="@+id/tvContentTittle0"
+                    style="@style/title_Login"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault0"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
+
                 <TextView
-                    style="@style/title_Login"
-                    android:textSize="20sp"
                     android:id="@+id/tvContentTittle1"
+                    style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault1"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
+
                 <TextView
-                    style="@style/title_Login"
-                    android:textSize="20sp"
                     android:id="@+id/tvContentTittle2"
+                    style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault2"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
+
                 <TextView
-                    style="@style/title_Login"
-                    android:textSize="20sp"
                     android:id="@+id/tvContentTittle3"
+                    style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault3"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
+
                 <TextView
-                    style="@style/title_Login"
-                    android:textSize="20sp"
                     android:id="@+id/tvContentTittle4"
+                    style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault4"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
+
                 <TextView
-                    style="@style/title_Login"
-                    android:textSize="20sp"
                     android:id="@+id/tvContentTittle5"
+                    style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault5"
                     android:layout_width="match_parent"
