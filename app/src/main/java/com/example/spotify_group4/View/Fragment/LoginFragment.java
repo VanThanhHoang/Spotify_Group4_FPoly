@@ -60,6 +60,9 @@ public class LoginFragment extends Fragment {
         });
         layoutBinding.btnPhoneAth.setOnClickListener(v->
                 replaceFragmentListener.replaceFragment(new PhoneNumberAthFragment()));
+        layoutBinding.btnLoginAccount1.setOnClickListener(v->{
+            replaceFragmentListener.replaceFragment(new LoginEmailFragment());
+        });
     }
     private void SigninGoogle(){
         Intent intent = gsc.getSignInIntent();
