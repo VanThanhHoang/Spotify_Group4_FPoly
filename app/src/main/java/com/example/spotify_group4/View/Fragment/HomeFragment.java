@@ -7,6 +7,8 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify_group4.Adapter.PlaylistAdapter;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
+import com.example.spotify_group4.Model.HomeContent;
 import com.example.spotify_group4.Model.PlayList;
 import com.example.spotify_group4.Retrofit.ApiSkyMusic;
 import com.example.spotify_group4.databinding.FragmentHomeBinding;
@@ -33,15 +36,12 @@ public class HomeFragment extends Fragment {
     FragmentHomeBinding layoutBinding;
     List<PlayList> playLists;
     RecyclerView[] listDefaultPlayList;
+    TextView[] listDefaultContentTittle;
     ReplaceFragmentListener replaceFragmentListener;
+    List<HomeContent> homeContents;
 
     void createPlayListRecycleView() {
-        PlaylistAdapter playlistAdapter = new PlaylistAdapter(playLists, replaceFragmentListener);
-        for (int i = 0; i < 5; i++) {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            listDefaultPlayList[i].setLayoutManager(linearLayoutManager);
-            listDefaultPlayList[i].setAdapter(playlistAdapter);
-        }
+
     }
 
     @Nullable
@@ -74,12 +74,46 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    void getHomeContent() {
+        homeContents = new ArrayList<>();
+        Call<List<HomeContent>> callGetHomeContent = ApiSkyMusic.apiSkyMusic.getHomeContent();
+        callGetHomeContent.enqueue(new Callback<List<HomeContent>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<HomeContent>> call, @NonNull Response<List<HomeContent>> response) {
+                homeContents = response.body();
+                createTittleContent();
+                createRecycleViewPlaylist();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<HomeContent>> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         replaceFragmentListener = (ReplaceFragmentListener) getContext();
     }
 
+    void createRecycleView() {
+
+    }
+    void createTittleContent(){
+        for(int i = 0;i<listDefaultContentTittle.length;i++){
+            listDefaultContentTittle[i].setText(homeContents.get(i).getName());
+        }
+    }
+    void createRecycleViewPlaylist(){
+        for(int i = 0;i<listDefaultContentTittle.length;i++){
+            PlaylistAdapter adapter = new PlaylistAdapter(homeContents.get(i).getPlayLists(),replaceFragmentListener);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+            listDefaultPlayList[i].setLayoutManager(linearLayoutManager);
+            listDefaultPlayList[i].setAdapter(adapter);
+        }
+    }
     void initEvent() {
         layoutBinding.layoutRefresh.setOnRefreshListener(() -> {
             createPlayLists();
@@ -87,7 +121,7 @@ public class HomeFragment extends Fragment {
                 if (layoutBinding.layoutRefresh.isRefreshing()) {
                     layoutBinding.layoutRefresh.setRefreshing(false);
                 }
-            },2000);
+            }, 2000);
         });
     }
 
@@ -95,6 +129,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         layoutBinding.shimmerLayout.startShimmer();
         createPlayLists();
+        getHomeContent();
         initEvent();
         listDefaultPlayList = new RecyclerView[]{
                 layoutBinding.rvPlayListDefault0,
@@ -102,7 +137,17 @@ public class HomeFragment extends Fragment {
                 layoutBinding.rvPlayListDefault2,
                 layoutBinding.rvPlayListDefault3,
                 layoutBinding.rvPlayListDefault4,
+                layoutBinding.rvPlayListDefault5
         };
+        listDefaultContentTittle = new TextView[]{
+                layoutBinding.tvContentTittle0,
+                layoutBinding.tvContentTittle1,
+                layoutBinding.tvContentTittle2,
+                layoutBinding.tvContentTittle3,
+                layoutBinding.tvContentTittle4,
+                layoutBinding.tvContentTittle5
+        };
+        createRecycleView();
         replaceFragmentListener.showComponents();
         super.onViewCreated(view, savedInstanceState);
     }

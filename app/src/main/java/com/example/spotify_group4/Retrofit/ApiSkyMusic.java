@@ -1,5 +1,6 @@
 package com.example.spotify_group4.Retrofit;
 
+import com.example.spotify_group4.Model.HomeContent;
 import com.example.spotify_group4.Model.PlayList;
 import java.util.List;
 
@@ -15,5 +16,6 @@ public interface ApiSkyMusic {
     ApiSkyMusic apiSkyMusic = retrofitSkyMusic.create(ApiSkyMusic.class);
    @GET("get_all_playlist.php")
     Call<List<PlayList>> getAllPlayList();
-
+    @GET("get_home_content.php")
+    Call<List<HomeContent>> getHomeContent();
 }

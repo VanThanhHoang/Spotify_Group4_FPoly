@@ -25,7 +25,7 @@ import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
-import com.example.spotify_group4.Model.Presenter.MediaPlayerPresenter;
+import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 

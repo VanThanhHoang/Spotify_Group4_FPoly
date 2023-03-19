@@ -86,7 +86,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     void setColorMatrix(ImageView imgPlayList){
         ColorMatrix colorMatrix = new ColorMatrix();
         colorMatrix.setSaturation(0); // 0 means grayscale
-        colorMatrix.setScale(0.7f, 0.7f, 0.7f, 1); // Scale all color channels by 0.5
+        colorMatrix.setScale(0.8f, 0.8f, 0.8f, 1); // Scale all color channels by 0.5
         ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(colorMatrix);
         imgPlayList.setColorFilter(colorFilter);
     }

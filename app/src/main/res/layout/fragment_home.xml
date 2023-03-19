@@ -4,7 +4,6 @@
     android:id="@+id/layoutRefresh"
     android:layout_height="match_parent"
     android:background="@color/black">
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,6 +11,7 @@
         android:padding="5dp">
 
         <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -42,33 +42,69 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
+                <TextView
+                    style="@style/title_Login"
+                    android:textSize="20sp"
+                    android:id="@+id/tvContentTittle0"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault0"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
-
+                <TextView
+                    style="@style/title_Login"
+                    android:textSize="20sp"
+                    android:id="@+id/tvContentTittle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault1"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
-
+                <TextView
+                    style="@style/title_Login"
+                    android:textSize="20sp"
+                    android:id="@+id/tvContentTittle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault2"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
-
+                <TextView
+                    style="@style/title_Login"
+                    android:textSize="20sp"
+                    android:id="@+id/tvContentTittle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault3"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
-
+                <TextView
+                    style="@style/title_Login"
+                    android:textSize="20sp"
+                    android:id="@+id/tvContentTittle4"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault4"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_margin="5dp" />
+                <TextView
+                    style="@style/title_Login"
+                    android:textSize="20sp"
+                    android:id="@+id/tvContentTittle5"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlayListDefault5"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_margin="5dp" />
