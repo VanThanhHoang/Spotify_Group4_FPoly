@@ -15,4 +15,5 @@ public interface ApiSkyMusic {
     ApiSkyMusic apiSkyMusic = retrofitSkyMusic.create(ApiSkyMusic.class);
    @GET("get_all_playlist.php")
     Call<List<PlayList>> getAllPlayList();
+
 }

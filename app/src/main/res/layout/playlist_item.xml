@@ -17,9 +17,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/albumqnt"
             android:layout_weight="4.5">
             <ImageView
+                android:alpha="0.8"
                 android:scaleType="centerCrop"
                 android:id="@+id/imgPlayList"
                 android:layout_width="match_parent"
@@ -33,6 +33,7 @@
                 android:background="@color/green" />
 
             <TextView
+
                 android:id="@+id/tvPlayListName"
                 android:layout_toEndOf="@id/leftLine"
                 android:layout_width="250dp"
@@ -42,7 +43,6 @@
                 android:layout_marginStart="10dp"
                 android:maxLines="3"
                 android:layout_marginBottom="5dp"
-                android:text="@string/ten_album"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />
