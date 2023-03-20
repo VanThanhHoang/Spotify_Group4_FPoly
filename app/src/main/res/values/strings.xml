@@ -27,9 +27,7 @@
     <string name="notification_music_chanel_name">Thông báo trình điều khiển nhạc</string>
     <!-- mediaPlayer -->
     <string name="defaultDuration">00:00</string>
-
+    <string name="ID_CHANEL_MUSIC">ID_CHANEL_MUSIC</string>
     <!-- album-->
-    <string name="ten_album">Tuyển tập của QNT</string>
-    <string name="ten_ca_si">Osad, low G và Da LAB</string>
-    <string name="ID_CHANEL_MUSIC">MUSIC_CHANEL</string>
+    <string name="nameAppSharedPreference">applicationSharedPreference</string>
 </resources>
