@@ -18,34 +18,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.spotify_group4.Adapter.HomeSliderAdapter;
 import com.example.spotify_group4.Adapter.PlaylistAdapter;
 import com.example.spotify_group4.Helper.AnimationZoomViewPager;
+import com.example.spotify_group4.Listener.GetDataHomeFragmentListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.HomeContent;
 import com.example.spotify_group4.Model.PlayList;
-import com.example.spotify_group4.Retrofit.ApiSkyMusic;
+import com.example.spotify_group4.Presenter.HomeFragmentPresenter;
 import com.example.spotify_group4.databinding.FragmentHomeBinding;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements GetDataHomeFragmentListener {
     FragmentHomeBinding layoutBinding;
-    List<PlayList> playListSlider;
+    HomeFragmentPresenter homeFragmentPresenter;
     RecyclerView[] listDefaultPlayList;
     TextView[] listDefaultContentTittle;
     ReplaceFragmentListener replaceFragmentListener;
-    List<HomeContent> homeContents;
-    Handler handler ;
+    Handler handler;
     Runnable sliderRunnable;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentHomeBinding.inflate(getLayoutInflater(), container, false);
+        homeFragmentPresenter = new HomeFragmentPresenter(this);
         return layoutBinding.getRoot();
     }
 
@@ -58,46 +55,9 @@ public class HomeFragment extends Fragment {
         layoutBinding.shimmerLayout.setVisibility(View.INVISIBLE);
     }
 
-    void getPlayListSlider() {
-        playListSlider = new ArrayList<>();
-        Call<List<PlayList>> callGetSliderPlayLists = ApiSkyMusic.apiSkyMusic.getSliderPlayList();
-        callGetSliderPlayLists.enqueue(new Callback<List<PlayList>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<PlayList>> call, @NonNull Response<List<PlayList>> response) {
-                playListSlider = response.body();
-                createSlider();
-                autoTransSlider();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<PlayList>> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
-    void getHomeContent() {
-        homeContents = new ArrayList<>();
-        Call<List<HomeContent>> callGetHomeContent = ApiSkyMusic.apiSkyMusic.getHomeContent();
-        callGetHomeContent.enqueue(new Callback<List<HomeContent>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<HomeContent>> call, @NonNull Response<List<HomeContent>> response) {
-                hideShimmer();
-                homeContents = response.body();
-                createTittleContent();
-                createRecycleViewPlaylist();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<HomeContent>> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
-    void createSlider() {
+    void createSlider(List<PlayList> playLists) {
         assert getActivity() != null;
-        HomeSliderAdapter homeSliderAdapter = new HomeSliderAdapter(getActivity(), playListSlider);
+        HomeSliderAdapter homeSliderAdapter = new HomeSliderAdapter(getActivity(), playLists);
         layoutBinding.vpgHomeSlider.setAdapter(homeSliderAdapter);
         layoutBinding.vpgHomeSlider.setPageTransformer(new AnimationZoomViewPager());
         layoutBinding.homeCircleIndicatior.setViewPager(layoutBinding.vpgHomeSlider);
@@ -111,13 +71,13 @@ public class HomeFragment extends Fragment {
     }
 
 
-    void createTittleContent() {
+    void createTittleContent(List<HomeContent> homeContents) {
         for (int i = 0; i < listDefaultContentTittle.length; i++) {
             listDefaultContentTittle[i].setText(homeContents.get(i).getName());
         }
     }
 
-    void createRecycleViewPlaylist() {
+    void createRecycleViewPlaylist(List<HomeContent> homeContents) {
         for (int i = 0; i < listDefaultContentTittle.length; i++) {
             PlaylistAdapter adapter = new PlaylistAdapter(homeContents.get(i).getPlayLists(), replaceFragmentListener);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -128,8 +88,8 @@ public class HomeFragment extends Fragment {
 
     void initEvent() {
         layoutBinding.layoutRefresh.setOnRefreshListener(() -> {
-            getHomeContent();
-            getPlayListSlider();
+            homeFragmentPresenter.getPlayListForSlider();
+            homeFragmentPresenter.getHomeContent();
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (layoutBinding.layoutRefresh.isRefreshing()) {
                     layoutBinding.layoutRefresh.setRefreshing(false);
@@ -138,22 +98,22 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void autoTransSlider() {
+    private void autoTransSlider(int sizePlayList) {
         handler = new Handler(Looper.getMainLooper());
         sliderRunnable = () -> {
             int currentPos = layoutBinding.vpgHomeSlider.getCurrentItem();
-            int total = playListSlider.size() - 1;
-            if (currentPos < total) {
+            if (currentPos < sizePlayList) {
                 currentPos++;
                 layoutBinding.vpgHomeSlider.setCurrentItem(currentPos);
             } else {
                 layoutBinding.vpgHomeSlider.setCurrentItem(0);
             }
-            handler.postDelayed(sliderRunnable,3000);
+            handler.postDelayed(sliderRunnable, 3000);
         };
         sliderRunnable.run();
     }
-    void setTextHello(){
+
+    void setTextHello() {
         LocalTime currentTime = LocalTime.now();
         int hour = currentTime.getHour();
         if (hour >= 4 && hour < 12) {
@@ -166,18 +126,18 @@ public class HomeFragment extends Fragment {
             layoutBinding.tvHelloHomeFragment.setText("Buổi tối tốt lành !");
         }
     }
+
     @Override
     public void onDestroy() {
-
         super.onDestroy();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setTextHello();
+        homeFragmentPresenter.getHomeContent();
         layoutBinding.shimmerLayout.startShimmer();
-        getHomeContent();
-        getPlayListSlider();
+        homeFragmentPresenter.getPlayListForSlider();
         initEvent();
         listDefaultPlayList = new RecyclerView[]{
                 layoutBinding.rvPlayListDefault0,
@@ -197,5 +157,28 @@ public class HomeFragment extends Fragment {
         };
         replaceFragmentListener.showComponents();
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onGetListPlayListComplete(List<PlayList> playLists) {
+        createSlider(playLists);
+        autoTransSlider(playLists.size() - 1);
+    }
+
+    @Override
+    public void onGetListPlayListFail() {
+
+    }
+
+    @Override
+    public void onGetHomeContentComplete(List<HomeContent> homeContents) {
+        createTittleContent(homeContents);
+        createRecycleViewPlaylist(homeContents);
+        hideShimmer();
+    }
+
+    @Override
+    public void onGetHomeContentFail() {
+
     }
 }
