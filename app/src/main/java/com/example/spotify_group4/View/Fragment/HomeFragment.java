@@ -103,8 +103,7 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
         sliderRunnable = () -> {
             int currentPos = layoutBinding.vpgHomeSlider.getCurrentItem();
             if (currentPos < sizePlayList) {
-                currentPos++;
-                layoutBinding.vpgHomeSlider.setCurrentItem(currentPos);
+                layoutBinding.vpgHomeSlider.setCurrentItem(++currentPos);
             } else {
                 layoutBinding.vpgHomeSlider.setCurrentItem(0);
             }
@@ -129,6 +128,7 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
 
     @Override
     public void onDestroy() {
+        handler.removeCallbacks(sliderRunnable);
         super.onDestroy();
     }
 

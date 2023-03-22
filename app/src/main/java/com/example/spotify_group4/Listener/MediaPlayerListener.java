@@ -4,9 +4,9 @@ public interface MediaPlayerListener {
     void onSongLoad();
     void onMusicPlay();
     void onMusicPause();
+    void onInitInfo(int fullDuration);
     void onMusicStop();
-    void onUpdateSeekbar();
-    void onUpdateTime();
-    void onTransSong();
-
+    void onUpdateSeekbar(String currentDuration,int currentProcess);
+    void onTransSong(int currentSongPosition);
+    void onChangeRepeatMode(String repeatMode);
 }
