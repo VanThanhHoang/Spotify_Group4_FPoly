@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +44,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     int mCurrentSongPosition;
     Song song;
     SongVpgAdapter songVpgAdapter;
+
     @Override
     public void onStart() {
         registerBroadcast();
@@ -60,7 +60,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         initEvent();
         initViewPager();
         playMusicPresenter.startPlayList(songList, mCurrentSongPosition);
-        Log.d("123", "onViewCreated: "+songList.toString());
     }
 
     @Override

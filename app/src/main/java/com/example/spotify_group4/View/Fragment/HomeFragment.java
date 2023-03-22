@@ -37,6 +37,10 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
     ReplaceFragmentListener replaceFragmentListener;
     Handler handler;
     Runnable sliderRunnable;
+    List<HomeContent> mHomeContents;
+    List<PlayList> mPlayListSlider;
+    boolean isCreateHomeContent;
+    boolean isCreatePlaylistSlider;
 
     @Nullable
     @Override
@@ -46,6 +50,47 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
         return layoutBinding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        setTextHello();
+        initComponent();
+        if (!isCreateHomeContent) {
+            homeFragmentPresenter.getHomeContent();
+            layoutBinding.shimmerLayout.startShimmer();
+        } else {
+            hideShimmer();
+            createTittleContent(mHomeContents);
+            createRecycleViewPlaylist(mHomeContents);
+        }
+        if (!isCreatePlaylistSlider) {
+            homeFragmentPresenter.getPlayListForSlider();
+        } else {
+            createSlider(mPlayListSlider);
+        }
+        initEvent();
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    void initComponent() {
+        listDefaultPlayList = new RecyclerView[]{
+                layoutBinding.rvPlayListDefault0,
+                layoutBinding.rvPlayListDefault1,
+                layoutBinding.rvPlayListDefault2,
+                layoutBinding.rvPlayListDefault3,
+                layoutBinding.rvPlayListDefault4,
+                layoutBinding.rvPlayListDefault5
+        };
+        listDefaultContentTittle = new TextView[]{
+                layoutBinding.tvContentTittle0,
+                layoutBinding.tvContentTittle1,
+                layoutBinding.tvContentTittle2,
+                layoutBinding.tvContentTittle3,
+                layoutBinding.tvContentTittle4,
+                layoutBinding.tvContentTittle5
+        };
+        replaceFragmentListener.showComponents();
+    }
 
     void hideShimmer() {
         layoutBinding.shimmerLayout.hideShimmer();
@@ -133,34 +178,9 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setTextHello();
-        homeFragmentPresenter.getHomeContent();
-        layoutBinding.shimmerLayout.startShimmer();
-        homeFragmentPresenter.getPlayListForSlider();
-        initEvent();
-        listDefaultPlayList = new RecyclerView[]{
-                layoutBinding.rvPlayListDefault0,
-                layoutBinding.rvPlayListDefault1,
-                layoutBinding.rvPlayListDefault2,
-                layoutBinding.rvPlayListDefault3,
-                layoutBinding.rvPlayListDefault4,
-                layoutBinding.rvPlayListDefault5
-        };
-        listDefaultContentTittle = new TextView[]{
-                layoutBinding.tvContentTittle0,
-                layoutBinding.tvContentTittle1,
-                layoutBinding.tvContentTittle2,
-                layoutBinding.tvContentTittle3,
-                layoutBinding.tvContentTittle4,
-                layoutBinding.tvContentTittle5
-        };
-        replaceFragmentListener.showComponents();
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onGetListPlayListComplete(List<PlayList> playLists) {
+        mPlayListSlider = playLists;
+        isCreatePlaylistSlider = true;
         createSlider(playLists);
         autoTransSlider(playLists.size() - 1);
     }
@@ -172,6 +192,8 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
 
     @Override
     public void onGetHomeContentComplete(List<HomeContent> homeContents) {
+        mHomeContents = homeContents;
+        isCreateHomeContent = true;
         createTittleContent(homeContents);
         createRecycleViewPlaylist(homeContents);
         hideShimmer();
