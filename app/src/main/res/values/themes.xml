@@ -84,8 +84,9 @@
     </style>
 
     <style name="img_button_media_player">
+        <item name="android:layout_weight">1.2</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="tint">@color/white</item>
         <item name="iconSize">30sp</item>
         <item name="backgroundTint">@android:color/transparent</item>
