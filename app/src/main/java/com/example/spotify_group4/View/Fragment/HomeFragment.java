@@ -173,8 +173,13 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
 
     @Override
     public void onDestroy() {
-        handler.removeCallbacks(sliderRunnable);
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        handler.removeCallbacks(sliderRunnable);
+        super.onStop();
     }
 
     @Override

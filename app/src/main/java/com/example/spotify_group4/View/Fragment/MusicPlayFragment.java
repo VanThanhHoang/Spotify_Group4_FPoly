@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -265,6 +266,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public void onPlayListShuffled(List<Song> songList) {
         mSongList = songList;
         songVpgAdapter.updateSongList(mSongList);
+        songVpgAdapter.notifyDataSetChanged();
     }
 
 }
