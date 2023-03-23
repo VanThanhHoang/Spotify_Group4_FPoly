@@ -7,9 +7,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,120 +15,64 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spotify_group4.Adapter.HomeSliderAdapter;
 import com.example.spotify_group4.Adapter.PlaylistAdapter;
+import com.example.spotify_group4.Helper.AnimationZoomViewPager;
+import com.example.spotify_group4.Listener.GetDataHomeFragmentListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.HomeContent;
 import com.example.spotify_group4.Model.PlayList;
-import com.example.spotify_group4.Retrofit.ApiSkyMusic;
+import com.example.spotify_group4.Presenter.HomeFragmentPresenter;
 import com.example.spotify_group4.databinding.FragmentHomeBinding;
 
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements GetDataHomeFragmentListener {
     FragmentHomeBinding layoutBinding;
-    List<PlayList> playLists;
+    HomeFragmentPresenter homeFragmentPresenter;
     RecyclerView[] listDefaultPlayList;
     TextView[] listDefaultContentTittle;
     ReplaceFragmentListener replaceFragmentListener;
-    List<HomeContent> homeContents;
-
-    void createPlayListRecycleView() {
-
-    }
+    Handler handler;
+    Runnable sliderRunnable;
+    List<HomeContent> mHomeContents;
+    List<PlayList> mPlayListSlider;
+    boolean isCreateHomeContent;
+    boolean isCreatePlaylistSlider;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentHomeBinding.inflate(getLayoutInflater(), container, false);
+        homeFragmentPresenter = new HomeFragmentPresenter(this);
         return layoutBinding.getRoot();
-    }
-
-
-    void createPlayLists() {
-        playLists = new ArrayList<>();
-        Call<List<PlayList>> callGetPlayList = ApiSkyMusic.apiSkyMusic.getAllPlayList();
-        callGetPlayList.enqueue(new Callback<List<PlayList>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<PlayList>> call, @NonNull Response<List<PlayList>> response) {
-                layoutBinding.shimmerLayout.hideShimmer();
-                if (layoutBinding.layoutRefresh.isRefreshing()) {
-                    layoutBinding.layoutRefresh.setRefreshing(false);
-                }
-                layoutBinding.shimmerLayout.setVisibility(View.INVISIBLE);
-                playLists = response.body();
-                createPlayListRecycleView();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<PlayList>> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "Sever bận !", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    void getHomeContent() {
-        homeContents = new ArrayList<>();
-        Call<List<HomeContent>> callGetHomeContent = ApiSkyMusic.apiSkyMusic.getHomeContent();
-        callGetHomeContent.enqueue(new Callback<List<HomeContent>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<HomeContent>> call, @NonNull Response<List<HomeContent>> response) {
-                homeContents = response.body();
-                createTittleContent();
-                createRecycleViewPlaylist();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<HomeContent>> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        replaceFragmentListener = (ReplaceFragmentListener) getContext();
-    }
-
-    void createRecycleView() {
-
-    }
-    void createTittleContent(){
-        for(int i = 0;i<listDefaultContentTittle.length;i++){
-            listDefaultContentTittle[i].setText(homeContents.get(i).getName());
-        }
-    }
-    void createRecycleViewPlaylist(){
-        for(int i = 0;i<listDefaultContentTittle.length;i++){
-            PlaylistAdapter adapter = new PlaylistAdapter(homeContents.get(i).getPlayLists(),replaceFragmentListener);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-            listDefaultPlayList[i].setLayoutManager(linearLayoutManager);
-            listDefaultPlayList[i].setAdapter(adapter);
-        }
-    }
-    void initEvent() {
-        layoutBinding.layoutRefresh.setOnRefreshListener(() -> {
-            createPlayLists();
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                if (layoutBinding.layoutRefresh.isRefreshing()) {
-                    layoutBinding.layoutRefresh.setRefreshing(false);
-                }
-            }, 2000);
-        });
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        layoutBinding.shimmerLayout.startShimmer();
-        createPlayLists();
-        getHomeContent();
+        setTextHello();
+        initComponent();
+        if (!isCreateHomeContent) {
+            homeFragmentPresenter.getHomeContent();
+            layoutBinding.shimmerLayout.startShimmer();
+        } else {
+            hideShimmer();
+            createTittleContent(mHomeContents);
+            createRecycleViewPlaylist(mHomeContents);
+        }
+        if (!isCreatePlaylistSlider) {
+            homeFragmentPresenter.getPlayListForSlider();
+        } else {
+            createSlider(mPlayListSlider);
+        }
         initEvent();
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    void initComponent() {
         listDefaultPlayList = new RecyclerView[]{
                 layoutBinding.rvPlayListDefault0,
                 layoutBinding.rvPlayListDefault1,
@@ -147,8 +89,123 @@ public class HomeFragment extends Fragment {
                 layoutBinding.tvContentTittle4,
                 layoutBinding.tvContentTittle5
         };
-        createRecycleView();
         replaceFragmentListener.showComponents();
-        super.onViewCreated(view, savedInstanceState);
+    }
+
+    void hideShimmer() {
+        layoutBinding.shimmerLayout.hideShimmer();
+        if (layoutBinding.layoutRefresh.isRefreshing()) {
+            layoutBinding.layoutRefresh.setRefreshing(false);
+        }
+        layoutBinding.shimmerLayout.setVisibility(View.INVISIBLE);
+    }
+
+    void createSlider(List<PlayList> playLists) {
+        assert getActivity() != null;
+        HomeSliderAdapter homeSliderAdapter = new HomeSliderAdapter(getActivity(), playLists);
+        layoutBinding.vpgHomeSlider.setAdapter(homeSliderAdapter);
+        layoutBinding.vpgHomeSlider.setPageTransformer(new AnimationZoomViewPager());
+        layoutBinding.homeCircleIndicatior.setViewPager(layoutBinding.vpgHomeSlider);
+        homeSliderAdapter.registerAdapterDataObserver(layoutBinding.homeCircleIndicatior.getAdapterDataObserver());
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        replaceFragmentListener = (ReplaceFragmentListener) getContext();
+    }
+
+
+    void createTittleContent(List<HomeContent> homeContents) {
+        for (int i = 0; i < listDefaultContentTittle.length; i++) {
+            listDefaultContentTittle[i].setText(homeContents.get(i).getName());
+        }
+    }
+
+    void createRecycleViewPlaylist(List<HomeContent> homeContents) {
+        for (int i = 0; i < listDefaultContentTittle.length; i++) {
+            PlaylistAdapter adapter = new PlaylistAdapter(homeContents.get(i).getPlayLists(), replaceFragmentListener);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            listDefaultPlayList[i].setLayoutManager(linearLayoutManager);
+            listDefaultPlayList[i].setAdapter(adapter);
+        }
+    }
+
+    void initEvent() {
+        layoutBinding.layoutRefresh.setOnRefreshListener(() -> {
+            homeFragmentPresenter.getPlayListForSlider();
+            homeFragmentPresenter.getHomeContent();
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (layoutBinding.layoutRefresh.isRefreshing()) {
+                    layoutBinding.layoutRefresh.setRefreshing(false);
+                }
+            }, 2000);
+        });
+    }
+
+    private void autoTransSlider(int sizePlayList) {
+        handler = new Handler(Looper.getMainLooper());
+        sliderRunnable = () -> {
+            int currentPos = layoutBinding.vpgHomeSlider.getCurrentItem();
+            if (currentPos < sizePlayList) {
+                layoutBinding.vpgHomeSlider.setCurrentItem(++currentPos);
+            } else {
+                layoutBinding.vpgHomeSlider.setCurrentItem(0);
+            }
+            handler.postDelayed(sliderRunnable, 3000);
+        };
+        sliderRunnable.run();
+    }
+
+    void setTextHello() {
+        LocalTime currentTime = LocalTime.now();
+        int hour = currentTime.getHour();
+        if (hour >= 4 && hour < 12) {
+            layoutBinding.tvHelloHomeFragment.setText("Chào buổi sáng!");
+        } else if (hour >= 12 && hour < 15) {
+            layoutBinding.tvHelloHomeFragment.setText("Buổi trưa vui vẻ nhé !");
+        } else if (hour >= 15 && hour < 18) {
+            layoutBinding.tvHelloHomeFragment.setText("Chúc buổi chiều đầy năng động!");
+        } else {
+            layoutBinding.tvHelloHomeFragment.setText("Buổi tối tốt lành !");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        handler.removeCallbacks(sliderRunnable);
+        super.onStop();
+    }
+
+    @Override
+    public void onGetListPlayListComplete(List<PlayList> playLists) {
+        mPlayListSlider = playLists;
+        isCreatePlaylistSlider = true;
+        createSlider(playLists);
+        autoTransSlider(playLists.size() - 1);
+    }
+
+    @Override
+    public void onGetListPlayListFail() {
+
+    }
+
+    @Override
+    public void onGetHomeContentComplete(List<HomeContent> homeContents) {
+        mHomeContents = homeContents;
+        isCreateHomeContent = true;
+        createTittleContent(homeContents);
+        createRecycleViewPlaylist(homeContents);
+        hideShimmer();
+    }
+
+    @Override
+    public void onGetHomeContentFail() {
+
     }
 }

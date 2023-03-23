@@ -1,5 +1,8 @@
 package com.example.spotify_group4.Adapter;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -30,5 +33,9 @@ public class SongVpgAdapter extends FragmentStateAdapter {
             return mSongList.size();
         }
         return 0;
+    }
+
+    public void updateSongList(List<Song> newSongList) {
+        mSongList = newSongList;
     }
 }

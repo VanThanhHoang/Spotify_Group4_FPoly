@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:weightSum="10">
 
     <RelativeLayout
         android:id="@+id/toolbarPlayMusicFragment"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="0dp"
+        android:layout_weight="0.7">
 
         <androidx.constraintlayout.utils.widget.ImageFilterButton
             android:id="@+id/btnBack"
@@ -26,15 +30,15 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpgSongInfo"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_below="@+id/toolbarPlayMusicFragment" />
+        android:layout_height="0dp"
+        android:layout_weight="8" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/timeSeekBar"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/vpgSongInfo"
+        android:layout_height="0dp"
         android:layout_marginTop="15dp"
+        android:layout_weight="0.5"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:defaultFocusHighlightEnabled="true"
@@ -43,63 +47,74 @@
         android:progressDrawable="@drawable/br_seek_bar"
         android:thumb="@null" />
 
-    <TextView
-        android:id="@+id/tvTimeStart"
-        style="@style/title_Login"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_below="@+id/timeSeekBar"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:text="@string/defaultDuration"
-        android:textSize="13sp" />
-
-    <TextView
-        android:id="@+id/tvTimeEnd"
-        style="@style/title_Login"
-        android:layout_width="100dp"
-        android:layout_height="48dp"
-        android:layout_below="@+id/timeSeekBar"
-        android:layout_alignParentEnd="true"
-        android:gravity="center"
-        android:text="@string/defaultDuration"
-        android:textSize="13sp" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_below="@+id/tvTimeStart">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btnPlay_Pause"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/custom_image_button_cycle"
-            android:backgroundTint="@color/green"
+        <TextView
+            android:id="@+id/tvTimeStart"
+            style="@style/title_Login"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:gravity="center"
-            android:src="@drawable/ic_play" />
+            android:text="@string/defaultDuration"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvTimeEnd"
+            style="@style/title_Login"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:text="@string/defaultDuration"
+            android:textSize="13sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnShuffle"
+            style="@style/img_button_media_player"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:icon="@drawable/ic_shuffle" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrev"
             style="@style/img_button_media_player"
-            android:layout_toStartOf="@+id/btnPlay_Pause"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             app:icon="@drawable/ic_prev" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btnPlay_Pause"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/custom_image_button_cycle"
+            android:backgroundTint="@color/green"
+            android:gravity="center"
+            android:src="@drawable/ic_play"
+            tools:ignore="NestedWeights" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
             style="@style/img_button_media_player"
-            android:layout_toEndOf="@+id/btnPlay_Pause"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             app:icon="@drawable/ic_next" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRepeatMode"
             style="@style/img_button_media_player"
-            android:layout_toStartOf="@+id/btnPrev"
-            app:icon="@drawable/ic_random" />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/img_button_media_player"
-            android:layout_toEndOf="@+id/btnNext"
-            app:icon="@drawable/ic_loop" />
-    </RelativeLayout>
-</RelativeLayout>
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:icon="@drawable/ic_not_repeat" />
+    </LinearLayout>
+</LinearLayout>

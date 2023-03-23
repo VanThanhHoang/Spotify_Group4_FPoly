@@ -1,13 +1,11 @@
 package com.example.spotify_group4.View.Fragment;
 
-import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.spotify_group4.Adapter.SongVpgAdapter;
 import com.example.spotify_group4.Helper.AnimationZoomViewPager;
+import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Helper.TimeFormatter;
 import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
@@ -27,55 +26,25 @@ import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
+import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
+import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 
 import java.util.List;
 
 public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
-    //ACTION
-    public static final String ACTION_TRANS_SONG = "PLAY_NEXT_SONG_FRAGMENT_MUSIC_PLAYER";
-    public static final String ACTION_MUSIC_COMPLETE = "MUSIC_COMPLETE_FRAGMENT_MUSIC_PLAYER";
-    public static final String ACTION_INIT_DURATION = "INIT_UI_FRAGMENT_MUSIC_PLAYER";
-    public static final String ACTION_UPDATE_DURATION = "UPDATE_UI_FRAGMENT_MUSIC_PLAYER";
+    AppSharedPreferenceHelper appSharedPreferenceHelper;
     FragmentPlayMusicBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
     MediaPlayerPresenter playMusicPresenter;
-    int CURRENT_ACTION = MediaPlayerPresenter.ACTION_PLAY;
-    mediaPlayerReceiver mediaPlayerReceiver;
-    int fullIntDuration;
+    int CURRENT_ACTION = Constants.MEDIA_PLAYER_ACTION_PLAY;
+    MediaPlayerReceiver mediaPlayerReceiver;
+    int mFullIntDuration;
     LoadListener loadListener;
-    List<Song> songList;
-    int currentSongPosition;
+    List<Song> mSongList;
+    int mCurrentSongPosition;
     Song song;
     SongVpgAdapter songVpgAdapter;
-
-    private class mediaPlayerReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            switch (action) {
-                case ACTION_INIT_DURATION:
-                    onMusicPlay();
-                    fullIntDuration = intent.getIntExtra("fullIntDuration", 0);
-                    String fullDuration = intent.getStringExtra("fullDuration");
-                    layoutBinding.tvTimeEnd.setText(fullDuration);
-                    break;
-                case ACTION_UPDATE_DURATION:
-                    String currentDuration = intent.getStringExtra("currentDuration");
-                    int positionSeekbar = intent.getIntExtra("positionSeekbar", 0);
-                    layoutBinding.tvTimeStart.setText(currentDuration);
-                    layoutBinding.timeSeekBar.setProgress(positionSeekbar);
-                    break;
-                case ACTION_MUSIC_COMPLETE:
-                    onMusicStop();
-                    break;
-                case ACTION_TRANS_SONG:
-                    currentSongPosition = intent.getIntExtra("CURS_POSITION", 0);
-                    onTransSong();
-                    break;
-            }
-        }
-    }
 
     @Override
     public void onStart() {
@@ -83,22 +52,16 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         super.onStart();
     }
 
-    void registerBroadcast() {
-        mediaPlayerReceiver = new mediaPlayerReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_INIT_DURATION);
-        intentFilter.addAction(ACTION_UPDATE_DURATION);
-        intentFilter.addAction(ACTION_MUSIC_COMPLETE);
-        intentFilter.addAction(ACTION_TRANS_SONG);
-        if (getContext() != null) {
-            getContext().registerReceiver(mediaPlayerReceiver, intentFilter);
-        }
-    }
-
-    public MusicPlayFragment(List<Song> songList, int songPosition) {
-        this.songList = songList;
-        this.currentSongPosition = songPosition;
-        this.song = songList.get(currentSongPosition);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mediaPlayerReceiver = new MediaPlayerReceiver(this);
+        replaceFragmentListener.hideComponents();
+        playMusicPresenter.getRepeatMode();
+        playMusicPresenter.getShuffleMode();
+        initEvent();
+        initViewPager();
+        playMusicPresenter.startPlayList(mSongList, mCurrentSongPosition);
     }
 
     @Override
@@ -108,21 +71,40 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         return layoutBinding.getRoot();
     }
 
+    void setShuffleButton(boolean isShuffle) {
+        if (isShuffle) {
+            layoutBinding.btnShuffle.setIconTintResource(R.color.green);
+        } else {
+            layoutBinding.btnShuffle.setIconTintResource(R.color.white);
+        }
+    }
+
+    void registerBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_SHUFFLED_PLAY_LIST);
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_INIT_DURATION);
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_MUSIC_COMPLETE);
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_UPDATE_DURATION);
+        if (getContext() != null) {
+            getContext().registerReceiver(mediaPlayerReceiver, intentFilter);
+        }
+    }
+
+    public MusicPlayFragment(List<Song> songList, int songPosition) {
+        this.mSongList = songList;
+        this.mCurrentSongPosition = songPosition;
+        this.song = songList.get(mCurrentSongPosition);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         loadListener = (LoadListener) context;
         replaceFragmentListener = (ReplaceFragmentListener) context;
+        appSharedPreferenceHelper = new AppSharedPreferenceHelper(context);
         super.onAttach(context);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        replaceFragmentListener.hideComponents();
-        initEvent();
-        initViewPager();
-        playMusicPresenter.startPlayList(songList, currentSongPosition);
-    }
 
     void resetTime() {
         layoutBinding.timeSeekBar.setProgress(0);
@@ -130,24 +112,31 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         layoutBinding.tvTimeEnd.setText(R.string.defaultDuration);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onDestroy() {
+        assert getContext() != null;
+        getContext().unregisterReceiver(mediaPlayerReceiver);
+        super.onDestroy();
+    }
+
     void initEvent() {
+        layoutBinding.btnShuffle.setOnClickListener(v -> playMusicPresenter.setShuffleMode());
+        layoutBinding.btnRepeatMode.setOnClickListener(v -> playMusicPresenter.setRepeatMode());
         if (getActivity() != null) {
             layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
         }
         layoutBinding.btnNext.setOnClickListener(v -> playMusicPresenter.playNextSong());
-        layoutBinding.btnPlayPause.setOnClickListener(v -> {
-            playButtonAction();
-        });
+        layoutBinding.btnPlayPause.setOnClickListener(v -> playButtonAction());
         layoutBinding.btnPrev.setOnClickListener(v -> {
             playMusicPresenter.playPrevSong();
             resetTime();
         });
+
         layoutBinding.timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    int positionUpdate = (fullIntDuration / 1000) * seekBar.getProgress();
+                    int positionUpdate = (mFullIntDuration / 1000) * seekBar.getProgress();
                     playMusicPresenter.seekMusic(positionUpdate);
                     seekBar.setProgress(progress);
                     layoutBinding.tvTimeStart.setText(TimeFormatter.formatMillisecondToMinuteAndSecond(positionUpdate));
@@ -168,20 +157,19 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     void playButtonAction() {
-        if (CURRENT_ACTION == MediaPlayerPresenter.ACTION_PAUSE) {
-            CURRENT_ACTION = MediaPlayerPresenter.ACTION_PLAY;
+        if (CURRENT_ACTION == Constants.MEDIA_PLAYER_ACTION_PAUSE) {
+            CURRENT_ACTION = Constants.MEDIA_PLAYER_ACTION_PLAY;
             playMusicPresenter.resumeMusic();
-        } else if (CURRENT_ACTION == MediaPlayerPresenter.ACTION_PLAY) {
-            CURRENT_ACTION = MediaPlayerPresenter.ACTION_PAUSE;
+        } else if (CURRENT_ACTION == Constants.MEDIA_PLAYER_ACTION_PLAY) {
+            CURRENT_ACTION = Constants.MEDIA_PLAYER_ACTION_PAUSE;
             playMusicPresenter.pauseMusic();
         }
     }
 
     void initViewPager() {
         assert this.getActivity() != null;
-        songVpgAdapter = new SongVpgAdapter(this.getActivity(), songList);
-        layoutBinding.vpgSongInfo.setAdapter(songVpgAdapter);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> layoutBinding.vpgSongInfo.setCurrentItem(currentSongPosition), 100);
+        setDataViewPager(mSongList);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition), 100);
         layoutBinding.vpgSongInfo.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             boolean isUserSwipe;
 
@@ -195,7 +183,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if (position == -1 || position == songList.size()) {
+                if (position == -1 || position == mSongList.size()) {
                     return;
                 }
                 if (isUserSwipe) {
@@ -206,6 +194,12 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             }
         });
         layoutBinding.vpgSongInfo.setPageTransformer(new AnimationZoomViewPager());
+    }
+
+    void setDataViewPager(List<Song> songList) {
+        assert getActivity() != null;
+        songVpgAdapter = new SongVpgAdapter(this.getActivity(), songList);
+        layoutBinding.vpgSongInfo.setAdapter(songVpgAdapter);
     }
 
     @Override
@@ -225,23 +219,54 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     @Override
+    public void onInitInfo(int fullIntDuration) {
+        mFullIntDuration = fullIntDuration;
+        layoutBinding.tvTimeEnd.setText(TimeFormatter.formatMillisecondToMinuteAndSecond(fullIntDuration));
+
+    }
+
+    @Override
     public void onMusicStop() {
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);
     }
 
     @Override
-    public void onUpdateSeekbar() {
-
+    public void onUpdateSeekbar(String currentDuration, int currentProcess) {
+        layoutBinding.tvTimeStart.setText(currentDuration);
+        layoutBinding.timeSeekBar.setProgress(currentProcess);
     }
 
     @Override
-    public void onUpdateTime() {
-
-    }
-
-    @Override
-    public void onTransSong() {
+    public void onTransSong(int currentSongPosition) {
+        mCurrentSongPosition = currentSongPosition;
         layoutBinding.vpgSongInfo.setCurrentItem(currentSongPosition);
+    }
+
+    @Override
+    public void onChangeRepeatMode(String repeatMode) {
+        if (repeatMode.equals(Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_NOT_REPEAT)) {
+            layoutBinding.btnRepeatMode.setIconResource(R.drawable.ic_not_repeat);
+            layoutBinding.btnRepeatMode.setIconTintResource(R.color.white);
+        } else if (repeatMode.equals(Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_REPEAT_ALL)) {
+            layoutBinding.btnRepeatMode.setIconResource(R.drawable.ic_repeat);
+            layoutBinding.btnRepeatMode.setIconTintResource(R.color.green);
+        } else {
+            layoutBinding.btnRepeatMode.setIconResource(R.drawable.ic_repeat_one);
+            layoutBinding.btnRepeatMode.setIconTintResource(R.color.green);
+        }
+
+    }
+
+    @Override
+    public void onChangeShuffleMode(boolean repeatMode) {
+        setShuffleButton(repeatMode);
+    }
+
+    @Override
+    public void onPlayListShuffled(List<Song> songList) {
+        mSongList = songList;
+        songVpgAdapter.updateSongList(mSongList);
+        songVpgAdapter.notifyDataSetChanged();
     }
 
 }

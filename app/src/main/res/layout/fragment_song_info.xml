@@ -8,22 +8,25 @@
     app:cardCornerRadius="8dp"
     android:layout_height="match_parent">
     <LinearLayout
+        android:weightSum="5"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgSong"
             android:layout_margin="10dp"
+            android:layout_weight="4"
             android:scaleType="centerCrop"
             android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="390dp"
+            android:layout_height="0dp"
             />
         <TextView
             android:layout_margin="5dp"
             android:textStyle="bold"
             android:id="@+id/tvSongName"
             style="@style/title_Login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:gravity="center"
@@ -33,6 +36,7 @@
             android:layout_margin="5dp"
             android:id="@+id/tvSinger"
             style="@style/title_Login"
+            android:layout_width="match_parent"
             android:maxLines="1"
             android:gravity="center"
             android:textSize="18sp"

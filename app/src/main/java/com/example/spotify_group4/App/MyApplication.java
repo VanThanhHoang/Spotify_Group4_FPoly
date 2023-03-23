@@ -4,7 +4,18 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
+import androidx.annotation.NonNull;
+
+import com.example.spotify_group4.Model.PlayList;
 import com.example.spotify_group4.R;
+import com.example.spotify_group4.Retrofit.ApiSkyMusic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyApplication extends Application {
     public static final String NOTIFICATION_CHANEL_MUSIC_ID = String.valueOf(R.string.ID_CHANEL_MUSIC);
@@ -23,4 +34,5 @@ public class MyApplication extends Application {
             manager.createNotificationChannel(notificationMusicChannel);
         }
     }
+
 }
