@@ -22,7 +22,7 @@ import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Helper.TimeFormatter;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.R;
-import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
+import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 
 import java.io.IOException;

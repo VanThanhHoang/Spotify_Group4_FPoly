@@ -1,4 +1,4 @@
-package com.example.spotify_group4.Receiver;
+package com.example.spotify_group4.Adapter;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

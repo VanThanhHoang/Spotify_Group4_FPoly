@@ -35,12 +35,11 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         userManagerAdapter = new UserManagerAdapter();
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutBinding.rcvName.setLayoutManager(linearLayoutManager);
         userManagerAdapter.setData(getListUser());
-        rcv.setAdapter(userManagerAdapter);
+        layoutBinding.rcvName.setAdapter(userManagerAdapter);
     }
 
     private List<User> getListUser() {
