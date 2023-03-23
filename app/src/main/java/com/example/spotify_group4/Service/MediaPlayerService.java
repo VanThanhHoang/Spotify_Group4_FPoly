@@ -18,11 +18,11 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Helper.TimeFormatter;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.R;
-import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 
 import java.io.IOException;
@@ -114,8 +114,12 @@ public class MediaPlayerService extends Service {
     }
 
     void shuffledPlayList() {
+        songList.remove(currentSongPosition);
         if (appSharedPreferenceHelper.isShuffleModeOn()) {
             Collections.shuffle(songList);
+            songList.add(currentSongPosition, currentSong);
+            sendListShuffled();
+        } else {
             sendListShuffled();
         }
     }
@@ -171,7 +175,7 @@ public class MediaPlayerService extends Service {
     }
 
     void setupMediaPlayer(String url) throws IOException {
-        mediaPlayer = MediaPlayer.create(this, R.raw.youandme_xch);
+        mediaPlayer = MediaPlayer.create(this, R.raw.anthan);
         // mediaPlayer.setDataSource(url);
         mediaPlayer.setOnCompletionListener(mp -> {
             if (mp != null) {

@@ -3,6 +3,7 @@ package com.example.spotify_group4.Presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
@@ -35,15 +36,17 @@ public class MediaPlayerPresenter {
     public void getShuffleMode() {
         mediaPlayerListener.onChangeShuffleMode(appSharedPreferenceHelper.isShuffleModeOn());
     }
-    public void setShuffleMode(){
-        if(appSharedPreferenceHelper.isShuffleModeOn()){
+
+    public void setShuffleMode() {
+        if (appSharedPreferenceHelper.isShuffleModeOn()) {
             appSharedPreferenceHelper.setShuffleMode(false);
             mediaPlayerListener.onChangeShuffleMode(false);
-        }else {
+        } else {
             appSharedPreferenceHelper.setShuffleMode(true);
             mediaPlayerListener.onChangeShuffleMode(true);
         }
     }
+
     public void setRepeatMode() {
         currentRepeatMode = appSharedPreferenceHelper.getRepeatMode();
         if (currentRepeatMode.equals(Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_NOT_REPEAT)) {
@@ -66,6 +69,7 @@ public class MediaPlayerPresenter {
     public void startPlayList(List<Song> songList, int position) {
         context.stopService(intentService);
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PLAY_LIST_SONG);
+        Log.d("123", "getextra : *" + position);
         intentService.putExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, position);
         intentService.putParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_SONG_LIST, (ArrayList<? extends Parcelable>) songList);
         mediaPlayerListener.onSongLoad();
@@ -100,7 +104,7 @@ public class MediaPlayerPresenter {
         context.startService(intentService);
     }
 
-/*    public void stopMusic() {
+/* public void stopMusic() {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_STOP);
         context.startService(intentService);
         mediaPlayerListener.onMusicStop();
@@ -112,5 +116,8 @@ public class MediaPlayerPresenter {
         mediaPlayerListener.onMusicPause();
     }
 
+    public void stopService() {
+        context.stopService(intentService);
+    }
 
 }

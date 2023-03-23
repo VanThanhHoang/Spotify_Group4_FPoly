@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.Adapter.SongVpgAdapter;
 import com.example.spotify_group4.Helper.AnimationZoomViewPager;
 import com.example.spotify_group4.Helper.Constants;
@@ -26,7 +26,6 @@ import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
-import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 
@@ -116,6 +115,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public void onDestroy() {
         assert getContext() != null;
         getContext().unregisterReceiver(mediaPlayerReceiver);
+        playMusicPresenter.stopService();
         super.onDestroy();
     }
 
@@ -168,7 +168,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
 
     void initViewPager() {
         assert this.getActivity() != null;
-        setDataViewPager(mSongList);
         new Handler(Looper.getMainLooper()).postDelayed(() -> layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition), 100);
         layoutBinding.vpgSongInfo.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             boolean isUserSwipe;
@@ -239,7 +238,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     @Override
     public void onTransSong(int currentSongPosition) {
         mCurrentSongPosition = currentSongPosition;
-        layoutBinding.vpgSongInfo.setCurrentItem(currentSongPosition);
+        layoutBinding.vpgSongInfo.setCurrentItem(currentSongPosition, false);
     }
 
     @Override
@@ -265,8 +264,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     @Override
     public void onPlayListShuffled(List<Song> songList) {
         mSongList = songList;
-        songVpgAdapter.updateSongList(mSongList);
-        songVpgAdapter.notifyDataSetChanged();
+        setDataViewPager(mSongList);
+        layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition, false);
     }
 
 }

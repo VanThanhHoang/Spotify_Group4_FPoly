@@ -1,7 +1,5 @@
 package com.example.spotify_group4.Adapter;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
