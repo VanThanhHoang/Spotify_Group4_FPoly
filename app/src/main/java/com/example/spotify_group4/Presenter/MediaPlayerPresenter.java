@@ -32,6 +32,18 @@ public class MediaPlayerPresenter {
         mediaPlayerListener.onChangeRepeatMode(currentRepeatMode);
     }
 
+    public void getShuffleMode() {
+        mediaPlayerListener.onChangeShuffleMode(appSharedPreferenceHelper.isShuffleModeOn());
+    }
+    public void setShuffleMode(){
+        if(appSharedPreferenceHelper.isShuffleModeOn()){
+            appSharedPreferenceHelper.setShuffleMode(false);
+            mediaPlayerListener.onChangeShuffleMode(false);
+        }else {
+            appSharedPreferenceHelper.setShuffleMode(true);
+            mediaPlayerListener.onChangeShuffleMode(true);
+        }
+    }
     public void setRepeatMode() {
         currentRepeatMode = appSharedPreferenceHelper.getRepeatMode();
         if (currentRepeatMode.equals(Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_NOT_REPEAT)) {
@@ -45,10 +57,12 @@ public class MediaPlayerPresenter {
         mediaPlayerListener.onChangeRepeatMode(currentRepeatMode);
         changeRepeatMode();
     }
-    void changeRepeatMode(){
+
+    void changeRepeatMode() {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_CHANGE_REPEAT_MODE);
         context.startService(intentService);
     }
+
     public void startPlayList(List<Song> songList, int position) {
         context.stopService(intentService);
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PLAY_LIST_SONG);

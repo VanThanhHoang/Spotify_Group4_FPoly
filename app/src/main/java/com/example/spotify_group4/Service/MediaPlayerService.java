@@ -8,11 +8,12 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -25,23 +26,42 @@ import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 public class MediaPlayerService extends Service {
-    MediaPlayer mediaPlayer;
-    Handler handler;
-    AppSharedPreferenceHelper appSharedPreferenceHelper;
-    boolean isInitPlayPlayList;
-    MediaSessionCompat mediaSession;
+    private MediaPlayer mediaPlayer;
+    private Handler handler;
+    private AppSharedPreferenceHelper appSharedPreferenceHelper;
+    private boolean isInitPlayPlayList;
+    private MediaSessionCompat mediaSession;
     private Runnable updateSeekBar;
-    MediaMetadataCompat.Builder metadataBuilder;
-    NotificationCompat.Builder notificationBuilder;
-    Notification notification;
-    int currentSongPosition;
-    List<Song> songList;
-    Song currentSong;
-    String currentRepeatMode;
+    private NotificationCompat.Builder notificationBuilder;
+    private int currentSongPosition;
+    private List<Song> songListDefault;
+    private List<Song> songList;
+    private Song currentSong;
+    private String currentRepeatMode;
+
+    @Override
+    public void onCreate() {
+        appSharedPreferenceHelper = new AppSharedPreferenceHelper(this);
+        currentRepeatMode = appSharedPreferenceHelper.getRepeatMode();
+        mediaPlayer = new MediaPlayer();
+        handler = new Handler(getMainLooper());
+        updateSeekBar = new Runnable() {
+            @Override
+            public void run() {
+                if (mediaPlayer != null) {
+                    updateDuration();
+                    handler.postDelayed(this, 1000);
+                }
+            }
+        };
+        super.onCreate();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -84,17 +104,27 @@ public class MediaPlayerService extends Service {
     }
 
     void initPlayList(Intent intent) {
-        songList = intent.getParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_SONG_LIST);
+        isInitPlayPlayList = true;
+        songListDefault = intent.getParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_SONG_LIST);
+        songList = songListDefault;
         currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
         currentSong = songList.get(currentSongPosition);
         prepareMusic(currentSong.getUrl());
+        new Handler(Looper.getMainLooper()).postDelayed(this::shuffledPlayList, 300);
+    }
+
+    void shuffledPlayList() {
+        if (appSharedPreferenceHelper.isShuffleModeOn()) {
+            Collections.shuffle(songList);
+            sendListShuffled();
+        }
     }
 
     void initMediaSession() {
         mediaSession = new MediaSessionCompat(this, "MEDIA");
         mediaSession.setActive(true);
         // set info
-        metadataBuilder = new MediaMetadataCompat.Builder();
+        MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentSong.getSingerName());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentSong.getName());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Album Name");
@@ -103,24 +133,6 @@ public class MediaPlayerService extends Service {
         mediaSession.setMetadata(metadataBuilder.build());
         setMediaSessionCallBack();
         mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
-    }
-
-    @Override
-    public void onCreate() {
-        appSharedPreferenceHelper = new AppSharedPreferenceHelper(this);
-        currentRepeatMode = appSharedPreferenceHelper.getRepeatMode();
-        mediaPlayer = new MediaPlayer();
-        handler = new Handler(getMainLooper());
-        updateSeekBar = new Runnable() {
-            @Override
-            public void run() {
-                if (mediaPlayer != null) {
-                    updateDuration();
-                    handler.postDelayed(this, 1000);
-                }
-            }
-        };
-        super.onCreate();
     }
 
     @Override
@@ -147,14 +159,20 @@ public class MediaPlayerService extends Service {
         }
     }
 
+    void sendListShuffled() {
+        Intent intent = new Intent(MediaPlayerReceiver.ACTION_SHUFFLED_PLAY_LIST);
+        intent.putParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_LIST_SHUFFLED, (ArrayList<? extends Parcelable>) songList);
+        sendBroadcast(intent);
+    }
+
     void startUiMusic() {
         initDuration();
         handler.postDelayed(updateSeekBar, 1000);
     }
 
     void setupMediaPlayer(String url) throws IOException {
-        mediaPlayer = MediaPlayer.create(this,R.raw.youandme_xch);
-       /* mediaPlayer.setDataSource(url);*/
+        mediaPlayer = MediaPlayer.create(this, R.raw.youandme_xch);
+        // mediaPlayer.setDataSource(url);
         mediaPlayer.setOnCompletionListener(mp -> {
             if (mp != null) {
                 onCompleteMusic();
@@ -316,7 +334,7 @@ public class MediaPlayerService extends Service {
             notificationBuilder.addAction(R.drawable.ic_pause, "Pause", null)
                     .addAction(R.drawable.ic_next, "Next", null);
         }
-        notification = notificationBuilder.build();
+        Notification notification = notificationBuilder.build();
         startForeground(1, notification);
     }
 

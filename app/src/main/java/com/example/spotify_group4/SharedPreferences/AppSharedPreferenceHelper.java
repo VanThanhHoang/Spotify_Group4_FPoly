@@ -17,11 +17,6 @@ public class AppSharedPreferenceHelper {
         shareEditor = sharedPreferences.edit();
     }
 
-    void insertBooleanValue(String key, boolean value) {
-        shareEditor.putBoolean(key, value);
-        shareEditor.apply();
-    }
-
     public void setRepeatMode(String repeatMode) {
         shareEditor.putString(Constants.MEDIA_KEY_REPEAT_MODE, repeatMode);
         shareEditor.apply();
@@ -31,7 +26,14 @@ public class AppSharedPreferenceHelper {
         return sharedPreferences.getString(Constants.MEDIA_KEY_REPEAT_MODE, Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_NOT_REPEAT);
     }
 
-    boolean getBooleanValue(String key) {
-        return sharedPreferences.getBoolean(key, false);
+    public void setShuffleMode(Boolean isTurnOnShuffleMde) {
+        shareEditor.putBoolean(Constants.MEDIA_KEY_SHUFFLE_MODE, isTurnOnShuffleMde);
+        shareEditor.apply();
     }
+
+    public boolean isShuffleModeOn() {
+        return sharedPreferences.getBoolean(Constants.MEDIA_KEY_SHUFFLE_MODE, false);
+    }
+
+
 }

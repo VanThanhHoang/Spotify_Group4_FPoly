@@ -26,21 +26,19 @@
             android:textStyle="bold"
             android:id="@+id/tvSongName"
             style="@style/title_Login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:gravity="center"
             android:maxLines="1"
-            android:height="0dp"
-            android:layout_weight="0.5"
             android:text="Song name" />
         <TextView
             android:layout_margin="5dp"
             android:id="@+id/tvSinger"
             style="@style/title_Login"
+            android:layout_width="match_parent"
             android:maxLines="1"
             android:gravity="center"
-            android:height="0dp"
-            android:layout_weight="0.5"
             android:textSize="18sp"
             android:layout_height="wrap_content"
             android:text="Singer"/>

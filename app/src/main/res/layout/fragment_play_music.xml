@@ -80,6 +80,7 @@
         android:weightSum="5">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnShuffle"
             style="@style/img_button_media_player"
             android:scaleX="1.5"
             android:scaleY="1.5"

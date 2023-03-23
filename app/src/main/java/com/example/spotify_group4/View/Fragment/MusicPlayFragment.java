@@ -40,7 +40,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     MediaPlayerReceiver mediaPlayerReceiver;
     int mFullIntDuration;
     LoadListener loadListener;
-    List<Song> songList;
+    List<Song> mSongList;
     int mCurrentSongPosition;
     Song song;
     SongVpgAdapter songVpgAdapter;
@@ -57,9 +57,10 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         mediaPlayerReceiver = new MediaPlayerReceiver(this);
         replaceFragmentListener.hideComponents();
         playMusicPresenter.getRepeatMode();
+        playMusicPresenter.getShuffleMode();
         initEvent();
         initViewPager();
-        playMusicPresenter.startPlayList(songList, mCurrentSongPosition);
+        playMusicPresenter.startPlayList(mSongList, mCurrentSongPosition);
     }
 
     @Override
@@ -69,8 +70,17 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         return layoutBinding.getRoot();
     }
 
+    void setShuffleButton(boolean isShuffle) {
+        if (isShuffle) {
+            layoutBinding.btnShuffle.setIconTintResource(R.color.green);
+        } else {
+            layoutBinding.btnShuffle.setIconTintResource(R.color.white);
+        }
+    }
+
     void registerBroadcast() {
         IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_SHUFFLED_PLAY_LIST);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_INIT_DURATION);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_MUSIC_COMPLETE);
@@ -81,11 +91,10 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     public MusicPlayFragment(List<Song> songList, int songPosition) {
-        this.songList = songList;
+        this.mSongList = songList;
         this.mCurrentSongPosition = songPosition;
         this.song = songList.get(mCurrentSongPosition);
     }
-
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -102,7 +111,15 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         layoutBinding.tvTimeEnd.setText(R.string.defaultDuration);
     }
 
+    @Override
+    public void onDestroy() {
+        assert getContext() != null;
+        getContext().unregisterReceiver(mediaPlayerReceiver);
+        super.onDestroy();
+    }
+
     void initEvent() {
+        layoutBinding.btnShuffle.setOnClickListener(v -> playMusicPresenter.setShuffleMode());
         layoutBinding.btnRepeatMode.setOnClickListener(v -> playMusicPresenter.setRepeatMode());
         if (getActivity() != null) {
             layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
@@ -113,6 +130,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             playMusicPresenter.playPrevSong();
             resetTime();
         });
+
         layoutBinding.timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -149,8 +167,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
 
     void initViewPager() {
         assert this.getActivity() != null;
-        songVpgAdapter = new SongVpgAdapter(this.getActivity(), songList);
-        layoutBinding.vpgSongInfo.setAdapter(songVpgAdapter);
+        setDataViewPager(mSongList);
         new Handler(Looper.getMainLooper()).postDelayed(() -> layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition), 100);
         layoutBinding.vpgSongInfo.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             boolean isUserSwipe;
@@ -165,7 +182,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if (position == -1 || position == songList.size()) {
+                if (position == -1 || position == mSongList.size()) {
                     return;
                 }
                 if (isUserSwipe) {
@@ -176,6 +193,12 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             }
         });
         layoutBinding.vpgSongInfo.setPageTransformer(new AnimationZoomViewPager());
+    }
+
+    void setDataViewPager(List<Song> songList) {
+        assert getActivity() != null;
+        songVpgAdapter = new SongVpgAdapter(this.getActivity(), songList);
+        layoutBinding.vpgSongInfo.setAdapter(songVpgAdapter);
     }
 
     @Override
@@ -231,6 +254,17 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             layoutBinding.btnRepeatMode.setIconTintResource(R.color.green);
         }
 
+    }
+
+    @Override
+    public void onChangeShuffleMode(boolean repeatMode) {
+        setShuffleButton(repeatMode);
+    }
+
+    @Override
+    public void onPlayListShuffled(List<Song> songList) {
+        mSongList = songList;
+        songVpgAdapter.updateSongList(mSongList);
     }
 
 }
