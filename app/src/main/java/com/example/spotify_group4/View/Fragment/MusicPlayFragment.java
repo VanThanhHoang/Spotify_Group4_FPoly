@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.Adapter.SongVpgAdapter;
 import com.example.spotify_group4.Helper.AnimationZoomViewPager;
 import com.example.spotify_group4.Helper.Constants;
@@ -26,6 +26,7 @@ import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
+import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 
@@ -64,7 +65,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentPlayMusicBinding.inflate(getLayoutInflater(), null, false);
         playMusicPresenter = new MediaPlayerPresenter(getContext(), this);
         return layoutBinding.getRoot();
@@ -139,7 +141,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
                     int positionUpdate = (mFullIntDuration / 1000) * seekBar.getProgress();
                     playMusicPresenter.seekMusic(positionUpdate);
                     seekBar.setProgress(progress);
-                    layoutBinding.tvTimeStart.setText(TimeFormatter.formatMillisecondToMinuteAndSecond(positionUpdate));
+                    layoutBinding.tvTimeStart.setText(TimeFormatter.
+                            formatMillisecondToMinuteAndSecond(positionUpdate));
                     playMusicPresenter.seekMusic(positionUpdate);
                 }
             }
@@ -173,9 +176,13 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
             boolean isUserSwipe;
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (!layoutBinding.vpgSongInfo.isFakeDragging()) {
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                    Toast.makeText(getContext(), "asds", Toast.LENGTH_SHORT).show();
                     isUserSwipe = true;
+                } else {
+                    isUserSwipe = false;
+
                 }
             }
 
@@ -238,7 +245,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     @Override
     public void onTransSong(int currentSongPosition) {
         mCurrentSongPosition = currentSongPosition;
-        layoutBinding.vpgSongInfo.setCurrentItem(currentSongPosition, false);
+        layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition, true);
     }
 
     @Override

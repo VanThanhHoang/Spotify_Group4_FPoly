@@ -69,7 +69,6 @@ public class MediaPlayerPresenter {
     public void startPlayList(List<Song> songList, int position) {
         context.stopService(intentService);
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PLAY_LIST_SONG);
-        Log.d("123", "getextra : *" + position);
         intentService.putExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, position);
         intentService.putParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_SONG_LIST, (ArrayList<? extends Parcelable>) songList);
         mediaPlayerListener.onSongLoad();
@@ -89,7 +88,7 @@ public class MediaPlayerPresenter {
 
     public void transSongByViewPager(int position) {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER);
-        intentService.putExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, position);
+        intentService.putExtra("CURS_POSITION", position);
         context.startService(intentService);
     }
 

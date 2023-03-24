@@ -1,9 +1,8 @@
-package com.example.spotify_group4.Adapter;
+package com.example.spotify_group4.Receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
@@ -37,17 +36,16 @@ public class MediaPlayerReceiver extends BroadcastReceiver {
             case ACTION_UPDATE_DURATION:
                 String currentDuration = intent.getStringExtra("currentDuration");
                 int currentProcess = intent.getIntExtra("positionSeekbar", 0);
-                mediaPlayerListener.onUpdateSeekbar(currentDuration,currentProcess);
+                mediaPlayerListener.onUpdateSeekbar(currentDuration, currentProcess);
                 break;
             case ACTION_MUSIC_COMPLETE:
                 mediaPlayerListener.onMusicStop();
                 break;
             case ACTION_TRANS_SONG:
-                int currentSongPosition = intent.getIntExtra("CURS_POSITION", 0);
+                int currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
                 mediaPlayerListener.onTransSong(currentSongPosition);
                 break;
             case ACTION_SHUFFLED_PLAY_LIST:
-                Log.e("123", "onReceive: ");
                 List<Song> songList = intent.getParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_LIST_SHUFFLED);
                 mediaPlayerListener.onPlayListShuffled(songList);
                 break;

@@ -14,15 +14,16 @@ import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.spotify_group4.Adapter.MediaPlayerReceiver;
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Helper.TimeFormatter;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.R;
+import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 
 import java.io.IOException;
@@ -114,8 +115,8 @@ public class MediaPlayerService extends Service {
     }
 
     void shuffledPlayList() {
-        songList.remove(currentSongPosition);
         if (appSharedPreferenceHelper.isShuffleModeOn()) {
+            songList.remove(currentSongPosition);
             Collections.shuffle(songList);
             songList.add(currentSongPosition, currentSong);
             sendListShuffled();
@@ -165,7 +166,8 @@ public class MediaPlayerService extends Service {
 
     void sendListShuffled() {
         Intent intent = new Intent(MediaPlayerReceiver.ACTION_SHUFFLED_PLAY_LIST);
-        intent.putParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_LIST_SHUFFLED, (ArrayList<? extends Parcelable>) songList);
+        intent.putParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_LIST_SHUFFLED,
+                (ArrayList<? extends Parcelable>) songList);
         sendBroadcast(intent);
     }
 
@@ -182,11 +184,11 @@ public class MediaPlayerService extends Service {
                 onCompleteMusic();
             }
         });
-    /*    mediaPlayer.prepareAsync();
+        /* mediaPlayer.prepareAsync();
         AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder();
         audioAttributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
         audioAttributesBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
-        mediaPlayer.setAudioAttributes(audioAttributesBuilder.build());*/
+        mediaPlayer.setAudioAttributes(audioAttributesBuilder.build()); */
     }
 
     void transSongByViewPager() {
@@ -196,7 +198,7 @@ public class MediaPlayerService extends Service {
 
     void sendBroadCastTransSong() {
         Intent intent = new Intent();
-        intent.putExtra("CURS_POSITION", currentSongPosition);
+        intent.putExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, currentSongPosition);
         intent.setAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
         sendBroadcast(intent);
     }
@@ -218,7 +220,7 @@ public class MediaPlayerService extends Service {
         }
     }
 
-    void transSong(int ACTION) {
+    void  transSong(int ACTION) {
         if (ACTION == Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG) {
             ++currentSongPosition;
             if (currentSongPosition == songList.size()) {

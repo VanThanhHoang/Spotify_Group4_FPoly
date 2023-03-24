@@ -178,7 +178,9 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
 
     @Override
     public void onStop() {
-        handler.removeCallbacks(sliderRunnable);
+        if (handler != null) {
+            handler.removeCallbacks(sliderRunnable);
+        }
         super.onStop();
     }
 
