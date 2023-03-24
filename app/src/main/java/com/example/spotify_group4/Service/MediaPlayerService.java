@@ -200,6 +200,7 @@ public class MediaPlayerService extends Service {
         Intent intent = new Intent();
         intent.putExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, currentSongPosition);
         intent.setAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
+        intent.setAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
         sendBroadcast(intent);
     }
 

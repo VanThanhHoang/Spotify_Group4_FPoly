@@ -52,7 +52,4 @@ public class HomeFragmentPresenter {
             }
         });
     }
-    void saveDataToCache(){
-
-    }
 }

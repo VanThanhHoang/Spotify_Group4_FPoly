@@ -5,12 +5,19 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class Song implements Parcelable {
+    @SerializedName("ID")
     int id;
+    @SerializedName("NAME")
     String name;
+    @SerializedName("SINGER_NAME")
     String singerName;
+    @SerializedName("URL_SONG")
     String url;
+    @SerializedName("URL_IMG")
     String urlImg;
 
     public Song(String name, String Singer, String url, String urlImg) {
