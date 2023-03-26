@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
 
     void createSlider(List<PlayList> playLists) {
         assert getActivity() != null;
-        HomeSliderAdapter homeSliderAdapter = new HomeSliderAdapter(getActivity(), playLists);
+        HomeSliderAdapter homeSliderAdapter = new HomeSliderAdapter(getActivity(), playLists, replaceFragmentListener);
         layoutBinding.vpgHomeSlider.setAdapter(homeSliderAdapter);
         layoutBinding.vpgHomeSlider.setPageTransformer(new AnimationZoomViewPager());
         layoutBinding.homeCircleIndicatior.setViewPager(layoutBinding.vpgHomeSlider);

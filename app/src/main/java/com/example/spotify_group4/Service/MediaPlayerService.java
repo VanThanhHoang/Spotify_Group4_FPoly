@@ -14,7 +14,6 @@ import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -67,6 +66,10 @@ public class MediaPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int action = intent.getIntExtra(Constants.ACTION_MEDIA_PLAYER, 0);
+        if (action == Constants.MEDIA_PLAYER_ACTION_CONTINUES_MEDIA_PLAYER) {
+            continuesMediaPlayer();
+            return START_NOT_STICKY;
+        }
         if (action == Constants.MEDIA_PLAYER_ACTION_PLAY_LIST_SONG && !isInitPlayPlayList) {
             initPlayList(intent);
             return START_NOT_STICKY;
@@ -177,18 +180,19 @@ public class MediaPlayerService extends Service {
     }
 
     void setupMediaPlayer(String url) throws IOException {
-        mediaPlayer = MediaPlayer.create(this, R.raw.anthan);
-        // mediaPlayer.setDataSource(url);
+        mediaPlayer = MediaPlayer.create(this, R.raw.song2);
+        /*mediaPlayer = new MediaPlayer();*/
+        /*mediaPlayer.setDataSource(url);*/
         mediaPlayer.setOnCompletionListener(mp -> {
             if (mp != null) {
                 onCompleteMusic();
             }
         });
-        /* mediaPlayer.prepareAsync();
+    /*     mediaPlayer.prepareAsync();
         AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder();
         audioAttributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
         audioAttributesBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
-        mediaPlayer.setAudioAttributes(audioAttributesBuilder.build()); */
+        mediaPlayer.setAudioAttributes(audioAttributesBuilder.build());*/
     }
 
     void transSongByViewPager() {
@@ -221,7 +225,7 @@ public class MediaPlayerService extends Service {
         }
     }
 
-    void  transSong(int ACTION) {
+    void transSong(int ACTION) {
         if (ACTION == Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG) {
             ++currentSongPosition;
             if (currentSongPosition == songList.size()) {
@@ -281,6 +285,11 @@ public class MediaPlayerService extends Service {
         intent.putExtra("fullIntDuration", mediaPlayer.getDuration());
         intent.putExtra("fullDuration", fullDuration);
         sendBroadcast(intent);
+    }
+
+    void continuesMediaPlayer() {
+        sendListShuffled();
+        initDuration();
     }
 
     void updateDuration() {

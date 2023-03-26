@@ -37,7 +37,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         playlistItemBinding = PlaylistItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new PlaylistViewHolder(playlistItemBinding);
     }
@@ -47,14 +46,15 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         int positionItem = holder.getLayoutPosition();
         PlayList playList = playLists.get(positionItem);
         Picasso.get().load(R.drawable.img_load).into(holder.imgPlayList);
-        holder.cardViewContain.setOnClickListener(v ->
-                replaceFragmentListener.replaceFragment(new PlayListFragment(playList.getId())));
+        holder.cardViewContain.setOnClickListener(v -> {
+            replaceFragmentListener.replaceFragment(new PlayListFragment(playList));
+            replaceFragmentListener.hideComponents();
+        });
         Picasso.get().load(playList.getUrlImg()).into(holder.imgPlayList);
         holder.tvPlaylistName.setText(playList.getName());
         setColorMatrix(playlistItemBinding.imgPlayList);
         setRandomColor(holder.leftLine, holder.botLine);
     }
-
 
     @Override
     public int getItemCount() {
@@ -84,7 +84,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         leftLine.setBackgroundColor(Color.parseColor(color));
         botLine.setBackgroundColor(Color.parseColor(color));
     }
-    void setColorMatrix(ImageView imgPlayList){
+
+    void setColorMatrix(ImageView imgPlayList) {
         ColorMatrix colorMatrix = new ColorMatrix();
         colorMatrix.setSaturation(0); // 0 means grayscale
         colorMatrix.setScale(0.8f, 0.8f, 0.8f, 1); // Scale all color channels by 0.5

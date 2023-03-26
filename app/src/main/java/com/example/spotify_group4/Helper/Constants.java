@@ -13,7 +13,7 @@ public class Constants {
     public static int MEDIA_PLAYER_ACTION_PLAY_PREV_SONG = 7;
     public static int MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER = 8;
     public static int MEDIA_PLAYER_ACTION_CHANGE_REPEAT_MODE = 9;
-
+    public static int MEDIA_PLAYER_ACTION_CONTINUES_MEDIA_PLAYER= 10;
     //EXTRA MEDIA PLAYER
     public static String MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION = "CURRENT_SONG_POSITION";                                                                                                                                                                                                                                                                                                                                                                                    
     public static String MEDIA_PLAYER_EXTRA_SONG_LIST = "CURRENT_SONG_LIST";

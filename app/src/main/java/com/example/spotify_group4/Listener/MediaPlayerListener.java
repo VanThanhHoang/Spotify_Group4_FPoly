@@ -22,5 +22,7 @@ public interface MediaPlayerListener {
     void onChangeRepeatMode(String repeatMode);
 
     void onChangeShuffleMode(boolean repeatMode);
+
     void onPlayListShuffled(List<Song> listSong);
+
 }
