@@ -15,8 +15,8 @@ public class Constants {
     public static int MEDIA_PLAYER_ACTION_CHANGE_REPEAT_MODE = 9;
 
     //EXTRA MEDIA PLAYER
-    public static String MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION = "CURRENT_SONG_POSITION";
-    public static String MEDIA_PLAYER_EXTRA_SONG_LIST = "CURRENT_SONG_POSITION";
+    public static String MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION = "CURRENT_SONG_POSITION";                                                                                                                                                                                                                                                                                                                                                                                    
+    public static String MEDIA_PLAYER_EXTRA_SONG_LIST = "CURRENT_SONG_LIST";
     public static String MEDIA_PLAYER_EXTRA_SEEK_POSITION = "SEEK_POSITION";
     public static String MEDIA_KEY_REPEAT_MODE = "REPEAT_MODE";
     public static String MEDIA_KEY_SHUFFLE_MODE = "SHUFFLE_MODE";
@@ -24,7 +24,6 @@ public class Constants {
     public static String MEDIA_PLAYER_EXTRA_REPEAT_MODE_REPEAT_ONCE = "REPEAT_ONCE";
     public static String MEDIA_PLAYER_EXTRA_REPEAT_MODE_REPEAT_ALL = "REPEAT_ALL";
     public static String MEDIA_PLAYER_EXTRA_LIST_SHUFFLED = "LIST_SHUFFLED";
-
 
 
 }

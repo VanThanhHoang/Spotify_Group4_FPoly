@@ -45,9 +45,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         int positionItem = holder.getLayoutPosition();
-        Picasso.get().load(R.drawable.img_load).into(holder.imgPlayList);
-        holder.cardViewContain.setOnClickListener(v -> replaceFragmentListener.replaceFragment(new PlayListFragment()));
         PlayList playList = playLists.get(positionItem);
+        Picasso.get().load(R.drawable.img_load).into(holder.imgPlayList);
+        holder.cardViewContain.setOnClickListener(v ->
+                replaceFragmentListener.replaceFragment(new PlayListFragment(playList.getId())));
         Picasso.get().load(playList.getUrlImg()).into(holder.imgPlayList);
         holder.tvPlaylistName.setText(playList.getName());
         setColorMatrix(playlistItemBinding.imgPlayList);
