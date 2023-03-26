@@ -1,6 +1,7 @@
 package com.example.spotify_group4.Model;
 
 public class User {
+    private int resourceId;
     private String name;
     private String password;
     public User(String name) {
@@ -10,6 +11,10 @@ public class User {
     public User(String name, String password) {
         this.name = name;
         this.password = password;
+    }
+    public User(int resourceId, String name) {
+        this.resourceId = resourceId;
+        this.name = name;
     }
 
     public String getPassword() {
@@ -38,5 +43,12 @@ public class User {
     }
     public boolean validatePassword(String password) {
         return password.length() >= 6;
+    }
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
     }
 }
