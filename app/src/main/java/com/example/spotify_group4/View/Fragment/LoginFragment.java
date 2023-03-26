@@ -1,10 +1,12 @@
 package com.example.spotify_group4.View.Fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,12 +26,13 @@ public class LoginFragment extends Fragment {
     ReplaceFragmentListener replaceFragmentListener;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        layoutBinding = FragmentLoginBinding.inflate(getLayoutInflater(),null,false);
+        layoutBinding = FragmentLoginBinding.inflate(getLayoutInflater(), null, false);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(getContext(),gso);
+        gsc = GoogleSignIn.getClient(getContext(), gso);
         layoutBinding.btnLoginGoogle.setOnClickListener(v -> SignInGoogle());
         return layoutBinding.getRoot();
     }
@@ -45,29 +48,33 @@ public class LoginFragment extends Fragment {
         setEvent();
         super.onViewCreated(view, savedInstanceState);
     }
-    void setEvent(){
-        layoutBinding.btnLoginAccount.setOnClickListener(v->{
+
+    void setEvent() {
+        layoutBinding.btnLoginAccount.setOnClickListener(v -> {
+            assert getActivity() != null;
             startActivity(new Intent(getContext(), HomeActivity.class));
+            getActivity().finish();
         });
-        layoutBinding.btnPhoneAth.setOnClickListener(v->
+        layoutBinding.btnPhoneAth.setOnClickListener(v ->
                 replaceFragmentListener.replaceFragment(new PhoneNumberAthFragment()));
-        layoutBinding.btnLoginAccount1.setOnClickListener(v->{
+        layoutBinding.btnLoginAccount1.setOnClickListener(v -> {
             replaceFragmentListener.replaceFragment(new LoginEmailFragment());
         });
     }
-    private void SignInGoogle(){
+
+    private void SignInGoogle() {
         Intent intent = gsc.getSignInIntent();
-        startActivityForResult(intent,100);
+        startActivityForResult(intent, 100);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100){
+        if (requestCode == 100) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 task.getResult(ApiException.class);
-                Intent intent = new Intent(getContext(),HomeActivity.class);
+                Intent intent = new Intent(getContext(), HomeActivity.class);
                 startActivity(intent);
             } catch (ApiException e) {
                 e.printStackTrace();

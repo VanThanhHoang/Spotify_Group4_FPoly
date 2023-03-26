@@ -37,7 +37,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         playlistItemBinding = PlaylistItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new PlaylistViewHolder(playlistItemBinding);
     }
@@ -47,14 +46,15 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         int positionItem = holder.getLayoutPosition();
         PlayList playList = playLists.get(positionItem);
         Picasso.get().load(R.drawable.img_load).into(holder.imgPlayList);
-        holder.cardViewContain.setOnClickListener(v ->
-                replaceFragmentListener.replaceFragment(new PlayListFragment(playList.getId())));
+        holder.cardViewContain.setOnClickListener(v -> {
+            replaceFragmentListener.replaceFragment(new PlayListFragment(playList.getId()));
+            replaceFragmentListener.hideComponents();
+        });
         Picasso.get().load(playList.getUrlImg()).into(holder.imgPlayList);
         holder.tvPlaylistName.setText(playList.getName());
         setColorMatrix(playlistItemBinding.imgPlayList);
         setRandomColor(holder.leftLine, holder.botLine);
     }
-
 
     @Override
     public int getItemCount() {
@@ -76,7 +76,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             cardViewContain = playlistItemBinding.container;
         }
     }
-
     void setRandomColor(View leftLine, View botLine) {
         Random rand = new Random();
         int num = rand.nextInt(6);

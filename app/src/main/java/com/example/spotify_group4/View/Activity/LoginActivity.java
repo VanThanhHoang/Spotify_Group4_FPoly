@@ -47,4 +47,12 @@ public class LoginActivity extends AppCompatActivity implements ReplaceFragmentL
     public void showComponents() {
 
     }
+
+    @Override
+    public void onBackFragment() {
+
+    }
+
+
+
 }

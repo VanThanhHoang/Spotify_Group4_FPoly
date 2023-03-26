@@ -27,7 +27,6 @@ public class MediaPlayerPresenter {
         this.mediaPlayerListener = mediaPlayerListener;
         appSharedPreferenceHelper = new AppSharedPreferenceHelper(context);
     }
-
     public void getRepeatMode() {
         currentRepeatMode = appSharedPreferenceHelper.getRepeatMode();
         mediaPlayerListener.onChangeRepeatMode(currentRepeatMode);
@@ -80,7 +79,10 @@ public class MediaPlayerPresenter {
         mediaPlayerListener.onMusicPlay();
         context.startService(intentService);
     }
-
+    public void continuesMediaPlayer() {
+        intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_CONTINUES_MEDIA_PLAYER);
+        context.startService(intentService);
+    }
     public void playNextSong() {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
         context.startService(intentService);

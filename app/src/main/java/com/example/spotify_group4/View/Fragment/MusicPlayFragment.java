@@ -19,6 +19,8 @@ import com.example.spotify_group4.Adapter.SongVpgAdapter;
 import com.example.spotify_group4.Helper.AnimationZoomViewPager;
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Helper.TimeFormatter;
+import com.example.spotify_group4.Listener.ExitMediaPlayerListener;
+import com.example.spotify_group4.Listener.HandleMiniPlayerListener;
 import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
@@ -27,16 +29,17 @@ import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
+import com.example.spotify_group4.View.Activity.HomeActivity;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 
 import java.util.List;
 
-public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
+public class MusicPlayFragment extends Fragment implements MediaPlayerListener, ExitMediaPlayerListener {
     AppSharedPreferenceHelper appSharedPreferenceHelper;
     FragmentPlayMusicBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
     MediaPlayerPresenter playMusicPresenter;
-    int CURRENT_ACTION = Constants.MEDIA_PLAYER_ACTION_PLAY;
+    int currentAction = Constants.MEDIA_PLAYER_ACTION_PLAY;
     MediaPlayerReceiver mediaPlayerReceiver;
     int mFullIntDuration;
     LoadListener loadListener;
@@ -45,23 +48,54 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     Song song;
     SongVpgAdapter songVpgAdapter;
     boolean isUserSwipe;
+    boolean mIsContinueMusicPlayer;
+    HandleMiniPlayerListener handleMiniPlayerListener;
+    HomeActivity homeActivity;
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    public MusicPlayFragment(List<Song> songList, int songPosition) {
+        this.mSongList = songList;
+        this.mCurrentSongPosition = songPosition;
+        this.song = songList.get(mCurrentSongPosition);
+    }
+
+    public MusicPlayFragment(List<Song> songList, int songPosition, boolean isContinueMusicPlayer) {
+        this.mSongList = songList;
+        this.mIsContinueMusicPlayer = isContinueMusicPlayer;
+        this.mCurrentSongPosition = songPosition;
+        this.song = songList.get(mCurrentSongPosition);
+    }
 
     @Override
     public void onStart() {
-        registerBroadcast();
+        if (!mIsContinueMusicPlayer) {
+            registerBroadcast();
+        }
         super.onStart();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mediaPlayerReceiver = new MediaPlayerReceiver(this);
-        replaceFragmentListener.hideComponents();
+        handleMiniPlayerListener.hideMiniPlayer();
         playMusicPresenter.getRepeatMode();
         playMusicPresenter.getShuffleMode();
+        replaceFragmentListener.hideComponents();
         initEvent();
         initViewPager();
-        playMusicPresenter.startPlayList(mSongList, mCurrentSongPosition);
+        if (!mIsContinueMusicPlayer) {
+            mediaPlayerReceiver = new MediaPlayerReceiver(this);
+            playMusicPresenter.startPlayList(mSongList, mCurrentSongPosition);
+        } else {
+            onPlayListShuffled(mSongList);
+            mediaPlayerReceiver = homeActivity.getMediaPlayerReceiver();
+            mediaPlayerReceiver.setMediaPlayerListener(this);
+            playMusicPresenter.continuesMediaPlayer();
+        }
     }
 
     @Override
@@ -87,23 +121,18 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         intentFilter.addAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_MUSIC_COMPLETE);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_UPDATE_DURATION);
-        if (getContext() != null) {
-            getContext().registerReceiver(mediaPlayerReceiver, intentFilter);
-        }
+        homeActivity.registerReceiver(mediaPlayerReceiver, intentFilter);
     }
 
-    public MusicPlayFragment(List<Song> songList, int songPosition) {
-        this.mSongList = songList;
-        this.mCurrentSongPosition = songPosition;
-        this.song = songList.get(mCurrentSongPosition);
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        homeActivity = (HomeActivity) getContext();
         loadListener = (LoadListener) context;
         replaceFragmentListener = (ReplaceFragmentListener) context;
         appSharedPreferenceHelper = new AppSharedPreferenceHelper(context);
-        super.onAttach(context);
+        handleMiniPlayerListener = (HandleMiniPlayerListener) context;
     }
 
 
@@ -115,9 +144,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
 
     @Override
     public void onDestroy() {
-        assert getContext() != null;
-        getContext().unregisterReceiver(mediaPlayerReceiver);
-        playMusicPresenter.stopService();
         super.onDestroy();
     }
 
@@ -160,17 +186,16 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     void playButtonAction() {
-        if (CURRENT_ACTION == Constants.MEDIA_PLAYER_ACTION_PAUSE) {
-            CURRENT_ACTION = Constants.MEDIA_PLAYER_ACTION_PLAY;
+        if (currentAction == Constants.MEDIA_PLAYER_ACTION_PAUSE) {
+            currentAction = Constants.MEDIA_PLAYER_ACTION_PLAY;
             playMusicPresenter.resumeMusic();
-        } else if (CURRENT_ACTION == Constants.MEDIA_PLAYER_ACTION_PLAY) {
-            CURRENT_ACTION = Constants.MEDIA_PLAYER_ACTION_PAUSE;
+        } else if (currentAction == Constants.MEDIA_PLAYER_ACTION_PLAY) {
+            currentAction = Constants.MEDIA_PLAYER_ACTION_PAUSE;
             playMusicPresenter.pauseMusic();
         }
     }
 
     void initViewPager() {
-        assert this.getActivity() != null;
         new Handler(Looper.getMainLooper()).postDelayed(() -> layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition), 100);
         layoutBinding.vpgSongInfo.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -198,8 +223,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     }
 
     void setDataViewPager(List<Song> songList) {
-        assert getActivity() != null;
-        songVpgAdapter = new SongVpgAdapter(this.getActivity(), songList);
+        songVpgAdapter = new SongVpgAdapter(homeActivity, songList);
         layoutBinding.vpgSongInfo.setAdapter(songVpgAdapter);
     }
 
@@ -223,7 +247,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public void onInitInfo(int fullIntDuration) {
         mFullIntDuration = fullIntDuration;
         layoutBinding.tvTimeEnd.setText(TimeFormatter.formatMillisecondToMinuteAndSecond(fullIntDuration));
-
     }
 
     @Override
@@ -235,12 +258,14 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
     public void onUpdateSeekbar(String currentDuration, int currentProcess) {
         layoutBinding.tvTimeStart.setText(currentDuration);
         layoutBinding.timeSeekBar.setProgress(currentProcess);
+        handleMiniPlayerListener.updateDurationMiniPlayer(currentProcess);
     }
 
     @Override
     public void onTransSong(int currentSongPosition) {
         mCurrentSongPosition = currentSongPosition;
         layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition, true);
+        handleMiniPlayerListener.transSong(mCurrentSongPosition);
     }
 
     @Override
@@ -268,6 +293,31 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener {
         mSongList = songList;
         setDataViewPager(mSongList);
         layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition, false);
+    }
+
+    @Override
+    public List<Song> getSongList() {
+        return mSongList;
+    }
+
+    @Override
+    public int getPosition() {
+        return mCurrentSongPosition;
+    }
+
+    @Override
+    public int getAction() {
+        return currentAction;
+    }
+
+    @Override
+    public int getFullDuration() {
+        return mFullIntDuration;
+    }
+
+    @Override
+    public MediaPlayerReceiver getReceiver() {
+        return mediaPlayerReceiver;
     }
 
 }

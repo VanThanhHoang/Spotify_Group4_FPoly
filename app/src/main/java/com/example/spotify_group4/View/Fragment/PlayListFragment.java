@@ -84,8 +84,14 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         playListFragmentPresenter.getSongListByPlayListId(idPlayList);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override

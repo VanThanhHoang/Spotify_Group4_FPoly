@@ -27,6 +27,9 @@ public class Song implements Parcelable {
         this.urlImg = urlImg;
     }
 
+    public Song() {
+    }
+
     public Song(Parcel source) {
         this.url = source.readString();
         this.singerName = source.readString();
