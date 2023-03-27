@@ -1,10 +1,12 @@
 package com.example.spotify_group4.Service;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,6 +26,8 @@ import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,20 +69,23 @@ public class MediaPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int action = intent.getIntExtra(Constants.ACTION_MEDIA_PLAYER, 0);
-        if (action == Constants.MEDIA_PLAYER_ACTION_CONTINUES_MEDIA_PLAYER) {
+        String action = intent.getStringExtra(Constants.ACTION_MEDIA_PLAYER);
+        if (action == null) {
+            action = intent.getAction();
+        }
+        if (action.equals(Constants.MEDIA_PLAYER_ACTION_CONTINUES_MEDIA_PLAYER)) {
             continuesMediaPlayer();
             return START_NOT_STICKY;
         }
-        if (action == Constants.MEDIA_PLAYER_ACTION_PLAY_LIST_SONG && !isInitPlayPlayList) {
+        if (action.equals(Constants.MEDIA_PLAYER_ACTION_PLAY_LIST_SONG) && !isInitPlayPlayList) {
             initPlayList(intent);
             return START_NOT_STICKY;
         }
-        if (action == Constants.MEDIA_PLAYER_ACTION_CHANGE_REPEAT_MODE) {
+        if (action.equals(Constants.MEDIA_PLAYER_ACTION_CHANGE_REPEAT_MODE)) {
             changeRepeatMode();
             return START_NOT_STICKY;
         }
-        if (action == Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER) {
+        if (action.equals(Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER)) {
             currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
             transSongByViewPager();
             return START_NOT_STICKY;
@@ -93,12 +100,12 @@ public class MediaPlayerService extends Service {
         currentRepeatMode = appSharedPreferenceHelper.getRepeatMode();
     }
 
-    void handlerMediaPlayer(int action, Intent intent) {
-        if (action == Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG) {
+    void handlerMediaPlayer(String action, Intent intent) {
+        if (action.equals(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG)) {
             transSong(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
-        } else if (action == Constants.MEDIA_PLAYER_ACTION_PLAY_PREV_SONG) {
+        } else if (action.equals(Constants.MEDIA_PLAYER_ACTION_PLAY_PREV_SONG)) {
             transSong(Constants.MEDIA_PLAYER_ACTION_PLAY_PREV_SONG);
-        } else if (action == Constants.MEDIA_PLAYER_ACTION_SEEK) {
+        } else if (action.equals(Constants.MEDIA_PLAYER_ACTION_SEEK)) {
             int positionToSeek = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_SEEK_POSITION, 0);
             mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
             seekMedia(positionToSeek);
@@ -135,9 +142,26 @@ public class MediaPlayerService extends Service {
         MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentSong.getSingerName());
         metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentSong.getName());
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Album Name");
         metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
-        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(getResources(), R.drawable.ic_facebook));
+        Picasso.get()
+                .load(currentSong.getUrlImg())
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                        // called when the bitmap failed to load
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        // called when the image is being fetched or loaded
+                    }
+                });
         mediaSession.setMetadata(metadataBuilder.build());
         setMediaSessionCallBack();
         mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
@@ -225,8 +249,8 @@ public class MediaPlayerService extends Service {
         }
     }
 
-    void transSong(int ACTION) {
-        if (ACTION == Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG) {
+    void transSong(String ACTION) {
+        if (ACTION.equals(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG)) {
             ++currentSongPosition;
             if (currentSongPosition == songList.size()) {
                 currentSongPosition = 0;
@@ -290,6 +314,7 @@ public class MediaPlayerService extends Service {
     void continuesMediaPlayer() {
         sendListShuffled();
         initDuration();
+        resumeMusic();
     }
 
     void updateDuration() {
@@ -306,18 +331,22 @@ public class MediaPlayerService extends Service {
         return (int) currentPosition;
     }
 
-    void handleAction(int action) {
-        if (action == Constants.MEDIA_PLAYER_ACTION_RESUME) {
+    void handleAction(String action) {
+        if (action.equals(Constants.MEDIA_PLAYER_ACTION_RESUME)) {
+            sendBroadCastResumesMusic();
             resumeMusic();
-        } else if (action == Constants.MEDIA_PLAYER_ACTION_PAUSE) {
+        } else if (action.equals(Constants.MEDIA_PLAYER_ACTION_PAUSE)) {
+            sendBroadCastPauseMusic();
             pauseMusic();
         }
     }
 
     void resumeMusic() {
-        changState(PlaybackStateCompat.STATE_PLAYING);
-        handler.postDelayed(updateSeekBar, 0);
-        mediaPlayer.start();
+        if (!mediaPlayer.isPlaying()) {
+            changState(PlaybackStateCompat.STATE_PLAYING);
+            handler.postDelayed(updateSeekBar, 0);
+            mediaPlayer.start();
+        }
     }
 
     void stopMusic() {
@@ -339,17 +368,43 @@ public class MediaPlayerService extends Service {
         }
     }
 
+    void sendBroadCastPauseMusic() {
+        Intent intent = new Intent(MediaPlayerReceiver.ACTION_PAUSE_MUSIC);
+        sendBroadcast(intent);
+    }
+
+    void sendBroadCastResumesMusic() {
+        Intent intent = new Intent(MediaPlayerReceiver.ACTION_RESUME_MUSIC);
+        sendBroadcast(intent);
+    }
+
     void changState(int state) {
+
         mediaSession.setPlaybackState(createPlaybackState(state));
         notificationBuilder.clearActions();
-        notificationBuilder.addAction(R.drawable.ic_prev, "Previous", null);
+        Intent prevIntent = new Intent(this, MediaPlayerService.class);
+        prevIntent.setAction(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
+        PendingIntent pendingPrevIntent = PendingIntent.getService(this, 0, prevIntent, PendingIntent.FLAG_IMMUTABLE);
+        notificationBuilder.addAction(R.drawable.ic_prev, "Previous", pendingPrevIntent);
+
         if (state == PlaybackStateCompat.STATE_PAUSED) {
-            notificationBuilder.addAction(R.drawable.ic_play, "Pause", null)
-                    .addAction(R.drawable.ic_next, "Next", null);
+            Intent resumeIntent = new Intent(this, MediaPlayerService.class);
+            resumeIntent.setAction(Constants.MEDIA_PLAYER_ACTION_RESUME);
+            PendingIntent pendingResumeIntent = PendingIntent.getService(this, 0, resumeIntent, PendingIntent.FLAG_IMMUTABLE);
+            notificationBuilder.addAction(R.drawable.ic_play, "Pause", pendingResumeIntent);
         } else {
-            notificationBuilder.addAction(R.drawable.ic_pause, "Pause", null)
-                    .addAction(R.drawable.ic_next, "Next", null);
+            Intent pauseIntent = new Intent(this, MediaPlayerService.class);
+            pauseIntent.setAction(Constants.MEDIA_PLAYER_ACTION_PAUSE);
+            PendingIntent pendingPauseIntent = PendingIntent.getService(this, 0, pauseIntent, PendingIntent.FLAG_IMMUTABLE);
+            notificationBuilder.addAction(R.drawable.ic_pause, "Pause", pendingPauseIntent);
+
         }
+        Intent nextIntent = new Intent(this, MediaPlayerService.class);
+        nextIntent.setAction(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
+        PendingIntent pendingNextIntent = PendingIntent.getService(this, 0, nextIntent, PendingIntent.FLAG_IMMUTABLE);
+        notificationBuilder.addAction(R.drawable.ic_next, "Next", pendingNextIntent);
+
+
         Notification notification = notificationBuilder.build();
         startForeground(1, notification);
     }
@@ -375,7 +430,7 @@ public class MediaPlayerService extends Service {
                 .setLargeIcon(bitmap)
                 .setOnlyAlertOnce(true)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(1)
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaSession.getSessionToken()));
     }
 }

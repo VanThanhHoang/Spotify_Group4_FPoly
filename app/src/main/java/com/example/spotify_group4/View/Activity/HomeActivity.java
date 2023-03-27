@@ -34,7 +34,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements ReplaceFragmentListener, LoadListener, MediaPlayerListener, HandleMiniPlayerListener {
+public class HomeActivity extends AppCompatActivity implements ReplaceFragmentListener, LoadListener, HandleMiniPlayerListener {
     ActivityHomeBinding layoutBinding;
     HomeFragment homeFragment;
     SearchFragment searchFragment;
@@ -43,14 +43,14 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     LoadingDialog loadingDialog;
     ExitMediaPlayerListener exitMediaPlayerListener;
     int mCurrentSongPosition;
-    int mCurrentAction;
+    String mCurrentAction;
     List<Song> songList;
     Song mCurrentSong;
     MediaPlayerPresenter mediaPlayerPresenter;
     MediaPlayerReceiver mediaPlayerReceiver;
     int mFullIntDuration;
     FragmentTransaction fragmentTransaction;
-
+    MediaPlayerListener mediaPlayerListener;
     @Nullable
     @Override
     public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
@@ -67,7 +67,6 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mediaPlayerReceiver = new MediaPlayerReceiver(this);
         layoutBinding = ActivityHomeBinding.inflate(getLayoutInflater(),
                 null, false);
         setContentView(layoutBinding.getRoot());
@@ -82,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
 
     void setEventMediaPlayer() {
         layoutBinding.btnPlayPause.setOnClickListener(v -> {
-            if (mCurrentAction == Constants.MEDIA_PLAYER_ACTION_PLAY) {
+            if (mCurrentAction.equals(Constants.MEDIA_PLAYER_ACTION_RESUME)) {
                 mediaPlayerPresenter.pauseMusic();
             } else {
                 mediaPlayerPresenter.resumeMusic();
@@ -117,7 +116,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         if (fragment instanceof MusicPlayFragment) {
             exitMediaPlayerListener = (ExitMediaPlayerListener) fragment;
             mCurrentAction = exitMediaPlayerListener.getAction();
-            if (mCurrentAction == Constants.MEDIA_PLAYER_ACTION_PLAY) {
+            if (mCurrentAction.equals(Constants.MEDIA_PLAYER_ACTION_RESUME)) {
                 prepareMiniMediaPlayer();
             }
         }
@@ -139,7 +138,8 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         mFullIntDuration = exitMediaPlayerListener.getFullDuration();
         mCurrentSong = songList.get(mCurrentSongPosition);
         mediaPlayerReceiver = exitMediaPlayerListener.getReceiver();
-        mediaPlayerPresenter = new MediaPlayerPresenter(this, this);
+        mediaPlayerListener = exitMediaPlayerListener.getMediaListener();
+        mediaPlayerPresenter = new MediaPlayerPresenter(this, mediaPlayerListener);
         layoutBinding.layoutBottomCurrentPlayingSong.setVisibility(View.VISIBLE);
         setEventMediaPlayer();
         setUpMiniPlayer();
@@ -209,57 +209,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         loadingDialog.dismiss();
     }
 
-    @Override
-    public void onSongLoad() {
 
-    }
-
-    @Override
-    public void onMusicPlay() {
-        mCurrentAction = Constants.MEDIA_PLAYER_ACTION_PLAY;
-        layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_pause_50);
-    }
-
-    @Override
-    public void onMusicPause() {
-        mCurrentAction = Constants.MEDIA_PLAYER_ACTION_PAUSE;
-        layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play_50);
-    }
-
-    @Override
-    public void onInitInfo(int fullDuration) {
-
-    }
-
-    @Override
-    public void onMusicStop() {
-
-    }
-
-    @Override
-    public void onUpdateSeekbar(String currentDuration, int currentProcess) {
-        layoutBinding.seekBarDuration.setProgress(currentProcess);
-    }
-
-    @Override
-    public void onTransSong(int currentSongPosition) {
-
-    }
-
-    @Override
-    public void onChangeRepeatMode(String repeatMode) {
-
-    }
-
-    @Override
-    public void onChangeShuffleMode(boolean repeatMode) {
-
-    }
-
-    @Override
-    public void onPlayListShuffled(List<Song> listSong) {
-
-    }
 
     @Override
     public void hideMiniPlayer() {
@@ -273,11 +223,27 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
 
     @Override
     public void transSong(int position) {
-       if(mCurrentSong!=null){
-           mCurrentSongPosition = position;
-           mCurrentSong = songList.get(mCurrentSongPosition);
-           setUpMiniPlayer();
-       }
+        if (mCurrentSong != null) {
+            mCurrentSongPosition = position;
+            mCurrentSong = songList.get(mCurrentSongPosition);
+            setUpMiniPlayer();
+        }
+    }
+
+    @Override
+    public void onSongResume() {
+        if (mCurrentSong != null) {
+            mCurrentAction = Constants.MEDIA_PLAYER_ACTION_RESUME;
+            layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_pause_50);
+        }
+    }
+
+    @Override
+    public void onSongPause() {
+        if (mCurrentSong != null) {
+            mCurrentAction = Constants.MEDIA_PLAYER_ACTION_PAUSE;
+            layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play_50);
+        }
     }
 
     @Override

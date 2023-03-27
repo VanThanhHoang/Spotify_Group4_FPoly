@@ -39,7 +39,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     FragmentPlayMusicBinding layoutBinding;
     ReplaceFragmentListener replaceFragmentListener;
     MediaPlayerPresenter playMusicPresenter;
-    int currentAction = Constants.MEDIA_PLAYER_ACTION_PLAY;
+    String currentAction = Constants.MEDIA_PLAYER_ACTION_RESUME;
     MediaPlayerReceiver mediaPlayerReceiver;
     int mFullIntDuration;
     LoadListener loadListener;
@@ -121,6 +121,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         intentFilter.addAction(MediaPlayerReceiver.ACTION_TRANS_SONG);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_MUSIC_COMPLETE);
         intentFilter.addAction(MediaPlayerReceiver.ACTION_UPDATE_DURATION);
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_PAUSE_MUSIC);
+        intentFilter.addAction(MediaPlayerReceiver.ACTION_RESUME_MUSIC);
         homeActivity.registerReceiver(mediaPlayerReceiver, intentFilter);
     }
 
@@ -134,7 +136,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         appSharedPreferenceHelper = new AppSharedPreferenceHelper(context);
         handleMiniPlayerListener = (HandleMiniPlayerListener) context;
     }
-     void resetTime() {
+
+    void resetTime() {
         layoutBinding.timeSeekBar.setProgress(0);
         layoutBinding.tvTimeStart.setText(R.string.defaultDuration);
         layoutBinding.tvTimeEnd.setText(R.string.defaultDuration);
@@ -184,10 +187,10 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     }
 
     void playButtonAction() {
-        if (currentAction == Constants.MEDIA_PLAYER_ACTION_PAUSE) {
-            currentAction = Constants.MEDIA_PLAYER_ACTION_PLAY;
+        if (currentAction.equals(Constants.MEDIA_PLAYER_ACTION_PAUSE)) {
+            currentAction = Constants.MEDIA_PLAYER_ACTION_RESUME;
             playMusicPresenter.resumeMusic();
-        } else if (currentAction == Constants.MEDIA_PLAYER_ACTION_PLAY) {
+        } else if (currentAction.equals(Constants.MEDIA_PLAYER_ACTION_RESUME)) {
             currentAction = Constants.MEDIA_PLAYER_ACTION_PAUSE;
             playMusicPresenter.pauseMusic();
         }
@@ -233,11 +236,13 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     @Override
     public void onMusicPlay() {
         loadListener.onComplete();
+        handleMiniPlayerListener.onSongResume();
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_pause);
     }
 
     @Override
     public void onMusicPause() {
+        handleMiniPlayerListener.onSongPause();
         layoutBinding.btnPlayPause.setImageResource(R.drawable.ic_play);
     }
 
@@ -304,7 +309,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     }
 
     @Override
-    public int getAction() {
+    public String getAction() {
         return currentAction;
     }
 
@@ -316,6 +321,11 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     @Override
     public MediaPlayerReceiver getReceiver() {
         return mediaPlayerReceiver;
+    }
+
+    @Override
+    public MediaPlayerListener getMediaListener() {
+        return this;
     }
 
 }

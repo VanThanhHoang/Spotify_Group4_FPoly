@@ -3,8 +3,6 @@ package com.example.spotify_group4.Receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
@@ -19,15 +17,19 @@ public class MediaPlayerReceiver extends BroadcastReceiver {
     public static final String ACTION_INIT_DURATION = "INIT_UI_FRAGMENT_MUSIC_PLAYER";
     public static final String ACTION_UPDATE_DURATION = "UPDATE_UI_FRAGMENT_MUSIC_PLAYER";
     public static final String ACTION_SHUFFLED_PLAY_LIST = "SHUFFLED_PLAY_LIST_MUSIC_PLAYER";
+    public static final String ACTION_PAUSE_MUSIC = "ACTION_PAUSE_MUSIC";
+    public static final String ACTION_RESUME_MUSIC = "ACTION_PLAY_MUSIC";
     // Extra
     MediaPlayerListener mMediaPlayerListener;
 
     public MediaPlayerReceiver(MediaPlayerListener mediaPlayerListener) {
         this.mMediaPlayerListener = mediaPlayerListener;
     }
-    public void setMediaPlayerListener(MediaPlayerListener mediaPlayerListener){
+
+    public void setMediaPlayerListener(MediaPlayerListener mediaPlayerListener) {
         this.mMediaPlayerListener = mediaPlayerListener;
     }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -52,6 +54,12 @@ public class MediaPlayerReceiver extends BroadcastReceiver {
             case ACTION_SHUFFLED_PLAY_LIST:
                 List<Song> songList = intent.getParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_LIST_SHUFFLED);
                 mMediaPlayerListener.onPlayListShuffled(songList);
+                break;
+            case ACTION_PAUSE_MUSIC:
+                mMediaPlayerListener.onMusicPause();
+                break;
+            case ACTION_RESUME_MUSIC:
+                mMediaPlayerListener.onMusicPlay();
                 break;
         }
     }

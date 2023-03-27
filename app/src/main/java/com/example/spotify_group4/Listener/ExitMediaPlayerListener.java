@@ -10,7 +10,8 @@ import java.util.List;
 public interface ExitMediaPlayerListener {
     List<Song> getSongList();
     int getPosition();
-    int getAction();
+    String getAction();
     int getFullDuration();
     MediaPlayerReceiver getReceiver();
+    MediaPlayerListener getMediaListener();
 }

@@ -6,5 +6,7 @@ public interface HandleMiniPlayerListener {
     void hideMiniPlayer();
     void updateDurationMiniPlayer(int currentProcess);
     void transSong(int position);
+    void onSongResume();
+    void onSongPause();
     MediaPlayerReceiver getMediaPlayerReceiver();
 }
