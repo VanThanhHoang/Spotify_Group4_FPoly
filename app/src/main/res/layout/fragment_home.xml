@@ -139,7 +139,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault5"
                     android:layout_width="match_parent"
-                    android:layout_height="350dp"
+                    android:layout_height="170dp"
                     android:layout_margin="5dp" />
                 <TextView
                     android:id="@+id/tvContentTittle6"

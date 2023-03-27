@@ -9,14 +9,27 @@
         android:id="@+id/imgSlider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <TextView
-        android:id="@+id/tvPlayListName"
-        android:textColor="@color/green"
-        style="@style/title_Login"
-        android:text="ádasd"
-        android:padding="10dp"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+        <TextView
+            android:background="@color/black"
+            android:textColor="@color/green"
+            style="@style/title_Login"
+            android:layout_gravity="center|bottom"
+            android:padding="10dp"
+            android:alpha="0.7"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/tvPlayListName"
+            android:textColor="@color/green"
+            style="@style/title_Login"
+            android:layout_gravity="center|bottom"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_width="match_parent"/>
+    </FrameLayout>
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.spotify_group4.View.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -121,6 +122,15 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void prepareMiniMediaPlayer() {
@@ -263,11 +273,11 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
 
     @Override
     public void transSong(int position) {
-        if (mCurrentSong != null) {
-            mCurrentSongPosition = position;
-            mCurrentSong = songList.get(mCurrentSongPosition);
-            setUpMiniPlayer();
-        }
+       if(mCurrentSong!=null){
+           mCurrentSongPosition = position;
+           mCurrentSong = songList.get(mCurrentSongPosition);
+           setUpMiniPlayer();
+       }
     }
 
     @Override
