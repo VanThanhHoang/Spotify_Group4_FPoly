@@ -19,11 +19,12 @@ public interface ApiSkyMusic {
             .build();
     ApiSkyMusic apiSkyMusic = retrofitSkyMusic.create(ApiSkyMusic.class);
 
-    @GET("get_song_from_play_list")
+    @GET("get_song_from_play_list.php")
     Call<List<Song>> getSongByPlayListId(@Query("playListId") int playListId);
-    @GET("get_home_content")
+
+    @GET("get_home_content.php")
     Call<List<HomeContent>> getHomeContent();
 
-    @GET("get_slider_playlist")
+    @GET("get_slider_playlist.php")
     Call<List<PlayList>> getSliderPlayList();
 }

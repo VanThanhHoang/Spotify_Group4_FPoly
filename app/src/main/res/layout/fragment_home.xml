@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,8 +52,7 @@
                     android:text="Hello"
                     android:gravity="left"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:ignore="RtlHardcoded" />
+                    android:layout_height="wrap_content"/>
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpgHomeSlider"
                     android:layout_width="match_parent"
@@ -71,7 +69,7 @@
                     android:id="@+id/tvContentTittle0"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -84,8 +82,7 @@
                     android:id="@+id/tvContentTittle1"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
+                    android:layout_height="70dp"
                     android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -98,8 +95,7 @@
                     android:id="@+id/tvContentTittle2"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
+                    android:layout_height="70dp"
                     android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -112,8 +108,7 @@
                     android:id="@+id/tvContentTittle3"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
+                    android:layout_height="70dp"
                     android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -126,8 +121,7 @@
                     android:id="@+id/tvContentTittle4"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
+                    android:layout_height="70dp"
                     android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -140,11 +134,21 @@
                     android:id="@+id/tvContentTittle5"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
+                    android:layout_height="70dp"
                     android:textSize="20sp" />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault5"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:id="@+id/tvContentTittle6"
+                    style="@style/title_Login"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:textSize="20sp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlayListDefault6"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_margin="5dp" />

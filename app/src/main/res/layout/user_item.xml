@@ -15,7 +15,8 @@
         android:text="..."
         android:textSize="18dp"
         tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="48dp" />
+        tools:layout_editor_absoluteY="48dp"
+        android:textColor="@color/white"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_baseline_navigate_next_24"
         tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="85dp" />
+        tools:layout_editor_absoluteY="85dp"
+        app:tint="@color/white" />
 
 </LinearLayout>
