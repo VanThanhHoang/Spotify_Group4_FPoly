@@ -25,5 +25,5 @@ public class Constants {
     public static String MEDIA_PLAYER_EXTRA_REPEAT_MODE_REPEAT_ALL = "REPEAT_ALL";
     public static String MEDIA_PLAYER_EXTRA_LIST_SHUFFLED = "LIST_SHUFFLED";
 
-
+    public static  String SONG_INFO_BASE_LINK ="https://skymusicfpolygroup3.000webhostapp.com/songinfo/songinfo?songId=";
 }

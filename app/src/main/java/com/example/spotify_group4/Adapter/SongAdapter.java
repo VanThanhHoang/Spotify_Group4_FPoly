@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
+import com.example.spotify_group4.R;
 import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
 import com.example.spotify_group4.databinding.SongItemBinding;
 import com.squareup.picasso.Picasso;
@@ -42,7 +43,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.songViewHolder
                         new MusicPlayFragment( songList,positionItem)
                 )
         );
-        Picasso.get().load(song.getUrlImg()).into(holder.imgSong);
+        Picasso.get().load(song.getUrlImg()).placeholder(R.drawable.img_load).into(holder.imgSong);
         holder.tvSongName.setText(song.getName());
         holder.tvSingerName.setText(song.getSingerName());
     }

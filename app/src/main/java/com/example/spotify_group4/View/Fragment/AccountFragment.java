@@ -1,5 +1,6 @@
 package com.example.spotify_group4.View.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.spotify_group4.Adapter.UserManagerAdapter;
 import com.example.spotify_group4.Model.User;
 import com.example.spotify_group4.R;
+import com.example.spotify_group4.View.Activity.LoginActivity;
 import com.example.spotify_group4.databinding.FragmentAcountBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
     FragmentAcountBinding layoutBinding;
-    private RecyclerView rcv;
     private UserManagerAdapter userManagerAdapter;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,14 +35,21 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userManagerAdapter = new UserManagerAdapter();
+        userManagerAdapter = new UserManagerAdapter(getContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutBinding.rcvName.setLayoutManager(linearLayoutManager);
+        layoutBinding.btnLogout.setOnClickListener(v ->logOut());
         userManagerAdapter.setData(getListUser());
         layoutBinding.rcvName.setAdapter(userManagerAdapter);
     }
 
+    void logOut(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        getActivity().finish();
+        startActivity(intent);
+    }
     private List<User> getListUser() {
         List<User> list = new ArrayList<>();
         list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Tài khoản"));

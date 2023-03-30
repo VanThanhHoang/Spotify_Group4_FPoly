@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spotify_group4.Adapter.SongAdapter;
 import com.example.spotify_group4.Listener.GetSongListListener;
+import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.PlayList;
 import com.example.spotify_group4.Model.Song;
@@ -31,11 +32,12 @@ import java.util.List;
 
 public class PlayListFragment extends Fragment implements GetSongListListener {
     FragmentPlaylistBinding fragmentPlaylistBinding;
-    List<Song> mSongList;
-    SongAdapter songAdapter;
-    private boolean isExpanded = true;
+    List<Song> mSongList ;
+    SongAdapter songAdapter ;
+    private boolean isExpanded = true ;
     private boolean isPlaying;
     PlayList mPlayList;
+    LoadListener loadListener;
     PlayListFragmentPresenter playListFragmentPresenter;
     ReplaceFragmentListener replaceFragmentListener;
 
@@ -64,19 +66,19 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
         }
     }
 
-    void createListMusic() {
 
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
         replaceFragmentListener = (ReplaceFragmentListener) context;
         playListFragmentPresenter = new PlayListFragmentPresenter(this);
+        loadListener = (LoadListener)  context;
         super.onAttach(context);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        loadListener.onLoad();
         playListFragmentPresenter.getSongListByPlayListId(mPlayList.getId());
         Picasso.get().load(mPlayList.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
         initToolbar();
@@ -99,7 +101,7 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     @Override
     public void onGetSongListComplete(List<Song> songList) {
         mSongList = songList;
-        createListMusic();
+        loadListener.onComplete();
         createRecycleView();
     }
 
@@ -125,7 +127,7 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
             fragmentPlaylistBinding.collapsingToolbarLayout.setContentScrimColor(requireContext().getResources().getColor(R.color.black, null));
             fragmentPlaylistBinding.collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(R.color.black, null));
         });
-        fragmentPlaylistBinding.appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+        fragmentPlaylistBinding.appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->  {
             isExpanded = Math.abs(verticalOffset) <= 200;
         });
     }

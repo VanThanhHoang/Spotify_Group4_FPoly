@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@color/black">
+
     <LinearLayout
+        android:id="@+id/layoutAccount"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -44,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:text="Hồi sơ"
+                android:text="Hồ sơ"
                 android:layout_toEndOf="@+id/image"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
@@ -57,14 +59,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/ic_baseline_navigate_next_24" />
+
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_marginTop="70dp"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
-
         />
+    <Button
+        android:layout_below="@id/rcvName"
+        android:text="dang xuat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLogout"/>
 </RelativeLayout>

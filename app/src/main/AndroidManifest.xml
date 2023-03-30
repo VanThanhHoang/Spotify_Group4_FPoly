@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:name=".App.MyApplication"
         android:allowBackup="true"
@@ -15,11 +17,34 @@
         android:theme="@style/Theme.Spotify_Group4"
         tools:targetApi="31">
         <activity
-            android:name=".View.Activity.HomeActivity"
+            android:name=".View.Activity.MainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+        <activity
+            android:name=".View.Activity.HomeActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="skymusicfpolygroup3.000webhostapp.com" />
+                <data android:pathPrefix="/songinfo" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="skymusicpoly" />
+                <data android:host="skymusicpoly" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".View.Activity.SplashScreenActivity"
@@ -29,17 +54,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".View.Activity.LoginActivity"
-            android:exported="true">
-
-        </activity>
-        <service android:name=".Service.MediaPlayerService"/>
+            android:exported="true" />
+        <service android:name=".Service.MediaPlayerService" />
     </application>
 
 </manifest>

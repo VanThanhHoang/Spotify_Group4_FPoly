@@ -25,6 +25,7 @@ import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.Song;
+import com.example.spotify_group4.Presenter.InteractPresenter;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
@@ -51,6 +52,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     boolean mIsContinueMusicPlayer;
     HandleMiniPlayerListener handleMiniPlayerListener;
     HomeActivity homeActivity;
+    InteractPresenter interactPresenter;
 
     @Override
     public void onDetach() {
@@ -132,6 +134,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         super.onAttach(context);
         homeActivity = (HomeActivity) getContext();
         loadListener = (LoadListener) context;
+        interactPresenter = new InteractPresenter(context);
         replaceFragmentListener = (ReplaceFragmentListener) context;
         appSharedPreferenceHelper = new AppSharedPreferenceHelper(context);
         handleMiniPlayerListener = (HandleMiniPlayerListener) context;
@@ -149,6 +152,9 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     }
 
     void initEvent() {
+        layoutBinding.btnShare.setOnClickListener(v ->
+                interactPresenter.shareWithAnotherApp(mSongList.get(mCurrentSongPosition))
+        );
         layoutBinding.btnShuffle.setOnClickListener(v -> playMusicPresenter.setShuffleMode());
         layoutBinding.btnRepeatMode.setOnClickListener(v -> playMusicPresenter.setRepeatMode());
         if (getActivity() != null) {
@@ -186,6 +192,31 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         });
     }
 
+    /*    void shareCardView(){
+            cardView.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(cardView.getDrawingCache());
+            cardView.setDrawingCacheEnabled(false);
+
+    // Lưu bitmap vào bộ nhớ
+            String fileName = "cardview_share.jpg";
+            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
+            File file = new File(filePath);
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+    // Truyền bitmap vào Intent chia sẻ
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/jpeg");
+            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(shareIntent, "Chia sẻ CardView"));
+        }*/
     void playButtonAction() {
         if (currentAction.equals(Constants.MEDIA_PLAYER_ACTION_PAUSE)) {
             currentAction = Constants.MEDIA_PLAYER_ACTION_RESUME;
@@ -212,6 +243,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
                     return;
                 }
                 if (isUserSwipe) {
+                    mCurrentSongPosition = position;
                     resetTime();
                     loadListener.onLoad();
                     playMusicPresenter.transSongByViewPager(position);

@@ -3,7 +3,6 @@ package com.example.spotify_group4.Presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
@@ -79,10 +78,12 @@ public class MediaPlayerPresenter {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_RESUME);
         context.startService(intentService);
     }
+
     public void continuesMediaPlayer() {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_CONTINUES_MEDIA_PLAYER);
         context.startService(intentService);
     }
+
     public void playNextSong() {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
         context.startService(intentService);
@@ -90,7 +91,7 @@ public class MediaPlayerPresenter {
 
     public void transSongByViewPager(int position) {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER);
-        intentService.putExtra("CURS_POSITION", position);
+        intentService.putExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, position);
         context.startService(intentService);
     }
 
@@ -104,12 +105,6 @@ public class MediaPlayerPresenter {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_SEEK);
         context.startService(intentService);
     }
-
-    /* public void stopMusic() {
-        intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_STOP);
-        context.startService(intentService);
-        mediaPlayerListener.onMusicStop();
-    }*/
 
     public void pauseMusic() {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PAUSE);

@@ -27,4 +27,6 @@ public interface ApiSkyMusic {
 
     @GET("get_slider_playlist.php")
     Call<List<PlayList>> getSliderPlayList();
+    @GET("get_song_by_id")
+    Call<List<Song>> getSongById(@Query("songId") int songId);
 }

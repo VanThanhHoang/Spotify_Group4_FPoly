@@ -1,10 +1,14 @@
 package com.example.spotify_group4.View.Activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +26,7 @@ import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.MediaPlayerPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
+import com.example.spotify_group4.Retrofit.ApiSkyMusic;
 import com.example.spotify_group4.View.Dialog.LoadingDialog;
 import com.example.spotify_group4.View.Fragment.AccountFragment;
 import com.example.spotify_group4.View.Fragment.HomeFragment;
@@ -32,7 +37,12 @@ import com.example.spotify_group4.View.Fragment.SearchFragment;
 import com.example.spotify_group4.databinding.ActivityHomeBinding;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity implements ReplaceFragmentListener, LoadListener, HandleMiniPlayerListener {
     ActivityHomeBinding layoutBinding;
@@ -51,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     int mFullIntDuration;
     FragmentTransaction fragmentTransaction;
     MediaPlayerListener mediaPlayerListener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
@@ -77,6 +88,32 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         initFragment();
         replaceFragment(homeFragment);
         layoutBinding.layoutBottomCurrentPlayingSong.setVisibility(View.GONE);
+        openByLink();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("123", "onNewIntent: ");
+        super.onNewIntent(intent);
+    }
+    void openByLink() {
+        Intent appLinkIntent = getIntent();
+        if(appLinkIntent.getAction()!=null){
+            int songId =  appLinkIntent.getExtras().getInt("songId");
+            Call<List<Song>> getSongById = ApiSkyMusic.apiSkyMusic.getSongById(songId);
+            getSongById.enqueue(new Callback<List<Song>>() {
+                @Override
+                public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
+                    replaceFragment(new MusicPlayFragment(response.body(),0));
+
+                }
+                @Override
+                public void onFailure(Call<List<Song>> call, Throwable t) {
+
+                }
+            });
+        }
+
     }
 
     void setEventMediaPlayer() {
@@ -208,7 +245,6 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     public void onComplete() {
         loadingDialog.dismiss();
     }
-
 
 
     @Override

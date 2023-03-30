@@ -45,14 +45,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/tvHelloHomeFragment"
-                    android:layout_margin="15dp"
                     style="@style/title_Login"
-                    android:text="Hello"
-                    android:gravity="left"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:gravity="left"
+                    android:text="Hello" />
+
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpgHomeSlider"
                     android:layout_width="match_parent"
@@ -136,17 +138,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault5"
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:layout_margin="5dp" />
+
                 <TextView
                     android:id="@+id/tvContentTittle6"
                     style="@style/title_Login"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textSize="20sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault6"
                     android:layout_width="match_parent"

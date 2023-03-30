@@ -16,6 +16,7 @@ import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -87,6 +88,7 @@ public class MediaPlayerService extends Service {
         }
         if (action.equals(Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER)) {
             currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
+            Log.d("123", "transSongByViewPager: "+currentSongPosition);
             transSongByViewPager();
             return START_NOT_STICKY;
         } else {
@@ -149,7 +151,9 @@ public class MediaPlayerService extends Service {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                         metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
-
+                        mediaSession.setMetadata(metadataBuilder.build());
+                        setMediaSessionCallBack();
+                        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
                     }
 
                     @Override
@@ -162,9 +166,6 @@ public class MediaPlayerService extends Service {
                         // called when the image is being fetched or loaded
                     }
                 });
-        mediaSession.setMetadata(metadataBuilder.build());
-        setMediaSessionCallBack();
-        mediaSession.setPlaybackState(createPlaybackState(PlaybackStateCompat.STATE_PLAYING));
     }
 
     @Override
@@ -204,7 +205,7 @@ public class MediaPlayerService extends Service {
     }
 
     void setupMediaPlayer(String url) throws IOException {
-        mediaPlayer = MediaPlayer.create(this, R.raw.song2);
+        mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
         /*mediaPlayer = new MediaPlayer();*/
         /*mediaPlayer.setDataSource(url);*/
         mediaPlayer.setOnCompletionListener(mp -> {
@@ -221,6 +222,7 @@ public class MediaPlayerService extends Service {
 
     void transSongByViewPager() {
         currentSong = songList.get(currentSongPosition);
+        Log.d("123", "transSongByViewPager: "+currentSong.getName());
         prepareMusic(currentSong.getUrl());
     }
 
@@ -271,6 +273,7 @@ public class MediaPlayerService extends Service {
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
+                resumeMusic();
                 super.onPlay();
             }
 
