@@ -34,7 +34,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userManagerAdapter = new UserManagerAdapter();
+        userManagerAdapter = new UserManagerAdapter(getContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutBinding.rcvName.setLayoutManager(linearLayoutManager);
