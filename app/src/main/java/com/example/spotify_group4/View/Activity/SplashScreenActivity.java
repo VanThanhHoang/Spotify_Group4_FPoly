@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spotify_group4.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -42,12 +45,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     boolean isUserLogin() {
-        FirebaseUser currentUser = null;
-        try {
-            currentUser = mAuth.getCurrentUser();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        return currentUser != null;
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        return currentUser != null || googleSignInAccount != null;
     }
 }

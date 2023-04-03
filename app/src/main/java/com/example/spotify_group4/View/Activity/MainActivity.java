@@ -16,6 +16,5 @@ public class MainActivity extends AppCompatActivity {
         textView2 = findViewById(R.id.textView2);
         String data = getIntent().getStringExtra("data");
         textView2.setText(data);
-
     }
 }

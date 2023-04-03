@@ -29,4 +29,7 @@ public interface ApiSkyMusic {
     Call<List<PlayList>> getSliderPlayList();
     @GET("get_song_by_id")
     Call<List<Song>> getSongById(@Query("songId") int songId);
+
+    @GET("get_song_by_name")
+    Call<List<Song>> searchSong(@Query("songName") String songName);
 }

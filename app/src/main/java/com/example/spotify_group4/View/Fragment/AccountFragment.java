@@ -1,6 +1,7 @@
 package com.example.spotify_group4.View.Fragment;
 
-import android.content.Intent;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +13,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spotify_group4.Adapter.UserManagerAdapter;
-import com.example.spotify_group4.Model.User;
-import com.example.spotify_group4.R;
-import com.example.spotify_group4.View.Activity.LoginActivity;
+import com.example.spotify_group4.Adapter.MenuAccountFragmentAdapter;
+import com.example.spotify_group4.Listener.AccountFragmentItemListener;
+import com.example.spotify_group4.Presenter.AccountFragmentPresenter;
 import com.example.spotify_group4.databinding.FragmentAcountBinding;
-import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements AccountFragmentItemListener {
     FragmentAcountBinding layoutBinding;
-    private UserManagerAdapter userManagerAdapter;
+    AccountFragmentPresenter accountFragmentPresenter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,39 +29,26 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        userManagerAdapter = new UserManagerAdapter(getContext());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        layoutBinding.rcvName.setLayoutManager(linearLayoutManager);
-        layoutBinding.btnLogout.setOnClickListener(v ->logOut());
-        userManagerAdapter.setData(getListUser());
-        layoutBinding.rcvName.setAdapter(userManagerAdapter);
+    public void onAttach(@NonNull Context context) {
+        accountFragmentPresenter = new AccountFragmentPresenter(getActivity());
+        super.onAttach(context);
     }
 
-    void logOut(){
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        getActivity().finish();
-        startActivity(intent);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        createRecycleView();
     }
-    private List<User> getListUser() {
-        List<User> list = new ArrayList<>();
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Tài khoản"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Trình tiết kiệm dữ liệu"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Ngôn ngữ"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Phát nhạc"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Nội dung nhạy cảm"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Thiết bị"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Ô tô"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Quyền riêng tư và mạng xã hội"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Trợ lý thoại và ứng dụng"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Chất lượng âm thanh"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Chất lượng video"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Không gian lưu trữ"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Thông báo"));
-        list.add(new User(R.drawable.ic_baseline_navigate_next_24, "Quảng cáo"));
-        return list;
+    void createRecycleView(){
+        MenuAccountFragmentAdapter menuAccountFragmentAdapter = new MenuAccountFragmentAdapter(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        layoutBinding.rcvMenu.setLayoutManager(linearLayoutManager);
+        layoutBinding.rcvMenu.setAdapter(menuAccountFragmentAdapter);
+    }
+
+    @Override
+    public boolean signOut() {
+        return accountFragmentPresenter.signOut();
     }
 }

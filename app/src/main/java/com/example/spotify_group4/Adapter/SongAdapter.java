@@ -19,18 +19,20 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.songViewHolder> {
-    SongItemBinding songItemBinding ;
+    SongItemBinding songItemBinding;
     List<Song> songList;
     ReplaceFragmentListener replaceFragmentListener;
-    public SongAdapter(List<Song> songList,ReplaceFragmentListener replaceFragmentListener) {
+
+    public SongAdapter(List<Song> songList, ReplaceFragmentListener replaceFragmentListener) {
         this.songList = songList;
-        this.replaceFragmentListener =replaceFragmentListener;
+        this.replaceFragmentListener = replaceFragmentListener;
     }
+
 
     @NonNull
     @Override
     public songViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        songItemBinding = SongItemBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        songItemBinding = SongItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new songViewHolder(songItemBinding);
     }
 
@@ -38,14 +40,19 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.songViewHolder
     public void onBindViewHolder(@NonNull songViewHolder holder, int position) {
         int positionItem = holder.getLayoutPosition();
         Song song = songList.get(positionItem);
-        holder.cardViewContainer.setOnClickListener(v->replaceFragmentListener
+        holder.cardViewContainer.setOnClickListener(v -> replaceFragmentListener
                 .replaceFragment(
-                        new MusicPlayFragment( songList,positionItem)
+                        new MusicPlayFragment(songList, positionItem)
                 )
         );
         Picasso.get().load(song.getUrlImg()).placeholder(R.drawable.img_load).into(holder.imgSong);
         holder.tvSongName.setText(song.getName());
         holder.tvSingerName.setText(song.getSingerName());
+    }
+
+    public void updateData(List<Song> songList) {
+        this.songList = songList;
+        notifyDataSetChanged();
     }
 
     @Override
