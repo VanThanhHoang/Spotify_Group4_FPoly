@@ -79,7 +79,9 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
                 layoutBinding.rvPlayListDefault2,
                 layoutBinding.rvPlayListDefault3,
                 layoutBinding.rvPlayListDefault4,
-                layoutBinding.rvPlayListDefault5
+                layoutBinding.rvPlayListDefault5,
+                layoutBinding.rvPlayListDefault6,
+                layoutBinding.rvPlayListDefault7
         };
         listDefaultContentTittle = new TextView[]{
                 layoutBinding.tvContentTittle0,
@@ -87,7 +89,9 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
                 layoutBinding.tvContentTittle2,
                 layoutBinding.tvContentTittle3,
                 layoutBinding.tvContentTittle4,
-                layoutBinding.tvContentTittle5
+                layoutBinding.tvContentTittle5,
+                layoutBinding.tvContentTittle6,
+                layoutBinding.tvContentTittle7
         };
         replaceFragmentListener.showComponents();
     }
@@ -142,6 +146,14 @@ public class HomeFragment extends Fragment implements GetDataHomeFragmentListene
                     layoutBinding.layoutRefresh.setRefreshing(false);
                 }
             }, 2000);
+        });
+        layoutBinding.layoutScroll.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY > oldScrollY) {
+                replaceFragmentListener.hideBotNav();
+            } else {
+                replaceFragmentListener.showBotNav();
+            }
+
         });
     }
 

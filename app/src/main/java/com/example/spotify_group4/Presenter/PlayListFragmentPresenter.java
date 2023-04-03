@@ -36,4 +36,17 @@ public class PlayListFragmentPresenter {
             }
         });
     }
+    public void getSongListBySingerId(int singerId) {
+        Call<List<Song>> callGetSongList = ApiSkyMusic.apiSkyMusic.getSongBySingerId(singerId);
+        callGetSongList.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Song>> call, @NonNull Response<List<Song>> response) {
+                mGetSongListListener.onGetSongListComplete(response.body());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Song>> call, @NonNull Throwable t) {
+            }
+        });
+    }
 }

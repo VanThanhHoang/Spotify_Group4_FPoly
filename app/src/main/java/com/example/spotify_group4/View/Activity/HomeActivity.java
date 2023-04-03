@@ -2,13 +2,11 @@ package com.example.spotify_group4.View.Activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +35,6 @@ import com.example.spotify_group4.View.Fragment.SearchFragment;
 import com.example.spotify_group4.databinding.ActivityHomeBinding;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -96,19 +93,22 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         Log.d("123", "onNewIntent: ");
         super.onNewIntent(intent);
     }
+
     void openByLink() {
         Intent appLinkIntent = getIntent();
-        if(appLinkIntent.getAction()!=null){
-            int songId =  appLinkIntent.getExtras().getInt("songId");
+        if (appLinkIntent.getAction() != null) {
+            int songId = appLinkIntent.getExtras().getInt("songId");
             Call<List<Song>> getSongById = ApiSkyMusic.apiSkyMusic.getSongById(songId);
             getSongById.enqueue(new Callback<List<Song>>() {
                 @Override
-                public void onResponse(Call<List<Song>> call, Response<List<Song>> response) {
-                    replaceFragment(new MusicPlayFragment(response.body(),0));
+                public void onResponse(@NonNull Call<List<Song>> call, @NonNull Response<List<Song>> response) {
+                    assert response.body() != null;
+                    replaceFragment(new MusicPlayFragment(response.body(), 0));
 
                 }
+
                 @Override
-                public void onFailure(Call<List<Song>> call, Throwable t) {
+                public void onFailure(@NonNull Call<List<Song>> call, @NonNull Throwable t) {
 
                 }
             });
@@ -130,11 +130,6 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     @Override
     protected void onStart() {
         super.onStart();
-    }
-
-    @Override
-    public void onBackFragment() {
-
     }
 
     void resumeMediaPlayerFragment() {
@@ -233,6 +228,16 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         if (!layoutBinding.bottomNavigation.isShown()) {
             layoutBinding.bottomNavigation.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void hideBotNav() {
+      /*  layoutBinding.bottomNavigation.setVisibility(View.GONE);*/
+    }
+
+    @Override
+    public void showBotNav() {
+        /*layoutBinding.bottomNavigation.setVisibility(View.VISIBLE);*/
     }
 
 

@@ -70,11 +70,6 @@ public class LoginFragment extends Fragment {
     }
 
     void setEvent() {
-        layoutBinding.btnLoginAccount.setOnClickListener(v -> {
-            assert getActivity() != null;
-            startActivity(new Intent(getContext(), HomeActivity.class));
-            getActivity().finish();
-        });
         layoutBinding.btnPhoneAth.setOnClickListener(v ->
                 replaceFragmentListener.replaceFragment(new PhoneNumberAthFragment()));
         layoutBinding.btnLoginAccount1.setOnClickListener(v ->

@@ -6,6 +6,7 @@
     android:background="@color/black">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/layoutScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
@@ -151,9 +152,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:textSize="20sp" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPlayListDefault6"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:id="@+id/tvContentTittle7"
+                    style="@style/title_Login"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:textSize="20sp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlayListDefault7"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_margin="5dp" />

@@ -6,6 +6,6 @@ public interface ReplaceFragmentListener {
     void replaceFragment(Fragment fragment);
     void hideComponents();
     void showComponents();
-    void onBackFragment();
-
+    void hideBotNav();
+    void showBotNav();
 }

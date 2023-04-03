@@ -2,6 +2,7 @@ package com.example.spotify_group4.Retrofit;
 
 import com.example.spotify_group4.Model.HomeContent;
 import com.example.spotify_group4.Model.PlayList;
+import com.example.spotify_group4.Model.Singer;
 import com.example.spotify_group4.Model.Song;
 
 import java.util.List;
@@ -32,4 +33,10 @@ public interface ApiSkyMusic {
 
     @GET("get_song_by_name")
     Call<List<Song>> searchSong(@Query("songName") String songName);
+
+    @GET("get_singer_by_name")
+    Call<List<Singer>> searchSinger(@Query("singerName") String singerName);
+
+    @GET("get_song_by_singer")
+    Call<List<Song>> getSongBySingerId(@Query("singerId") int singerId);
 }

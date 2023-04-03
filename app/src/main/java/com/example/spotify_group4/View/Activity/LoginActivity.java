@@ -49,9 +49,15 @@ public class LoginActivity extends AppCompatActivity implements ReplaceFragmentL
     }
 
     @Override
-    public void onBackFragment() {
+    public void hideBotNav() {
 
     }
+
+    @Override
+    public void showBotNav() {
+
+    }
+
 
 
 

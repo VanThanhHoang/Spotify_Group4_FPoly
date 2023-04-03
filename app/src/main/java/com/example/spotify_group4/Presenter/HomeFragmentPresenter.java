@@ -1,5 +1,7 @@
 package com.example.spotify_group4.Presenter;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.spotify_group4.Listener.GetDataHomeFragmentListener;
@@ -29,6 +31,7 @@ public class HomeFragmentPresenter {
             public void onResponse(@NonNull Call<List<PlayList>> call, @NonNull Response<List<PlayList>> response) {
                 playListSlider = response.body();
                 mGetDataHomeFragmentListener.onGetListPlayListComplete(playListSlider);
+
             }
 
             @Override

@@ -2,7 +2,7 @@ package com.example.spotify_group4.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PlayList {
+public class    PlayList {
     @SerializedName("ID")
     int id;
     @SerializedName("NAME")

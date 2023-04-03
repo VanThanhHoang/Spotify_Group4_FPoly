@@ -22,6 +22,7 @@ import com.example.spotify_group4.Listener.GetSongListListener;
 import com.example.spotify_group4.Listener.LoadListener;
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.PlayList;
+import com.example.spotify_group4.Model.Singer;
 import com.example.spotify_group4.Model.Song;
 import com.example.spotify_group4.Presenter.PlayListFragmentPresenter;
 import com.example.spotify_group4.R;
@@ -34,17 +35,18 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     FragmentPlaylistBinding fragmentPlaylistBinding;
     List<Song> mSongList ;
     SongAdapter songAdapter ;
-    private boolean isExpanded = true ;
     private boolean isPlaying;
     PlayList mPlayList;
     LoadListener loadListener;
     PlayListFragmentPresenter playListFragmentPresenter;
     ReplaceFragmentListener replaceFragmentListener;
-
+    Singer singer;
     public PlayListFragment(PlayList playList) {
         mPlayList = playList;
     }
-
+    public PlayListFragment(Singer singer) {
+        this.singer = singer;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,8 +81,13 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         loadListener.onLoad();
-        playListFragmentPresenter.getSongListByPlayListId(mPlayList.getId());
-        Picasso.get().load(mPlayList.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
+        if(mPlayList!=null){
+            playListFragmentPresenter.getSongListByPlayListId(mPlayList.getId());
+            Picasso.get().load(mPlayList.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
+        }else {
+            playListFragmentPresenter.getSongListBySingerId(singer.getId());
+            Picasso.get().load(singer.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
+        }
         initToolbar();
         initToolbarAnimation();
         fragmentPlaylistBinding.playPauseButton.setOnClickListener(v -> {
@@ -120,15 +127,14 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     }
 
     private void initToolbarAnimation() {
-        fragmentPlaylistBinding.collapsingToolbarLayout.setTitle(mPlayList.getName());
+       if(mPlayList!=null){
+           fragmentPlaylistBinding.collapsingToolbarLayout.setTitle(mPlayList.getName());
+       }
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.son_tung);
         Palette.from(bitmap).generate(palette -> {
             // set màu toolbar
             fragmentPlaylistBinding.collapsingToolbarLayout.setContentScrimColor(requireContext().getResources().getColor(R.color.black, null));
             fragmentPlaylistBinding.collapsingToolbarLayout.setStatusBarScrimColor(getResources().getColor(R.color.black, null));
-        });
-        fragmentPlaylistBinding.appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->  {
-            isExpanded = Math.abs(verticalOffset) <= 200;
         });
     }
 
@@ -141,7 +147,6 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     private void pause() {
         isPlaying = false;
         fragmentPlaylistBinding.playPauseButton.setImageResource(R.drawable.ic_play);
-        // TODO: Pause playing audio or video.
     }
 
 }
