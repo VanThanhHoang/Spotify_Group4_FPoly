@@ -64,6 +64,11 @@
         <item name="color">@color/black</item>
     </style>
 
+    <style name="MyCheckboxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="colorControlNormal">@color/green</item>
+        <item name="colorControlActivated">@color/green</item>
+    </style>
+
     <style name="button_register_account" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textSize">15sp</item>
         <item name="strokeWidth">1sp</item>
