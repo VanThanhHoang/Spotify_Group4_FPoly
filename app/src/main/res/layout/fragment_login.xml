@@ -38,6 +38,7 @@
         <com.google.android.material.button.MaterialButton
             style="@style/button_login_style"
             android:backgroundTint="@color/green"
+            android:id="@+id/btnRegisterAccount"
             android:text="@string/sigup"
             android:textColor="@color/black"
             app:cornerRadius="@dimen/border_raius_button"

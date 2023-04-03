@@ -60,6 +60,9 @@ public class LoginFragment extends Fragment {
         layoutBinding.btnLoginAccount1.setOnClickListener(v -> {
             replaceFragmentListener.replaceFragment(new LoginEmailFragment());
         });
+        layoutBinding.btnRegisterAccount.setOnClickListener(v ->{
+            replaceFragmentListener.replaceFragment(new FragmentRegisterAccount());
+        });
     }
 
     private void SignInGoogle() {
