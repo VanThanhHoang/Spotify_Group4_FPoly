@@ -90,7 +90,6 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.d("123", "onNewIntent: ");
         super.onNewIntent(intent);
     }
 
@@ -232,12 +231,12 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
 
     @Override
     public void hideBotNav() {
-      /*  layoutBinding.bottomNavigation.setVisibility(View.GONE);*/
+
     }
 
     @Override
     public void showBotNav() {
-        /*layoutBinding.bottomNavigation.setVisibility(View.VISIBLE);*/
+
     }
 
 

@@ -34,28 +34,32 @@
         android:layout_weight="7.3" />
 
     <RelativeLayout
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
         android:gravity="center"
+        android:paddingStart="20dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.7"
         android:orientation="horizontal"
         tools:ignore="RtlSymmetry">
-        <ImageButton
-            android:background="@color/transparent"
-           android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnShare"
-            android:background="@color/transparent"
-            android:layout_alignParentStart="true"
-            android:src="@drawable/ic_share"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:iconSize="25dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_alignParentStart="true"
+            app:icon="@drawable/ic_share" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLikeSong"
+            app:iconSize="25dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_like"
+            tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
 

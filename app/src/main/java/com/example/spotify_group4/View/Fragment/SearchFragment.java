@@ -97,9 +97,9 @@ public class SearchFragment extends Fragment implements SearchListener {
                     return false;
                 }
                 if (searchState == STATE_SEARCH_SONG) {
-                    searchPresenter.searchSong(query);
+                    searchPresenter.searchSong(query.trim());
                 } else {
-                    searchPresenter.searchSinger(query);
+                    searchPresenter.searchSinger(query.trim());
                 }
                 loadListener.onLoad();
                 return false;
@@ -111,9 +111,9 @@ public class SearchFragment extends Fragment implements SearchListener {
                     return false;
                 }
                 if (searchState == STATE_SEARCH_SONG) {
-                    searchPresenter.searchSong(newText);
+                    searchPresenter.searchSong(newText.trim());
                 } else {
-                    searchPresenter.searchSinger(newText);
+                    searchPresenter.searchSinger(newText.trim());
                 }
                 return false;
             }

@@ -1,6 +1,10 @@
 package com.example.spotify_group4.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("USER_ID")
+    private String id;
     private String name;
     private String password;
     public User(String name) {

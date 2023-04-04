@@ -95,11 +95,11 @@
                     app:tint="@color/white" />
 
                 <SeekBar
-                    android:max="1000"
                     android:id="@+id/seekBarDuration"
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_alignParentBottom="true"
+                    android:max="1000"
                     android:progressTint="@color/white"
                     android:thumb="@null" />
             </RelativeLayout>

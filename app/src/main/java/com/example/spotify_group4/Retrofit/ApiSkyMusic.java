@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiSkyMusic {
@@ -28,6 +29,7 @@ public interface ApiSkyMusic {
 
     @GET("get_slider_playlist.php")
     Call<List<PlayList>> getSliderPlayList();
+
     @GET("get_song_by_id")
     Call<List<Song>> getSongById(@Query("songId") int songId);
 
@@ -39,4 +41,16 @@ public interface ApiSkyMusic {
 
     @GET("get_song_by_singer")
     Call<List<Song>> getSongBySingerId(@Query("singerId") int singerId);
+
+    @POST("insert_user")
+    Call<Void> insertUser(@Query("userId") String userId);
+
+    @POST("like_song")
+    Call<Void> likeSong(@Query("userId") String userId, @Query("songId") int songId);
+
+    @POST("like_song")
+    Call<Void> unLikeSong(@Query("userId") String userId, @Query("songId") int songId);
+
+    @POST("check_is_like_song")
+    Call<String> isLikeSong(@Query("userId") String userId, @Query("songId") int songId);
 }

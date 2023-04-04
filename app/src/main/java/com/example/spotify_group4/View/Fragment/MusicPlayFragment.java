@@ -32,8 +32,11 @@ import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 import com.example.spotify_group4.View.Activity.HomeActivity;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MusicPlayFragment extends Fragment implements MediaPlayerListener, ExitMediaPlayerListener {
     AppSharedPreferenceHelper appSharedPreferenceHelper;
@@ -46,30 +49,42 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     LoadListener loadListener;
     List<Song> mSongList;
     int mCurrentSongPosition;
-    Song song;
+    Song mCurrentSong;
     SongVpgAdapter songVpgAdapter;
     boolean isUserSwipe;
     boolean mIsContinueMusicPlayer;
     HandleMiniPlayerListener handleMiniPlayerListener;
     HomeActivity homeActivity;
     InteractPresenter interactPresenter;
+    String userId;
+    boolean isLikeSong;
 
     @Override
     public void onDetach() {
         super.onDetach();
     }
 
+    void getUserId() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            if (getContext() != null) {
+                userId = Objects.requireNonNull(GoogleSignIn.getLastSignedInAccount(getContext())).getId();
+            }
+        }
+    }
+
     public MusicPlayFragment(List<Song> songList, int songPosition) {
         this.mSongList = songList;
         this.mCurrentSongPosition = songPosition;
-        this.song = songList.get(mCurrentSongPosition);
+        mCurrentSong = songList.get(mCurrentSongPosition);
     }
 
     public MusicPlayFragment(List<Song> songList, int songPosition, boolean isContinueMusicPlayer) {
         this.mSongList = songList;
         this.mIsContinueMusicPlayer = isContinueMusicPlayer;
         this.mCurrentSongPosition = songPosition;
-        this.song = songList.get(mCurrentSongPosition);
+        mCurrentSong = songList.get(mCurrentSongPosition);
     }
 
     @Override
@@ -83,6 +98,8 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getUserId();
+        playMusicPresenter.isSongLiked(userId, mCurrentSong.getId());
         handleMiniPlayerListener.hideMiniPlayer();
         playMusicPresenter.getRepeatMode();
         playMusicPresenter.getShuffleMode();
@@ -152,6 +169,11 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     }
 
     void initEvent() {
+        layoutBinding.btnLikeSong.setOnClickListener(v -> {
+            isLikeSong = !isLikeSong;
+            playMusicPresenter.likeSong(userId, mCurrentSong.getId());
+            likeSong(isLikeSong);
+        });
         layoutBinding.btnShare.setOnClickListener(v ->
                 interactPresenter.shareWithAnotherApp(mSongList.get(mCurrentSongPosition))
         );
@@ -160,13 +182,16 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         if (getActivity() != null) {
             layoutBinding.btnBack.setOnClickListener(v -> getActivity().onBackPressed());
         }
-        layoutBinding.btnNext.setOnClickListener(v -> playMusicPresenter.playNextSong());
+        layoutBinding.btnNext.setOnClickListener(v -> {
+            playMusicPresenter.isSongLiked(userId, mCurrentSong.getId());
+            playMusicPresenter.playNextSong();
+        });
+
         layoutBinding.btnPlayPause.setOnClickListener(v -> playButtonAction());
         layoutBinding.btnPrev.setOnClickListener(v -> {
             playMusicPresenter.playPrevSong();
             resetTime();
         });
-
         layoutBinding.timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -192,31 +217,6 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         });
     }
 
-    /*    void shareCardView(){
-            cardView.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(cardView.getDrawingCache());
-            cardView.setDrawingCacheEnabled(false);
-
-    // Lưu bitmap vào bộ nhớ
-            String fileName = "cardview_share.jpg";
-            String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
-            File file = new File(filePath);
-            try {
-                FileOutputStream outputStream = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                outputStream.flush();
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-    // Truyền bitmap vào Intent chia sẻ
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("image/jpeg");
-            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(shareIntent, "Chia sẻ CardView"));
-        }*/
     void playButtonAction() {
         if (currentAction.equals(Constants.MEDIA_PLAYER_ACTION_PAUSE)) {
             currentAction = Constants.MEDIA_PLAYER_ACTION_RESUME;
@@ -247,6 +247,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
                     resetTime();
                     loadListener.onLoad();
                     playMusicPresenter.transSongByViewPager(position);
+                    playMusicPresenter.isSongLiked(userId, mCurrentSong.getId());
                 }
                 super.onPageSelected(position);
             }
@@ -328,6 +329,18 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         mSongList = songList;
         setDataViewPager(mSongList);
         layoutBinding.vpgSongInfo.setCurrentItem(mCurrentSongPosition, false);
+    }
+
+    @Override
+    public void likeSong(boolean isLikeSong) {
+        this.isLikeSong = isLikeSong;
+        if (isLikeSong) {
+            layoutBinding.btnLikeSong.setIconResource(R.drawable.ic_liked);
+            layoutBinding.btnLikeSong.setIconTintResource(R.color.green);
+        } else {
+            layoutBinding.btnLikeSong.setIconResource(R.drawable.ic_like);
+            layoutBinding.btnLikeSong.setIconTintResource(R.color.white);
+        }
     }
 
     @Override

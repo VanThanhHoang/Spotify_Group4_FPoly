@@ -1,6 +1,5 @@
 package com.example.spotify_group4.View.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Helper.KeyBroadHelper;
-import com.example.spotify_group4.View.Activity.HomeActivity;
+import com.example.spotify_group4.Presenter.AuthPresenter;
 import com.example.spotify_group4.View.Dialog.LoadingDialog;
 import com.example.spotify_group4.databinding.FragmentEnterAthCodeBinding;
 import com.google.firebase.FirebaseException;
@@ -46,14 +45,17 @@ public class EnterAthCodeFragment extends Fragment {
     String phoneNumber;
     String verifyId;
     FirebaseAuth mAuth;
+    AuthPresenter authPresenter;
     PhoneAuthProvider.ForceResendingToken mForceResendingToken;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutBinding = FragmentEnterAthCodeBinding.inflate(getLayoutInflater(), null, false);
         mAuth = FirebaseAuth.getInstance();
+        authPresenter = new AuthPresenter(getContext());
         getInfoVerify();
-        if(getContext()!=null){
+        if (getContext() != null) {
             loadingDialog = new LoadingDialog(getContext());
         }
         return layoutBinding.getRoot();
@@ -234,17 +236,13 @@ public class EnterAthCodeFragment extends Fragment {
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = task.getResult().getUser();
+                        authPresenter.insertUser(user.getUid());
                         loadingDialog.hide();
-                        goHomeActivity();
+                        authPresenter.goHomeActivity();
                     } else {
                         Toast.makeText(getContext(), "Mã xác minh bạn nhập " +
                                 "không chính xác hoặc đã hết hạn!", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    void goHomeActivity() {
-        Intent intent = new Intent(getContext(), HomeActivity.class);
-        startActivity(intent);
     }
 }

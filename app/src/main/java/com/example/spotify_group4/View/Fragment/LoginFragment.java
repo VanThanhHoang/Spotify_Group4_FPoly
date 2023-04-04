@@ -15,8 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
+import com.example.spotify_group4.Presenter.AuthPresenter;
 import com.example.spotify_group4.View.Activity.HomeActivity;
 import com.example.spotify_group4.databinding.FragmentLoginBinding;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -30,7 +32,7 @@ public class LoginFragment extends Fragment {
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
     private ActivityResultLauncher<Intent> myActivityResultLauncher;
-
+    AuthPresenter authPresenter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class LoginFragment extends Fragment {
     }
     @Override
     public void onAttach(@NonNull Context context) {
+        authPresenter = new AuthPresenter(context);
         replaceFragmentListener = (ReplaceFragmentListener) context;
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(context, googleSignInOptions);
@@ -49,8 +52,10 @@ public class LoginFragment extends Fragment {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                         try {
                             task.getResult(ApiException.class);
-                            Intent intent = new Intent(getContext(), HomeActivity.class);
-                            startActivity(intent);
+                            GoogleSignInAccount account = task.getResult();
+                            String userId = account.getId();
+                            authPresenter.insertUser(userId);
+                            authPresenter.goHomeActivity();
                             if (getActivity() != null) {
                                 getActivity().finish();
                             }
