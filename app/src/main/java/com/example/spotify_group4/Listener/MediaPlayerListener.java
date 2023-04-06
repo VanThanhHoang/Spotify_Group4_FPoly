@@ -25,4 +25,5 @@ public interface MediaPlayerListener {
 
     void onPlayListShuffled(List<Song> listSong);
     void likeSong(boolean isLikeSong);
+    void onGetSumLike(int sumLike);
 }

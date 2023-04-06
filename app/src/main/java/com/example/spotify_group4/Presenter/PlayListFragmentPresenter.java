@@ -1,7 +1,7 @@
 package com.example.spotify_group4.Presenter;
 
 
-import android.util.Log;
+
 
 import androidx.annotation.NonNull;
 
@@ -33,6 +33,19 @@ public class PlayListFragmentPresenter {
             @Override
             public void onFailure(@NonNull Call<List<Song>> call, @NonNull Throwable t) {
 
+            }
+        });
+    }
+    public void getSongLiked(String userId) {
+        Call<List<Song>> callGetListSong = ApiSkyMusic.apiSkyMusic.getSongLiked(userId);
+        callGetListSong.enqueue(new Callback<List<Song>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Song>> call, @NonNull Response<List<Song>> response) {
+                mGetSongListListener.onGetSongListComplete(response.body());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Song>> call, @NonNull Throwable t) {
             }
         });
     }

@@ -35,7 +35,6 @@
 
     <RelativeLayout
         android:gravity="center"
-        android:paddingStart="20dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.7"
@@ -44,21 +43,31 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnShare"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:iconSize="25dp"
             android:scaleX="1.5"
             android:scaleY="1.5"
             android:layout_alignParentStart="true"
             app:icon="@drawable/ic_share" />
-        <com.google.android.material.button.MaterialButton
+
+        <TextView
+            android:id="@+id/tvSumLike"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/btnLikeSong"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+        <ImageButton
+            android:backgroundTint="@android:color/transparent"
             android:id="@+id/btnLikeSong"
             app:iconSize="25dp"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_like"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_like"
             tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>

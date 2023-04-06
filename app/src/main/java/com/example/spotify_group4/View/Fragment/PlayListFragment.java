@@ -25,6 +25,7 @@ import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.PlayList;
 import com.example.spotify_group4.Model.Singer;
 import com.example.spotify_group4.Model.Song;
+import com.example.spotify_group4.Model.User;
 import com.example.spotify_group4.Presenter.PlayListFragmentPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.databinding.FragmentPlaylistBinding;
@@ -42,11 +43,15 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     PlayListFragmentPresenter playListFragmentPresenter;
     ReplaceFragmentListener replaceFragmentListener;
     Singer singer;
+    String userId ;
     public PlayListFragment(PlayList playList) {
         mPlayList = playList;
     }
     public PlayListFragment(Singer singer) {
         this.singer = singer;
+    }
+    public PlayListFragment(String userId) {
+        this.userId = userId;
     }
     @Nullable
     @Override
@@ -85,9 +90,11 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
         if(mPlayList!=null){
             playListFragmentPresenter.getSongListByPlayListId(mPlayList.getId());
             Picasso.get().load(mPlayList.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
-        }else {
+        }else if(singer!=null) {
             playListFragmentPresenter.getSongListBySingerId(singer.getId());
             Picasso.get().load(singer.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
+        }else {
+            playListFragmentPresenter.getSongLiked(userId);
         }
         initToolbar();
         initToolbarAnimation();
@@ -111,6 +118,10 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
         mSongList = songList;
         loadListener.onComplete();
         createRecycleView();
+        if(userId!=null){
+            fragmentPlaylistBinding.collapsingToolbarLayout.setTitle("Bài hát đã thích");
+            Picasso.get().load(mSongList.get(0).getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
+        }
     }
 
     @Override

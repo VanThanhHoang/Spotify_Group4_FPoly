@@ -88,7 +88,6 @@ public class MediaPlayerService extends Service {
         }
         if (action.equals(Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER)) {
             currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
-            Log.d("123", "transSongByViewPager: "+currentSongPosition);
             transSongByViewPager();
             return START_NOT_STICKY;
         } else {
@@ -180,13 +179,6 @@ public class MediaPlayerService extends Service {
         }
         try {
             setupMediaPlayer(url);
-            mediaPlayer.setOnPreparedListener(mp -> {
-                startUiMusic();
-                mediaPlayer.start();
-                initMediaSession();
-                initNotification();
-                changState(PlaybackStateCompat.STATE_PLAYING);
-            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -204,25 +196,9 @@ public class MediaPlayerService extends Service {
         handler.postDelayed(updateSeekBar, 1000);
     }
 
-    void setupMediaPlayer(String url) throws IOException {
-        mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
-        /*mediaPlayer = new MediaPlayer();*/
-        /*mediaPlayer.setDataSource(url);*/
-        mediaPlayer.setOnCompletionListener(mp -> {
-            if (mp != null) {
-                onCompleteMusic();
-            }
-        });
-    /*     mediaPlayer.prepareAsync();
-        AudioAttributes.Builder audioAttributesBuilder = new AudioAttributes.Builder();
-        audioAttributesBuilder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
-        audioAttributesBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
-        mediaPlayer.setAudioAttributes(audioAttributesBuilder.build());*/
-    }
 
     void transSongByViewPager() {
         currentSong = songList.get(currentSongPosition);
-        Log.d("123", "transSongByViewPager: "+currentSong.getName());
         prepareMusic(currentSong.getUrl());
     }
 
@@ -382,7 +358,6 @@ public class MediaPlayerService extends Service {
     }
 
     void changState(int state) {
-
         mediaSession.setPlaybackState(createPlaybackState(state));
         notificationBuilder.clearActions();
         Intent prevIntent = new Intent(this, MediaPlayerService.class);
@@ -435,5 +410,29 @@ public class MediaPlayerService extends Service {
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaSession.getSessionToken()));
+    }
+
+    void setupMediaPlayer(String url) throws IOException {
+      mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
+     /*   mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(url);
+        mediaPlayer.setOnCompletionListener(mp -> {
+            if (mp != null) {
+                onCompleteMusic();
+            }
+        });*/
+        mediaPlayer.setOnPreparedListener(mp -> {
+            startUiMusic();
+            mediaPlayer.start();
+            initMediaSession();
+            initNotification();
+            changState(PlaybackStateCompat.STATE_PLAYING);
+        });
+ /*       mediaPlayer.setOnErrorListener((mp, what, extra) ->{
+            mediaPlayer.stop();
+            return false;
+        });*/
+     /*   mediaPlayer.prepareAsync();
+*/
     }
 }

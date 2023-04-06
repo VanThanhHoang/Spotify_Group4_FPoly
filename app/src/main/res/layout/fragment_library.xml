@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@color/black">
-    <TextView
-        style="@style/title_Login"
-        android:text="Library"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</RelativeLayout>
+    <Button
+        android:id="@+id/btnSongLiked"
+        android:text="Bài hát đã thích"
+        android:gravity="left|center"
+        android:textSize="20sp"
+        android:drawableEnd="@drawable/ic_like"
+        android:drawableTint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="RtlHardcoded" />
+    <Button
+        android:id="@+id/btnMyPlayList"
+        android:text="PlayList của tôi"
+        android:gravity="left|center"
+        android:textSize="20sp"
+        android:drawableEnd="@drawable/ic_play_list"
+        android:drawableTint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="RtlHardcoded" />
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.spotify_group4.View.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     InteractPresenter interactPresenter;
     String userId;
     boolean isLikeSong;
-
+    int mSumLike = 0;
     @Override
     public void onDetach() {
         super.onDetach();
@@ -99,6 +100,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getUserId();
+        playMusicPresenter.getSumLike(mCurrentSong.getId());
         playMusicPresenter.isSongLiked(userId, mCurrentSong.getId());
         handleMiniPlayerListener.hideMiniPlayer();
         playMusicPresenter.getRepeatMode();
@@ -168,8 +170,14 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
         super.onDestroy();
     }
 
+    @SuppressLint("SetTextI18n")
     void initEvent() {
         layoutBinding.btnLikeSong.setOnClickListener(v -> {
+            if(isLikeSong){
+                layoutBinding.tvSumLike.setText(--mSumLike+"");
+            }else {
+                layoutBinding.tvSumLike.setText(++mSumLike+"");
+            }
             isLikeSong = !isLikeSong;
             playMusicPresenter.likeSong(userId, mCurrentSong.getId());
             likeSong(isLikeSong);
@@ -335,14 +343,18 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     public void likeSong(boolean isLikeSong) {
         this.isLikeSong = isLikeSong;
         if (isLikeSong) {
-            layoutBinding.btnLikeSong.setIconResource(R.drawable.ic_liked);
-            layoutBinding.btnLikeSong.setIconTintResource(R.color.green);
+            layoutBinding.btnLikeSong.setImageResource(R.drawable.ic_liked);
         } else {
-            layoutBinding.btnLikeSong.setIconResource(R.drawable.ic_like);
-            layoutBinding.btnLikeSong.setIconTintResource(R.color.white);
+            layoutBinding.btnLikeSong.setImageResource(R.drawable.ic_like);
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onGetSumLike(int sumLike) {
+        mSumLike = sumLike;
+        layoutBinding.tvSumLike.setText(sumLike+"");
+    }
     @Override
     public List<Song> getSongList() {
         return mSongList;

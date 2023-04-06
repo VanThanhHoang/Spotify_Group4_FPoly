@@ -42,14 +42,18 @@ public interface ApiSkyMusic {
     @GET("get_song_by_singer")
     Call<List<Song>> getSongBySingerId(@Query("singerId") int singerId);
 
+    @GET("get_song_liked")
+    Call<List<Song>> getSongLiked(@Query("userId") String userId);
+
+    @GET("get_sum_like")
+    Call<Integer> getSumLike(@Query("songId") int songId);
+
     @POST("insert_user")
     Call<Void> insertUser(@Query("userId") String userId);
 
     @POST("like_song")
     Call<Void> likeSong(@Query("userId") String userId, @Query("songId") int songId);
 
-    @POST("like_song")
-    Call<Void> unLikeSong(@Query("userId") String userId, @Query("songId") int songId);
 
     @POST("check_is_like_song")
     Call<String> isLikeSong(@Query("userId") String userId, @Query("songId") int songId);

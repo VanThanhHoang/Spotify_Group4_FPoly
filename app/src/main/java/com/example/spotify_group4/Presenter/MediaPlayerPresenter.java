@@ -118,9 +118,9 @@ public class MediaPlayerPresenter {
         intentService.putExtra(Constants.ACTION_MEDIA_PLAYER, Constants.MEDIA_PLAYER_ACTION_PAUSE);
         context.startService(intentService);
     }
-    public void likeSong(String userId,int songId){
-        Call<Void> likeSong = ApiSkyMusic.apiSkyMusic.likeSong(userId,songId);
-        Log.d("123", "likeSong: "+userId+"+song "+songId);
+
+    public void likeSong(String userId, int songId) {
+        Call<Void> likeSong = ApiSkyMusic.apiSkyMusic.likeSong(userId, songId);
         likeSong.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
@@ -134,19 +134,35 @@ public class MediaPlayerPresenter {
         });
     }
 
+    public void getSumLike(int songId) {
+        Call<Integer> getSumLike = ApiSkyMusic.apiSkyMusic.getSumLike(songId);
+        getSumLike.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                mediaPlayerListener.onGetSumLike(response.body());
+                Log.d("123", "onResponse: ");
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+            }
+        });
+    }
+
     public void stopService() {
         context.stopService(intentService);
     }
-    public void isSongLiked(String userId,int songId){
-        Call<String> callIsLikeSong = ApiSkyMusic.apiSkyMusic.isLikeSong(userId,songId);
-        Log.d("123", "isSongLiked: "+userId+"+song "+songId);
+
+    public void isSongLiked(String userId, int songId) {
+        Call<String> callIsLikeSong = ApiSkyMusic.apiSkyMusic.isLikeSong(userId, songId);
         callIsLikeSong.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                if(response.body()!=null){
+                if (response.body() != null) {
                     mediaPlayerListener.likeSong(response.body().equals("isLike"));
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<String> call, Throwable t) {
             }

@@ -16,9 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Presenter.AuthPresenter;
-import com.example.spotify_group4.View.Activity.HomeActivity;
 import com.example.spotify_group4.databinding.FragmentLoginBinding;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -81,9 +79,7 @@ public class LoginFragment extends Fragment {
                 replaceFragmentListener.replaceFragment(new LoginEmailFragment())
         );
         layoutBinding.btnLoginGoogle.setOnClickListener(v -> SignInGoogle());
-        layoutBinding.btnRegisterAccount.setOnClickListener(v ->{
-            replaceFragmentListener.replaceFragment(new FragmentRegisterAccount());
-        });
+        layoutBinding.btnRegisterAccount.setOnClickListener(v -> replaceFragmentListener.replaceFragment(new FragmentRegisterAccount()));
     }
 
     private void SignInGoogle() {
