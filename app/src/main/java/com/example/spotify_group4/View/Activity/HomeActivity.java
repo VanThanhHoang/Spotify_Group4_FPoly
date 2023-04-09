@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +32,7 @@ import com.example.spotify_group4.View.Fragment.LibraryFragment;
 import com.example.spotify_group4.View.Fragment.MusicPlayFragment;
 import com.example.spotify_group4.View.Fragment.PlayListFragment;
 import com.example.spotify_group4.View.Fragment.SearchFragment;
+import com.example.spotify_group4.View.Fragment.UserPlayListFragment;
 import com.example.spotify_group4.databinding.ActivityHomeBinding;
 import com.squareup.picasso.Picasso;
 
@@ -58,6 +59,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
     int mFullIntDuration;
     FragmentTransaction fragmentTransaction;
     MediaPlayerListener mediaPlayerListener;
+    long backPressedTime = 0;
 
     @Nullable
     @Override
@@ -150,8 +152,22 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
             if (mCurrentAction.equals(Constants.MEDIA_PLAYER_ACTION_RESUME)) {
                 prepareMiniMediaPlayer();
             }
+            super.onBackPressed();
+            return;
         }
-        super.onBackPressed();
+        if (fragment instanceof HomeFragment ||
+                fragment instanceof SearchFragment ||
+                fragment instanceof LibraryFragment ||
+                fragment instanceof AccountFragment) {
+            if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                super.onBackPressed();
+            } else {
+                Toast.makeText(this, "Nhấn Back lần nữa để thoát", Toast.LENGTH_SHORT).show();
+            }
+            backPressedTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -191,7 +207,7 @@ public class HomeActivity extends AppCompatActivity implements ReplaceFragmentLi
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainerHome, fragment);
         fragmentTransaction.setCustomAnimations(R.anim.anm_replace_fragment, R.anim.anm_replace_fragment);
-        if (fragment instanceof MusicPlayFragment || fragment instanceof PlayListFragment) {
+        if (fragment instanceof MusicPlayFragment || fragment instanceof PlayListFragment || fragment instanceof UserPlayListFragment) {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             return;

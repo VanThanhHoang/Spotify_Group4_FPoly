@@ -54,7 +54,21 @@ public interface ApiSkyMusic {
     @POST("like_song")
     Call<Void> likeSong(@Query("userId") String userId, @Query("songId") int songId);
 
-
     @POST("check_is_like_song")
     Call<String> isLikeSong(@Query("userId") String userId, @Query("songId") int songId);
+
+    @POST("insert_user_playlist")
+    Call<Void> add_play_list(@Query("userId") String userId, @Query("playListName") String playListName);
+
+    @POST("delete_user_play_list")
+    Call<Void> delete_play_list(@Query("playlistId") int playlistId);
+
+    @POST("update_user_play_list")
+    Call<Void> update_play_list(@Query("playlistId") int playlistId,@Query("playListName") String playlistName);
+
+    @POST("insert_detail_user_play_list")
+    Call<Void> add_song_to_play_list(@Query("playlistId") int playlistId,@Query("songId") int songId);
+
+    @GET("get_user_playlist")
+    Call<List<PlayList>> getUserPlayList(@Query("userId") String userId);
 }

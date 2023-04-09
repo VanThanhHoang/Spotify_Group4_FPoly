@@ -32,10 +32,11 @@ import com.example.spotify_group4.R;
 import com.example.spotify_group4.Receiver.MediaPlayerReceiver;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
 import com.example.spotify_group4.View.Activity.HomeActivity;
+import com.example.spotify_group4.View.Dialog.DialogAddSongToPlayList;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.auth.FirebaseAuth;
-
+    
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +61,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     String userId;
     boolean isLikeSong;
     int mSumLike = 0;
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -173,10 +175,10 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     @SuppressLint("SetTextI18n")
     void initEvent() {
         layoutBinding.btnLikeSong.setOnClickListener(v -> {
-            if(isLikeSong){
-                layoutBinding.tvSumLike.setText(--mSumLike+"");
-            }else {
-                layoutBinding.tvSumLike.setText(++mSumLike+"");
+            if (isLikeSong) {
+                layoutBinding.tvSumLike.setText(--mSumLike + "");
+            } else {
+                layoutBinding.tvSumLike.setText(++mSumLike + "");
             }
             isLikeSong = !isLikeSong;
             playMusicPresenter.likeSong(userId, mCurrentSong.getId());
@@ -222,6 +224,11 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
             public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
+        });
+        layoutBinding.btnAddPlayList.setOnClickListener(v -> {
+            assert getContext() != null;
+            DialogAddSongToPlayList dialogAddSongToPlayList = new DialogAddSongToPlayList(this.getContext(), userId, mCurrentSong.getId());
+            dialogAddSongToPlayList.show();
         });
     }
 
@@ -353,8 +360,9 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     @Override
     public void onGetSumLike(int sumLike) {
         mSumLike = sumLike;
-        layoutBinding.tvSumLike.setText(sumLike+"");
+        layoutBinding.tvSumLike.setText(sumLike + "");
     }
+
     @Override
     public List<Song> getSongList() {
         return mSongList;

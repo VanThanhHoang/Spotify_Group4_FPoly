@@ -32,7 +32,7 @@ public class PlayListFragmentPresenter {
 
             @Override
             public void onFailure(@NonNull Call<List<Song>> call, @NonNull Throwable t) {
-
+                mGetSongListListener.onGetSongListFail();
             }
         });
     }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -126,7 +127,8 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
 
     @Override
     public void onGetSongListFail() {
-
+        loadListener.onComplete();
+        Toast.makeText(getContext(), "Không có bài hát nào trong playlist", Toast.LENGTH_SHORT).show();
     }
 
     private void initToolbar() {

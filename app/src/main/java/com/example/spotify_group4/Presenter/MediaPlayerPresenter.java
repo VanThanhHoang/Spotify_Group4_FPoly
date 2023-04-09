@@ -1,18 +1,24 @@
 package com.example.spotify_group4.Presenter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Parcelable;
-import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
 import com.example.spotify_group4.Helper.Constants;
 import com.example.spotify_group4.Listener.MediaPlayerListener;
 import com.example.spotify_group4.Model.Song;
+import com.example.spotify_group4.R;
 import com.example.spotify_group4.Retrofit.ApiSkyMusic;
 import com.example.spotify_group4.Service.MediaPlayerService;
 import com.example.spotify_group4.SharedPreferences.AppSharedPreferenceHelper;
+import com.example.spotify_group4.View.Dialog.DialogAddSongToPlayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,13 +144,13 @@ public class MediaPlayerPresenter {
         Call<Integer> getSumLike = ApiSkyMusic.apiSkyMusic.getSumLike(songId);
         getSumLike.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                mediaPlayerListener.onGetSumLike(response.body());
-                Log.d("123", "onResponse: ");
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                if(response.body()!=null){
+                    mediaPlayerListener.onGetSumLike(response.body());
+                }
             }
-
             @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
             }
         });
     }
@@ -168,4 +174,5 @@ public class MediaPlayerPresenter {
             }
         });
     }
+
 }
