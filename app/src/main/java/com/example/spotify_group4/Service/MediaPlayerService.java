@@ -71,6 +71,7 @@ public class MediaPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getStringExtra(Constants.ACTION_MEDIA_PLAYER);
+        Log.d("123", "action" + action);
         if (action == null) {
             action = intent.getAction();
         }
@@ -85,15 +86,12 @@ public class MediaPlayerService extends Service {
         if (action.equals(Constants.MEDIA_PLAYER_ACTION_CHANGE_REPEAT_MODE)) {
             changeRepeatMode();
             return START_NOT_STICKY;
-        }
-        if (action.equals(Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER)) {
+        } else if (action.equals(Constants.MEDIA_PLAYER_ACTION_TRANS_SONG_VIEWPAGER)) {
             currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
             transSongByViewPager();
-            return START_NOT_STICKY;
         } else {
             handlerMediaPlayer(action, intent);
         }
-        //action
         return START_NOT_STICKY;
     }
 
@@ -103,6 +101,7 @@ public class MediaPlayerService extends Service {
 
     void handlerMediaPlayer(String action, Intent intent) {
         if (action.equals(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG)) {
+            Log.d("123", "handlerMediaPlayer: ");
             transSong(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
         } else if (action.equals(Constants.MEDIA_PLAYER_ACTION_PLAY_PREV_SONG)) {
             transSong(Constants.MEDIA_PLAYER_ACTION_PLAY_PREV_SONG);
@@ -121,7 +120,7 @@ public class MediaPlayerService extends Service {
         songList = songListDefault;
         currentSongPosition = intent.getIntExtra(Constants.MEDIA_PLAYER_EXTRA_CURRENT_SONG_POSITION, 0);
         currentSong = songList.get(currentSongPosition);
-        prepareMusic(currentSong.getUrl());
+        setupMediaPlayer(currentSong.getUrl());
         new Handler(Looper.getMainLooper()).postDelayed(this::shuffledPlayList, 300);
     }
 
@@ -173,17 +172,6 @@ public class MediaPlayerService extends Service {
         super.onDestroy();
     }
 
-    void prepareMusic(String url) {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
-        try {
-            setupMediaPlayer(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     void sendListShuffled() {
         Intent intent = new Intent(MediaPlayerReceiver.ACTION_SHUFFLED_PLAY_LIST);
         intent.putParcelableArrayListExtra(Constants.MEDIA_PLAYER_EXTRA_LIST_SHUFFLED,
@@ -199,7 +187,7 @@ public class MediaPlayerService extends Service {
 
     void transSongByViewPager() {
         currentSong = songList.get(currentSongPosition);
-        prepareMusic(currentSong.getUrl());
+        setupMediaPlayer(currentSong.getUrl());
     }
 
     void sendBroadCastTransSong() {
@@ -212,7 +200,7 @@ public class MediaPlayerService extends Service {
 
     void onCompleteMusic() {
         if (currentRepeatMode.equals(Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_REPEAT_ONCE)) {
-            prepareMusic(currentSong.getUrl());
+            setupMediaPlayer(currentSong.getUrl());
         } else if (currentRepeatMode.equals(Constants.MEDIA_PLAYER_EXTRA_REPEAT_MODE_REPEAT_ALL)) {
             transSong(Constants.MEDIA_PLAYER_ACTION_PLAY_NEXT_SONG);
         } else {
@@ -242,7 +230,7 @@ public class MediaPlayerService extends Service {
         }
         sendBroadCastTransSong();
         currentSong = songList.get(currentSongPosition);
-        prepareMusic(currentSong.getUrl());
+        setupMediaPlayer(currentSong.getUrl());
     }
 
     void setMediaSessionCallBack() {
@@ -322,7 +310,7 @@ public class MediaPlayerService extends Service {
 
     void resumeMusic() {
         if (!mediaPlayer.isPlaying()) {
-            changState(PlaybackStateCompat.STATE_PLAYING);
+            changeState(PlaybackStateCompat.STATE_PLAYING);
             handler.postDelayed(updateSeekBar, 0);
             mediaPlayer.start();
         }
@@ -341,7 +329,7 @@ public class MediaPlayerService extends Service {
         handler.removeCallbacks(updateSeekBar);
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
-                changState(PlaybackStateCompat.STATE_PAUSED);
+                changeState(PlaybackStateCompat.STATE_PAUSED);
                 mediaPlayer.pause();
             }
         }
@@ -357,7 +345,7 @@ public class MediaPlayerService extends Service {
         sendBroadcast(intent);
     }
 
-    void changState(int state) {
+    void changeState(int state) {
         mediaSession.setPlaybackState(createPlaybackState(state));
         notificationBuilder.clearActions();
         Intent prevIntent = new Intent(this, MediaPlayerService.class);
@@ -412,27 +400,33 @@ public class MediaPlayerService extends Service {
                         .setMediaSession(mediaSession.getSessionToken()));
     }
 
-    void setupMediaPlayer(String url) throws IOException {
-      mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
-     /*   mediaPlayer = new MediaPlayer();
-        mediaPlayer.setDataSource(url);
+    void setupMediaPlayer(String url) {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
+    /*    mediaPlayer.release();
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(this, Uri.parse(url));
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            return;
+        }
+        mediaPlayer.setOnErrorListener((mp, what, extra) -> true); */
+
         mediaPlayer.setOnCompletionListener(mp -> {
             if (mp != null) {
                 onCompleteMusic();
             }
-        });*/
+        });
         mediaPlayer.setOnPreparedListener(mp -> {
-            startUiMusic();
             mediaPlayer.start();
+            startUiMusic();
             initMediaSession();
             initNotification();
-            changState(PlaybackStateCompat.STATE_PLAYING);
+            changeState(PlaybackStateCompat.STATE_PLAYING);
         });
- /*       mediaPlayer.setOnErrorListener((mp, what, extra) ->{
-            mediaPlayer.stop();
-            return false;
-        });*/
-     /*   mediaPlayer.prepareAsync();
-*/
     }
+
 }

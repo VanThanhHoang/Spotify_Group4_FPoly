@@ -2,6 +2,7 @@ package com.example.spotify_group4.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,7 +68,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.songViewHolder
         CardView cardViewContainer;
         TextView tvSongName, tvSingerName;
         ImageView imgSong;
-
         public songViewHolder(@NonNull SongItemBinding songItemBinding) {
             super(songItemBinding.getRoot());
             cardViewContainer = songItemBinding.container;

@@ -21,10 +21,10 @@
             android:src="@drawable/ic_arrow" />
 
         <androidx.constraintlayout.utils.widget.ImageFilterButton
-            android:id="@+id/btnMore"
+            android:id="@+id/btnAddPlayList"
             style="@style/img_button_toolbar"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_more" />
+            android:src="@drawable/ic_add_playlist" />
     </RelativeLayout>
 
     <androidx.viewpager2.widget.ViewPager2

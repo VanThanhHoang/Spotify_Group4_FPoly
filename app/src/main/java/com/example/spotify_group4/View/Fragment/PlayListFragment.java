@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +25,6 @@ import com.example.spotify_group4.Listener.ReplaceFragmentListener;
 import com.example.spotify_group4.Model.PlayList;
 import com.example.spotify_group4.Model.Singer;
 import com.example.spotify_group4.Model.Song;
-import com.example.spotify_group4.Model.User;
 import com.example.spotify_group4.Presenter.PlayListFragmentPresenter;
 import com.example.spotify_group4.R;
 import com.example.spotify_group4.databinding.FragmentPlaylistBinding;
@@ -35,24 +34,35 @@ import java.util.List;
 
 public class PlayListFragment extends Fragment implements GetSongListListener {
     FragmentPlaylistBinding fragmentPlaylistBinding;
-    List<Song> mSongList ;
-    SongAdapter songAdapter ;
+    List<Song> mSongList;
+    SongAdapter songAdapter;
     private boolean isPlaying;
     PlayList mPlayList;
     LoadListener loadListener;
     PlayListFragmentPresenter playListFragmentPresenter;
     ReplaceFragmentListener replaceFragmentListener;
     Singer singer;
-    String userId ;
+    String userId;
+    public static final String FLAG_USER_PLAYLIST = "FLAG_USER_PLAYLIST";
+    String flag;
+
     public PlayListFragment(PlayList playList) {
         mPlayList = playList;
     }
+
+    public PlayListFragment(PlayList playList, String flag) {
+        this.flag = flag;
+        mPlayList = playList;
+    }
+
     public PlayListFragment(Singer singer) {
         this.singer = singer;
     }
+
     public PlayListFragment(String userId) {
         this.userId = userId;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,26 +85,29 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     }
 
 
-
     @Override
     public void onAttach(@NonNull Context context) {
         replaceFragmentListener = (ReplaceFragmentListener) context;
         playListFragmentPresenter = new PlayListFragmentPresenter(this);
-        loadListener = (LoadListener)  context;
+        loadListener = (LoadListener) context;
         super.onAttach(context);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         loadListener.onLoad();
-        if(mPlayList!=null){
-            playListFragmentPresenter.getSongListByPlayListId(mPlayList.getId());
-            Picasso.get().load(mPlayList.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
-        }else if(singer!=null) {
+        if (flag != null) {
+            if (mPlayList != null && !flag.isEmpty()) {
+                playListFragmentPresenter.getSongByUserPlayList(mPlayList.getId());
+            }
+        } else if (singer != null) {
             playListFragmentPresenter.getSongListBySingerId(singer.getId());
             Picasso.get().load(singer.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
-        }else {
+        } else if (userId != null) {
             playListFragmentPresenter.getSongLiked(userId);
+        } else {
+            playListFragmentPresenter.getSongListByPlayListId(mPlayList.getId());
+            Picasso.get().load(mPlayList.getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
         }
         initToolbar();
         initToolbarAnimation();
@@ -118,15 +131,20 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
         mSongList = songList;
         loadListener.onComplete();
         createRecycleView();
-        if(userId!=null){
+        if ( userId != null  ) {
             fragmentPlaylistBinding.collapsingToolbarLayout.setTitle("Bài hát đã thích");
+            Picasso.get().load(mSongList.get(0).getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
+        }
+        if (flag!=null){
+            fragmentPlaylistBinding.collapsingToolbarLayout.setTitle(mPlayList.getName());
             Picasso.get().load(mSongList.get(0).getUrlImg()).into(fragmentPlaylistBinding.imgPlayList);
         }
     }
 
     @Override
     public void onGetSongListFail() {
-
+        loadListener.onComplete();
+        Toast.makeText(getContext(), "Không có bài hát nào trong playlist", Toast.LENGTH_SHORT).show();
     }
 
     private void initToolbar() {
@@ -139,9 +157,9 @@ public class PlayListFragment extends Fragment implements GetSongListListener {
     }
 
     private void initToolbarAnimation() {
-       if(mPlayList!=null){
-           fragmentPlaylistBinding.collapsingToolbarLayout.setTitle(mPlayList.getName());
-       }
+        if (mPlayList != null) {
+            fragmentPlaylistBinding.collapsingToolbarLayout.setTitle(mPlayList.getName());
+        }
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.son_tung);
         Palette.from(bitmap).generate(palette -> {
             // set màu toolbar

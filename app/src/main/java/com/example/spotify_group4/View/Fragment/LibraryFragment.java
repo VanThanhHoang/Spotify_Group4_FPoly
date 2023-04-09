@@ -46,6 +46,7 @@ public class LibraryFragment extends Fragment {
 
     void setEvent() {
         layoutBinding.btnSongLiked.setOnClickListener(v -> replaceFragmentListener.replaceFragment(new PlayListFragment(userId)));
+        layoutBinding.btnMyPlayList.setOnClickListener(v -> replaceFragmentListener.replaceFragment(new UserPlayListFragment()));
     }
 
     void getUserId() {
