@@ -36,7 +36,7 @@ import com.example.spotify_group4.View.Dialog.DialogAddSongToPlayList;
 import com.example.spotify_group4.databinding.FragmentPlayMusicBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.auth.FirebaseAuth;
-    
+
 import java.util.List;
 import java.util.Objects;
 
@@ -196,15 +196,19 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
             playMusicPresenter.playNextSong();
             playMusicPresenter.isSongLiked(userId, mCurrentSong.getId());
             playMusicPresenter.getSumLike(mCurrentSong.getId());
-            if(mCurrentSongPosition==mSongList.size()-1){
-                mCurrentSongPosition=0;
-            }else {
+            if (mCurrentSongPosition == mSongList.size() - 1) {
+                mCurrentSongPosition = 0;
+            } else {
                 mCurrentSong = mSongList.get(++mCurrentSongPosition);
             }
         });
         layoutBinding.btnPrev.setOnClickListener(v -> {
             playMusicPresenter.playPrevSong();
-            mCurrentSong = mSongList.get(--mCurrentSongPosition);
+            if (mCurrentSongPosition == 0) {
+                mCurrentSongPosition = mSongList.size()-1;
+            } else {
+                mCurrentSong = mSongList.get(--mCurrentSongPosition);
+            }
             playMusicPresenter.getSumLike(mCurrentSong.getId());
             resetTime();
         });
