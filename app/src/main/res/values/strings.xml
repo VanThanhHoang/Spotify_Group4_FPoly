@@ -2,7 +2,7 @@
     <string name="app_name">Spotify_Group4</string>
     <!--layout_sigin-->
     <string name="titlle_login1">Hàng triệu bài hát.</string>
-    <string name="titlle_login2">Miễn phí trên Spotify.</string>
+    <string name="titlle_login2">Miễn phí trên Skymusic.</string>
     <string name="sigup">Đăng Ký miễn phí</string>
     <string name="sigin_sdt">Tiếp tục với số điện thoại</string>
     <string name="sigin_google">Tiếp tục bằng Google</string>
@@ -12,13 +12,13 @@
 
     <!-- tạo tài khoản -->
     <string name="details_name">Tên của bạn là gì?</string>
-    <string name="detail1">Thông tin này hiển thị trên Hồ sơ Spotify của bạn.</string>
-    <string name="detail2">Bằng việc nhấn vào Tạo tài khoản, bạn đồng ý với Điều khoản sử dụng của Spotify.</string>
+    <string name="detail1">Thông tin này hiển thị trên Hồ sơ Skymusic của bạn.</string>
+    <string name="detail2">Bằng việc nhấn vào Tạo tài khoản, bạn đồng ý với Điều khoản sử dụng của Skymusic.</string>
     <string name="detail3">Điều khoản sử dụng</string>
-    <string name="detail4">Để tìm hiểu thêm về cách thức Spotify thu nhập, sử dụng, chia sẻ và bảo vệ dự liệu cá nhân của bạn, vui lòng xem Chính sách quyền riêng tư của Spotify.</string>
+    <string name="detail4">Để tìm hiểu thêm về cách thức Skymusic thu nhập, sử dụng, chia sẻ và bảo vệ dự liệu cá nhân của bạn, vui lòng xem Chính sách quyền riêng tư của Skymusic.</string>
     <string name="detail5">Chính sách quyền riêng tư</string>
-    <string name="detail6">Tôi không muốn nhận tin nhắn tiếp thị từ Spotify.</string>
-    <string name="detail7">Chia sẻ dữ liệu đăng ký của tôi với các nhà cung cấp nội dung của Spotify cho mục đích tiếp thị.</string>
+    <string name="detail6">Tôi không muốn nhận tin nhắn tiếp thị từ Skymusic.</string>
+    <string name="detail7">Chia sẻ dữ liệu đăng ký của tôi với các nhà cung cấp nội dung của Skymusic cho mục đích tiếp thị.</string>
     <string name="register_account">Tạo tài khoản</string>
     <!-- login email -->
     <string name="emailorname">Email hoặc tên người dùng</string>
