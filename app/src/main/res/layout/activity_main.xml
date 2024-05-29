@@ -1,18 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="25dp"
+    android:background="#181a1f"
     tools:context=".View.Activity.MainActivity">
-
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="63dp"
-        android:layout_height="45dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:id="@+id/tvTittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Tải nhạc lên"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPlaylist"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/black"
+        app:hintTextColor="@color/white"
+        app:boxStrokeWidth="1.5dp"
+        app:boxStrokeColor="@color/box_color_statelist"
+        android:layout_width="match_parent"
+        android:hint="Tên bài hát"
+        android:layout_height="80dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:inputType="none"
+            android:id="@+id/edPlayListName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:padding="10dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/black"
+        app:boxBackgroundColor="@color/black"
+        app:hintTextColor="@color/white"
+        app:boxStrokeWidth="1.5dp"
+        app:boxStrokeColor="@color/box_color_statelist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <AutoCompleteTextView
+            android:id="@+id/atcPlaylist"
+            android:inputType="none"
+            android:hint="Chọn ca sĩ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:padding="10dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton
+        app:strokeColor="@color/green"
+        android:layout_margin="10dp"
+        app:cornerRadius="6dp"
+        android:id="@+id/btnAddMusic"
+        android:layout_gravity="center"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:text="Chọn file nhạc"
+        android:textColor="@color/green"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <com.google.android.material.button.MaterialButton
+        app:strokeColor="@color/green"
+        android:layout_margin="10dp"
+        app:cornerRadius="6dp"
+        android:id="@+id/uploadMusic"
+        android:layout_gravity="center"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:text="Tải bài hát lên"
+        android:textColor="@color/green"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

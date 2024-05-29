@@ -33,7 +33,6 @@ public class HomeFragmentPresenter {
                 mGetDataHomeFragmentListener.onGetListPlayListComplete(playListSlider);
 
             }
-
             @Override
             public void onFailure(@NonNull Call<List<PlayList>> call, @NonNull Throwable t) {
                 mGetDataHomeFragmentListener.onGetListPlayListFail();

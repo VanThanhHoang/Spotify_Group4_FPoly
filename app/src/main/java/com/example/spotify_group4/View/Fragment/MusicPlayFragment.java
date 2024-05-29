@@ -1,15 +1,24 @@
 package com.example.spotify_group4.View.Fragment;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,13 +77,13 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     }
 
     void getUserId() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        } else {
-            if (getContext() != null) {
-                userId = Objects.requireNonNull(GoogleSignIn.getLastSignedInAccount(getContext())).getId();
-            }
-        }
+//        (loginReq.getStatus().equals("success")) {
+//            SharedPreferences sharedPreferences = getContext().getSharedPreferences("MySharedPref", 0);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putString("token", loginReq.getEmail());
+//            editor.apply();
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MySharedPref", 0);
+        userId = sharedPreferences.getString("token", "");
     }
 
     public MusicPlayFragment(List<Song> songList, int songPosition) {
@@ -174,6 +183,7 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
 
     @SuppressLint("SetTextI18n")
     void initEvent() {
+        layoutBinding.btnDown.setOnClickListener(v -> checkPermission());
         layoutBinding.btnLikeSong.setOnClickListener(v -> {
             if (isLikeSong) {
                 layoutBinding.tvSumLike.setText(--mSumLike + "");
@@ -405,5 +415,18 @@ public class MusicPlayFragment extends Fragment implements MediaPlayerListener, 
     public MediaPlayerListener getMediaListener() {
         return this;
     }
-
+    private void downloadSong(String url) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle(mSongList.get(mCurrentSongPosition).getName());
+        request.setDescription("Đang tải xuống");
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mSongList.get(mCurrentSongPosition).getName() + ".mp3");
+        DownloadManager manager = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(request);
+    }
+    void checkPermission() {
+            downloadSong(mSongList.get(mCurrentSongPosition).getUrl());
+    }
 }

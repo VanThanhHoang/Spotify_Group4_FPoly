@@ -1,6 +1,7 @@
 package com.example.spotify_group4.Retrofit;
 
 import com.example.spotify_group4.Model.HomeContent;
+import com.example.spotify_group4.Model.LoginReq;
 import com.example.spotify_group4.Model.PlayList;
 import com.example.spotify_group4.Model.Singer;
 import com.example.spotify_group4.Model.Song;
@@ -74,4 +75,13 @@ public interface ApiSkyMusic {
 
     @GET("get_user_playlist")
     Call<List<PlayList>> getUserPlayList(@Query("userId") String userId);
+    // post login
+    @POST("login")
+    Call<LoginReq> login(@Query("email") String email, @Query("password") String password);
+
+    @GET("get_all_singer")
+    Call<List<Singer>> getAllSinger();
+    // passing to body of request not to query
+    @POST("insert_song")
+    Call<Void> insertSong(@Query("songName") String songName, @Query("singerId") int singerId, @Query("songUrlImg") String songUrlImg, @Query("songUrl") String songUrl, @Query("genre") String genre);
 }

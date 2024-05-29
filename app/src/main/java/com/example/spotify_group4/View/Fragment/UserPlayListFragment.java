@@ -1,6 +1,7 @@
 package com.example.spotify_group4.View.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,13 +61,8 @@ public class UserPlayListFragment extends Fragment implements UserPlayListListen
     }
 
     void getUserId() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        } else {
-            if (getContext() != null) {
-                userId = Objects.requireNonNull(GoogleSignIn.getLastSignedInAccount(getContext())).getId();
-            }
-        }
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MySharedPref", 0);
+        userId = sharedPreferences.getString("token", "");
     }
 
     @Override
@@ -77,6 +73,6 @@ public class UserPlayListFragment extends Fragment implements UserPlayListListen
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onUpdatePlaylist() {
-        userPlaylistAdapter.notifyDataSetChanged();
+     createRv();
     }
 }

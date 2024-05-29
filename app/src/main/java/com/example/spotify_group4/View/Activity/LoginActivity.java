@@ -1,5 +1,7 @@
 package com.example.spotify_group4.View.Activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,6 +21,12 @@ public class LoginActivity extends AppCompatActivity implements ReplaceFragmentL
         super.onCreate(savedInstanceState);
         layoutBinding = ActivityLoginBinding.inflate(getLayoutInflater(), null, false);
         setContentView(layoutBinding.getRoot());
+        SharedPreferences sharedPreferences = this.getSharedPreferences("MySharedPref", 0);
+       String userId = sharedPreferences.getString("token", "");
+       if(!userId.equals("")) {
+           startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+           finish();
+       }
         layoutBinding.topAppBar.setNavigationOnClickListener(v-> onBackPressed());
         initFragment();
         replaceFragment(loginFragment);

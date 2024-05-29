@@ -50,7 +50,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             replaceFragmentListener.replaceFragment(new PlayListFragment(playList));
             replaceFragmentListener.hideComponents();
         });
-        Picasso.get().load(playList.getUrlImg()).into(holder.imgPlayList);
+        Picasso.get().load(playList.getUrlImg()).placeholder(R.drawable.img_load).into(holder.imgPlayList);
         holder.tvPlaylistName.setText(playList.getName());
         setColorMatrix(playlistItemBinding.imgPlayList);
         setRandomColor(holder.leftLine, holder.botLine);

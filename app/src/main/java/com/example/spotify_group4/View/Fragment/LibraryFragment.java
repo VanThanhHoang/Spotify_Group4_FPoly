@@ -1,6 +1,7 @@
 package com.example.spotify_group4.View.Fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,13 +51,8 @@ public class LibraryFragment extends Fragment {
     }
 
     void getUserId() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        } else {
-            if (getContext() != null) {
-                userId = Objects.requireNonNull(GoogleSignIn.getLastSignedInAccount(getContext())).getId();
-            }
-        }
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("MySharedPref", 0);
+        userId = sharedPreferences.getString("token", "");
     }
 
 }

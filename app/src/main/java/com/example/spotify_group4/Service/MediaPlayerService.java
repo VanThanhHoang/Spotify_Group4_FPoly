@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -404,8 +405,8 @@ public class MediaPlayerService extends Service {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
-        mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
-    /*    mediaPlayer.release();
+//        mediaPlayer = MediaPlayer.create(this, R.raw.roimotngay);
+//         mediaPlayer.release();
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(this, Uri.parse(url));
@@ -413,7 +414,7 @@ public class MediaPlayerService extends Service {
         } catch (IOException e) {
             return;
         }
-        mediaPlayer.setOnErrorListener((mp, what, extra) -> true); */
+        mediaPlayer.setOnErrorListener((mp, what, extra) -> true);
 
         mediaPlayer.setOnCompletionListener(mp -> {
             if (mp != null) {
